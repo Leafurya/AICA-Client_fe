@@ -7,7 +7,7 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="94" Margin="153,144,0,0" VerticalAlignment="Top" Width="166" MouseMove="richTextBox_MouseMove" IsReadOnly="True" Focusable="False">
+        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="94" Margin="153,144,0,0" VerticalAlignment="Top" Width="166" IsReadOnly="True" Focusable="True">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>
@@ -15,6 +15,7 @@
             </FlowDocument>
         </RichTextBox>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="457,217,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
+        <Canvas HorizontalAlignment="Left" Height="94" Margin="153,144,0,0" VerticalAlignment="Top" Width="166" Background="Transparent" MouseLeftButtonUp="Canvas_MouseLeftButtonUp" MouseMove="Canvas_MouseMove" Cursor="Hand"/>
 
     </Grid>
 </Window>

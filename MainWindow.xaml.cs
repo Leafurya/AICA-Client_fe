@@ -22,12 +22,16 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        WordSearch.Interface.InitStyle(richTextBox);
     }
 
-    private void richTextBox_MouseMove(object sender, MouseEventArgs e)
+    private void Canvas_MouseMove(object sender, MouseEventArgs e)
     {
         Point mousePos = e.GetPosition(richTextBox);
         WordSearch.Interface.SelectRange(richTextBox, mousePos);
+    }
+    private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        Debug.WriteLine("click");
+        WordSearch.Interface.RequestDictionary();
     }
 }

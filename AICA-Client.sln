@@ -6,7 +6,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AICA-Client", "AICA-Client.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordSearch", "modules\WordSearch\WordSearch.csproj", "{6B4757D4-12EB-4C62-B4CD-4A75C3251256}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextSelector", "modules\TextSelector\TextSelector.csproj", "{1D88787B-9D67-4457-9076-F26AB1E88827}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utility", "modules\Uility\Utility.csproj", "{BD010121-AA99-4643-A4A6-683783560EA7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,10 +22,10 @@ Global
 		{6B4757D4-12EB-4C62-B4CD-4A75C3251256}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B4757D4-12EB-4C62-B4CD-4A75C3251256}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B4757D4-12EB-4C62-B4CD-4A75C3251256}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1D88787B-9D67-4457-9076-F26AB1E88827}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1D88787B-9D67-4457-9076-F26AB1E88827}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1D88787B-9D67-4457-9076-F26AB1E88827}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1D88787B-9D67-4457-9076-F26AB1E88827}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD010121-AA99-4643-A4A6-683783560EA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD010121-AA99-4643-A4A6-683783560EA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD010121-AA99-4643-A4A6-683783560EA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD010121-AA99-4643-A4A6-683783560EA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
