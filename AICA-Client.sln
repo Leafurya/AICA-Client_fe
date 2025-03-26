@@ -1,0 +1,36 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35828.75
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AICA-Client", "AICA-Client.csproj", "{739A5A9A-4F4F-4DAE-AC1E-5C6A8B006428}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WordSearch", "modules\WordSearch\WordSearch.csproj", "{6B4757D4-12EB-4C62-B4CD-4A75C3251256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextSelector", "modules\TextSelector\TextSelector.csproj", "{1D88787B-9D67-4457-9076-F26AB1E88827}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{739A5A9A-4F4F-4DAE-AC1E-5C6A8B006428}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{739A5A9A-4F4F-4DAE-AC1E-5C6A8B006428}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{739A5A9A-4F4F-4DAE-AC1E-5C6A8B006428}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{739A5A9A-4F4F-4DAE-AC1E-5C6A8B006428}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B4757D4-12EB-4C62-B4CD-4A75C3251256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B4757D4-12EB-4C62-B4CD-4A75C3251256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B4757D4-12EB-4C62-B4CD-4A75C3251256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B4757D4-12EB-4C62-B4CD-4A75C3251256}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D88787B-9D67-4457-9076-F26AB1E88827}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D88787B-9D67-4457-9076-F26AB1E88827}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D88787B-9D67-4457-9076-F26AB1E88827}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D88787B-9D67-4457-9076-F26AB1E88827}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A01288F6-1EAF-4DD4-9BC1-52E03D09EE94}
+	EndGlobalSection
+EndGlobal

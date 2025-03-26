@@ -1,0 +1,86 @@
+## Build results
+bin/
+obj/
+
+## User-specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Mono Auto Generated Files
+mono_crash.*
+
+## Visual Studio working folder
+.vs/
+
+## Rider IDE
+.idea/
+
+## Windows image file caches
+Thumbs.db
+ehthumbs.db
+
+## DotCover
+*.dotCover
+
+## Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+
+## NCrunch
+*.ncrunch*
+.*crunch*.local.xml
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## Publish
+*.publish.xml
+*.pubxml
+*.publishproj
+
+## MSBuild Binary and Log files
+*.log
+*.tlog
+*.cache
+*.ilk
+*.meta
+*.obj
+*.pch
+*.pdb
+*.ipdb
+*.iobj
+
+## Web files
+wwwroot/
+
+## Others
+*.dbmdl
+*.db
+*.bak
+*.tmp
+*.log
+
+## Application Insights
+ApplicationInsights.config
+
+## Local test results
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+
+## Configuration files
+appsettings.Development.json
+appsettings.Local.json
+
+# Rider & JetBrains
+.idea/
+*.sln.iml
