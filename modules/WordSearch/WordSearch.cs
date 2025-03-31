@@ -59,6 +59,13 @@ namespace WordSearch
             string word=selector.GetText();
             req.RequestDictionary(word);
         }
+        public static async Task RequestDictionary(TextBox outputBox)
+        {
+            string word = selector.GetText();
+            string result = await WordMeaningService.GetMeaningAsync(word);
+            outputBox.Text = result;
+        }
+
     }
 }
 

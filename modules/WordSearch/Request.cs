@@ -37,5 +37,17 @@ namespace WordSearch
                 Debug.WriteLine(result);
             }
         }
+        public async Task<string> GetDictionaryResult(string word)
+        {
+            HttpResponseMessage res = await client.GetAsync(this.host + "/" + word);
+            if (res.IsSuccessStatusCode)
+            {
+                return await res.Content.ReadAsStringAsync();
+            }
+            return "해석을 불러올 수 없습니다.";
+        }
     }
+
+
 }
+

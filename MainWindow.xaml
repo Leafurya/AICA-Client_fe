@@ -16,6 +16,8 @@
         </RichTextBox>
         <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="153,288,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
         <Canvas HorizontalAlignment="Left" Height="94" Margin="153,144,0,0" VerticalAlignment="Top" Width="166" Background="Transparent" MouseLeftButtonUp="Canvas_MouseLeftButtonUp" MouseMove="Canvas_MouseMove" Cursor="Hand"/>
+        <TextBox x:Name="MeaningBox" Width="400" Height="100" Margin="364,117,36,217" FontSize="16" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+            
 
     </Grid>
 </Window>

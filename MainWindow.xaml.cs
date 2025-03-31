@@ -34,4 +34,11 @@ public partial class MainWindow : Window
         Debug.WriteLine("click");
         WordSearch.Interface.RequestDictionary();
     }
+    private async void richTextBox_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        WordSearch.Interface.SelectRange(richTextBox, e.GetPosition(richTextBox));
+        await WordSearch.Interface.RequestDictionary(MeaningBox);
+    }
+
+
 }
