@@ -16,9 +16,9 @@ namespace WordSearch
         private static Selector selector = new Selector();
         private static int textId = 23;
         /// <summary>
-        /// ¼±ÅÃµÈ ¹®ÀÚ¿­ Ç¥½Ã ¸Ş¼­µå 
+        /// ì„ íƒëœ ë¬¸ìì—´ í‘œì‹œ ë©”ì„œë“œ 
         /// <para>
-        /// »ç¿ë ¿¹½Ã)
+        /// ì‚¬ìš© ì˜ˆì‹œ)
         /// </para>
         /// Point mousePos = e.GetPosition(richTextBox);<br/>
         /// WordSearch.Interface.SelectRange(richTextBox, mousePos);
@@ -28,17 +28,17 @@ namespace WordSearch
         static public void SelectRange(RichTextBox textBox, Point mousePt)
         {
 
-            //¸¶¿ì½º À§Ä¡¿¡ ÀÖ´Â ¹®ÀÚÀÇ À§Ä¡(ÀÎµ¦½º)¸¦ °¡Á®¿È
+            //ë§ˆìš°ìŠ¤ ìœ„ì¹˜ì— ìˆëŠ” ë¬¸ìì˜ ìœ„ì¹˜(ì¸ë±ìŠ¤)ë¥¼ ê°€ì ¸ì˜´
             //Selector sel = new Selector();
             int idx = selector.GetCharIndexFromPoint(textBox,mousePt);
 
-            //DB¿¡¼­ ÀÎµ¦½º(idx)¿¡ ÇØ´çÇÏ´Â ´Ü¾îÀÇ ½ÃÀÛ, ³¡ ºÎºĞÀ» °¡Á®¿È
-            //Point targetPos = DBManager.GetWord(idx); //¿¹½Ã
+            //DBì—ì„œ ì¸ë±ìŠ¤(idx)ì— í•´ë‹¹í•˜ëŠ” ë‹¨ì–´ì˜ ì‹œì‘, ë ë¶€ë¶„ì„ ê°€ì ¸ì˜´
+            //Point targetPos = DBManager.GetWord(idx); //ì˜ˆì‹œ
             //Debug.WriteLine("idx "+ idx);
             
             Point targetPos = selector.GetWordFromDB(textId, idx); //new Point(idx, idx + 3);
 
-            //ÇØ´ç ¾ğ¾îÀÇ »öÀ» º¯°æÇÔ
+            //í•´ë‹¹ ì–¸ì–´ì˜ ìƒ‰ì„ ë³€ê²½í•¨
             TextRange selectedText = selector.GetSelectedTextRange(textBox.Document.ContentStart, (int)targetPos.X, (int)targetPos.Y);
 
             if (selectedText != null)
@@ -48,28 +48,30 @@ namespace WordSearch
 
         }
         /// <summary>
-        /// ÅØ½ºÆ® ¹Ú½º ½ºÅ¸ÀÏ ÃÊ±âÈ­<br/>
-        /// Ä¿¼­ º¯°æ, Ä³·µ ¼û±è
+        /// í…ìŠ¤íŠ¸ ë°•ìŠ¤ ìŠ¤íƒ€ì¼ ì´ˆê¸°í™”<br/>
+        /// ì»¤ì„œ ë³€ê²½, ìºëŸ¿ ìˆ¨ê¹€
         /// </summary>
         /// <param name="textBox"></param>
         static public void InitStyle(RichTextBox textBox)
         {
             textBox.Cursor = Cursors.Hand;
         }
-        static public void RequestDictionary()
+        static public async Task PrintMeaning(TextBox outputBox)
         {
             HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
-            string word=selector.GetText();
-            req.RequestDictionary(word);
+            string word = selector.GetText();
+
+            string result = await req.GetDictionaryResult(word); // í•´ì„ ë°›ì•„ì˜¤ê¸°
+            outputBox.Text = result;                             // í™”ë©´ì— ë„ìš°ê¸°
         }
         static public void HighlightPOS(RichTextBox textBox)
         {
             string word=selector.GetText();
-            //DB¿¡¼­ ¸ğµç ´Ü¾î¸¦ Ã£´Â´Ù
+            //DBì—ì„œ ëª¨ë“  ë‹¨ì–´ë¥¼ ì°¾ëŠ”ë‹¤
             List<WordData> targets = new List<WordData>();
             targets=selector.GetWordsFromDB(textId, word);
 
-            //°¢ ´Ü¾îÀÇ Ç°»ç¿¡ ¸Â´Â ¹è°æ»öÀ» ÁöÁ¤ÇÑ´Ù
+            //ê° ë‹¨ì–´ì˜ í’ˆì‚¬ì— ë§ëŠ” ë°°ê²½ìƒ‰ì„ ì§€ì •í•œë‹¤
             targets.ForEach(data =>
             {
                 TextRange selectedText = selector.GetSelectedTextRange(textBox.Document.ContentStart, data.start, data.end);
