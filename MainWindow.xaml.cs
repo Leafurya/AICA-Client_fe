@@ -30,10 +30,20 @@ public partial class MainWindow : Window
         Point mousePos = e.GetPosition(richTextBox);
         WordSearch.Interface.SelectRange(richTextBox, mousePos);
     }
-    private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    private async void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        WordSearch.Interface.RequestDictionary();
         WordSearch.Interface.HighlightPOS(richTextBox);
+        
+        //Debug.WriteLine("click");
+
+        // 1. RichTextBox 기준으로 마우스 위치 얻기
+        //Point mousePos = e.GetPosition(richTextBox);
+
+        // 2. 단어 선택 (색 칠해주는 것까지 포함)
+        //WordSearch.Interface.SelectRange(richTextBox, mousePos);
+
+        // 3. 해석 요청 + MeaningBox에 표시
+        await WordSearch.Interface.PrintMeaning(MeaningBox);
     }
 
 
@@ -65,4 +75,7 @@ public partial class MainWindow : Window
         }
         return null;
     }
+
+
+
 }
