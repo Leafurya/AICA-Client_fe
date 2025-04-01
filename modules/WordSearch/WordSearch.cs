@@ -53,17 +53,13 @@ namespace WordSearch
         {
             textBox.Cursor = Cursors.Hand;
         }
-        static public void RequestDictionary()
+        static public async Task RequestDictionary(TextBox outputBox)
         {
             HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
-            string word=selector.GetText();
-            req.RequestDictionary(word);
-        }
-        public static async Task RequestDictionary(TextBox outputBox)
-        {
             string word = selector.GetText();
-            string result = await WordMeaningService.GetMeaningAsync(word);
-            outputBox.Text = result;
+
+            string result = await req.GetDictionaryResult(word); // 해석 받아오기
+            outputBox.Text = result;                             // 화면에 띄우기
         }
 
     }

@@ -27,16 +27,6 @@ namespace WordSearch
         {
             this.host = host;
         }
-        public async Task RequestDictionary(string word)
-        {
-            //url 예시: host/dictionary?word=hello
-            HttpResponseMessage res = await client.GetAsync(this.host + "/" + word);
-            if (res.IsSuccessStatusCode)
-            {
-                string result = await res.Content.ReadAsStringAsync();
-                Debug.WriteLine(result);
-            }
-        }
         public async Task<string> GetDictionaryResult(string word)
         {
             HttpResponseMessage res = await client.GetAsync(this.host + "/" + word);
@@ -46,8 +36,9 @@ namespace WordSearch
             }
             return "해석을 불러올 수 없습니다.";
         }
+
+
+
     }
-
-
 }
 
