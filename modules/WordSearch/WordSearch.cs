@@ -14,6 +14,7 @@ namespace WordSearch
     public class Interface
     {
         private static Selector selector = new Selector();
+        private static int textId = 23;
         /// <summary>
         /// 선택된 문자열 표시 메서드 
         /// <para>
@@ -33,14 +34,16 @@ namespace WordSearch
 
             //DB에서 인덱스(idx)에 해당하는 단어의 시작, 끝 부분을 가져옴
             //Point targetPos = DBManager.GetWord(idx); //예시
-            Point targetPos = new Point(idx, idx + 3);
+            //Debug.WriteLine("idx "+ idx);
+            
+            Point targetPos = selector.GetWordFromDB(textId, idx); //new Point(idx, idx + 3);
 
             //해당 언어의 색을 변경함
             TextRange selectedText = selector.GetSelectedTextRange(textBox.Document.ContentStart, (int)targetPos.X, (int)targetPos.Y);
 
             if (selectedText != null)
             {
-                selector.ColorSelectedText(selectedText);
+                selector.SetTextColorToSelectedText(selectedText);
             }
 
         }
@@ -58,6 +61,23 @@ namespace WordSearch
             HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
             string word=selector.GetText();
             req.RequestDictionary(word);
+        }
+        static public void HighlightPOS(RichTextBox textBox)
+        {
+            string word=selector.GetText();
+            //DB에서 모든 단어를 찾는다
+            List<WordData> targets = new List<WordData>();
+            targets=selector.GetWordsFromDB(textId, word);
+
+            //각 단어의 품사에 맞는 배경색을 지정한다
+            targets.ForEach(data =>
+            {
+                TextRange selectedText = selector.GetSelectedTextRange(textBox.Document.ContentStart, data.start, data.end);
+                if (selectedText != null)
+                {
+                    selector.SetBackgroundColorToSelectedText(selectedText, Brushes.Cyan);
+                }
+            });
         }
     }
 }

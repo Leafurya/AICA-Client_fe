@@ -7,15 +7,17 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <Grid>
-        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="94" Margin="153,144,0,0" VerticalAlignment="Top" Width="166" IsReadOnly="True" Focusable="True">
+        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="242" Margin="27,22,0,0"  VerticalAlignment="Top" Width="373" IsReadOnly="True" Focusable="True" VerticalScrollBarVisibility="Auto"
+                    AcceptsReturn="True">
             <FlowDocument>
                 <Paragraph>
-                    <Run Text="RichTextBox"/>
+                    <Run Text=""/>
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="153,288,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120"/>
-        <Canvas HorizontalAlignment="Left" Height="94" Margin="153,144,0,0" VerticalAlignment="Top" Width="166" Background="Transparent" MouseLeftButtonUp="Canvas_MouseLeftButtonUp" MouseMove="Canvas_MouseMove" Cursor="Hand"/>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Margin="146,286,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="229" Height="125"/>
+        <Canvas HorizontalAlignment="Left" Height="242" Margin="27,22,0,0" VerticalAlignment="Top" Width="355" Background="Transparent" MouseLeftButtonUp="Canvas_MouseLeftButtonUp" MouseMove="Canvas_MouseMove" Cursor="Hand" MouseWheel="Canvas_MouseWheel"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="23" Margin="483,168,0,0" VerticalAlignment="Top" Width="82"/>
 
     </Grid>
 </Window>
