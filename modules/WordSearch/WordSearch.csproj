@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\TextSelector\TextSelector.csproj" />
+    <ProjectReference Include="..\Uility\Utility.csproj" />
   </ItemGroup>
 
 </Project>
