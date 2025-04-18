@@ -28,7 +28,7 @@ namespace Translate
                 StandardErrorEncoding = Encoding.UTF8
             };
 
-            string result;
+            string result = "";
             using (Process process = Process.Start(psi))
             {
                 result = await process.StandardOutput.ReadToEndAsync();
