@@ -7,7 +7,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-using Utiliy.TextSelector;
+using Utility.TextSelector;
 
 namespace WordSearch
 {
@@ -29,23 +29,18 @@ namespace WordSearch
         {
 
             //마우스 위치에 있는 문자의 위치(인덱스)를 가져옴
-            //Selector sel = new Selector();
             int idx = selector.GetCharIndexFromPoint(textBox,mousePt);
 
             //DB에서 인덱스(idx)에 해당하는 단어의 시작, 끝 부분을 가져옴
-            //Point targetPos = DBManager.GetWord(idx); //예시
-            //Debug.WriteLine("idx "+ idx);
-            
-            Point targetPos = selector.GetWordFromDB(textId, idx); //new Point(idx, idx + 3);
+            Point targetPos = selector.GetWordFromDB(textId, idx);
 
-            //해당 언어의 색을 변경함
+            //해당 영역의 색을 변경함
             TextRange selectedText = selector.GetSelectedTextRange(textBox.Document.ContentStart, (int)targetPos.X, (int)targetPos.Y);
 
             if (selectedText != null)
             {
                 selector.SetTextColorToSelectedText(selectedText);
             }
-
         }
         /// <summary>
         /// 텍스트 박스 스타일 초기화<br/>
