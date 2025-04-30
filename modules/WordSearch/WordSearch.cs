@@ -25,7 +25,7 @@ namespace WordSearch
         /// </summary>
         /// <param name="textBox"></param>
         /// <param name="mousePt"></param>
-        static public void SelectRange(RichTextBox textBox, Point mousePt)
+        static public void SelectRange(RichTextBox textBox, Point mousePt, int textId)
         {
 
             //마우스 위치에 있는 문자의 위치(인덱스)를 가져옴

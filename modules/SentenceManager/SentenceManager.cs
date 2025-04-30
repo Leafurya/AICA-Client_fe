@@ -8,13 +8,13 @@ using System.Windows.Documents;
 using System.Windows;
 
 using Utility.TextSelector;
-using System.Windows.Media.TextFormatting;
 
 namespace SentenceManager
 {
     public class Request
     {
-        static public async Task<bool> SaveText(string url, int textid, string accessToken, string text)
+        static private string host = "http://127.0.0.1:8080";
+        static public async Task<bool> SaveText(int textid, string accessToken, string text)
         {
             HttpClient client = new HttpClient();
             Dictionary<string, string> data = new Dictionary<string, string>
@@ -26,13 +26,13 @@ namespace SentenceManager
             string jsonData = $"{{ \"sentenceId\": {textid}, \"sentence\": \"{text}\" }}";
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage res = await client.PostAsync(url, content);
+            HttpResponseMessage res = await client.PostAsync(host+"/api/sentence", content);
             return res.IsSuccessStatusCode;
         }
         static public async Task<string> GetTextList(string url)
         {
             HttpClient client = new HttpClient();
-            HttpResponseMessage res = await client.GetAsync(url);
+            HttpResponseMessage res = await client.GetAsync(host+ "/api/sentence");
             if (res.IsSuccessStatusCode)
             {
                 string responseBody = await res.Content.ReadAsStringAsync();
@@ -40,12 +40,21 @@ namespace SentenceManager
             }
             return "";
         }
+        static public async Task<bool> DeleteText(int textId,string accessToken)
+        {
+            HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+
+            Debug.WriteLine($"req start {host}/api/sentence/{textId}");
+            HttpResponseMessage res = await client.DeleteAsync($"{host}/api/sentence/{textId}");
+            Debug.WriteLine("req");
+            return res.IsSuccessStatusCode;
+        }
     }
     public class Interface
     {
         private static Selector selector = new Selector();
-        private static TextList textList;
-
+        private static SentenceList sentenceList=new SentenceList();
 
         static public int PreProcess(string sentence)
         {
@@ -82,7 +91,7 @@ namespace SentenceManager
         }
         static public async void SaveText(int textid, string accessToken, string text)
         {
-            if(await Request.SaveText("http://127.0.0.1:8080/api/sentence", textid, accessToken, text))
+            if(await Request.SaveText(textid, accessToken, text))
             {
                 Debug.WriteLine("success");
             }
@@ -120,15 +129,24 @@ namespace SentenceManager
         static public async Task RequestTextList()
         {
             string resopnseBody = await Request.GetTextList("http://127.0.0.1:8080/api/sentence");
-            textList=new TextList(resopnseBody);
+            sentenceList=new SentenceList(resopnseBody);
         }
         static public void ShowTextList(ListBox listBox)
         {
-            List<SentenceData> data=textList.getData();
+            List<SentenceData> data= sentenceList.getData();
             listBox.Items.Clear();
             foreach (SentenceData sentenceData in data)
             { 
                 listBox.Items.Add(sentenceData);
+            }
+        }
+        static public async void DeleteText(int textId,string accessToken)
+        {
+            bool result = await Request.DeleteText(textId, accessToken);
+            if (result)
+            {
+                sentenceList.DeteleSentence(textId);
+                Debug.WriteLine($"delete text {textId}");
             }
         }
     }

@@ -54,7 +54,7 @@ namespace Utility
 
                 return result;
             }
-            protected void Deconnect()
+            protected void Disconnect()
             {
                 conn.Close();
             }

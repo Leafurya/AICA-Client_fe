@@ -161,7 +161,7 @@ namespace Utility
                     result.Y = Convert.ToDouble(item[1]);
                 });
 
-                Deconnect();
+                Disconnect();
 
                 return result;
             }
@@ -180,7 +180,7 @@ namespace Utility
                     result.Add(data);
                 });
 
-                Deconnect();
+                Disconnect();
 
                 return result;
             }
@@ -200,7 +200,7 @@ namespace Utility
                     result.Y = Convert.ToDouble(item[1]);
                 });
 
-                Deconnect();
+                Disconnect();
 
                 return result;
             }
