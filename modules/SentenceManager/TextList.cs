@@ -55,8 +55,6 @@ namespace SentenceManager
                 //result.X = Convert.ToDouble(item[0]);
                 //result.Y = Convert.ToDouble(item[1]);
             });
-
-            
         }
         public List<SentenceData> getData()
         {

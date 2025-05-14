@@ -8,9 +8,38 @@ using System.Windows.Input;
 using System.Windows.Media;
 
 using Utility.TextSelector;
+using Utility.RequestConst;
+using Utility.Data.AicaDict;
+using Utility.Data.Word;
 
 namespace WordSearch
 {
+    class Request
+    {
+        static private HttpClient client = RequestConst.client;
+        static private string host=RequestConst.host;
+
+        /// <summary>
+        /// RestAPI 대상 host 지정
+        /// </summary>
+        /// <param name="host">
+        /// RestAPI를 보낼 서버의 주소<br/>
+        /// ex) https://127.0.0.1:8080
+        /// </param>
+        static public async Task<string> GetDictionaryResult(string word)
+        {
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "mangoaccesstoken");
+            Debug.WriteLine(host + "/api/public/word-lookup?word=" + word);
+            HttpResponseMessage res = await client.GetAsync(host + "/api/public/word-lookup?word=" + word);
+            if (res.IsSuccessStatusCode)
+            {
+                string responseBody = await res.Content.ReadAsStringAsync();
+                //return responseBody;
+                return await res.Content.ReadAsStringAsync();
+            }
+            return "해석을 불러올 수 없습니다.";
+        }
+    }
     public class Interface
     {
         private static Selector selector = new Selector();
@@ -53,10 +82,18 @@ namespace WordSearch
         }
         static public async Task PrintMeaning(TextBox outputBox)
         {
-            HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
+            //HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
             string word = selector.GetText();
 
-            string result = await req.GetDictionaryResult(word); // 해석 받아오기
+            string result = await Request.GetDictionaryResult(word);
+            Debug.WriteLine(result);
+            WordMeanings? wordMeanings = Manager.Append(result);
+            if (wordMeanings != null)
+            {
+                Manager.SelectWord(wordMeanings.wordId);
+                result = wordMeanings.ToString();
+            }
+            //string result = await req.GetDictionaryResult(word); // 해석 받아오기
             outputBox.Text = result;                             // 화면에 띄우기
         }
         static public void HighlightPOS(RichTextBox textBox)
@@ -75,6 +112,11 @@ namespace WordSearch
                     selector.SetBackgroundColorToSelectedText(selectedText, Brushes.Cyan);
                 }
             });
+        }
+        static public int GetSelectedWordId()
+        {
+            //return selector.GetWordId();
+            return 0;
         }
     }
 }
