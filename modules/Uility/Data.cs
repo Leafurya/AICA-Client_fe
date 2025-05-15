@@ -36,7 +36,7 @@ namespace Utility
                 public string partOfSpeech { get; set; }
                 public string exampleSentence { get; set; }
                 public string exampleMeaning { get; set; }
-            }
+            } 
             public class WordMeanings
             {
                 public int wordId { get; set; }
