@@ -6,7 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using Utility.DataBase;
 
-namespace Utiliy
+namespace Utility
 {
     namespace TextSelector
     {
@@ -102,27 +102,33 @@ namespace Utiliy
                 int count = 0;
                 TextPointer navigator = start;
 
+
                 while (navigator != null)
                 {
                     if (navigator.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                     {
                         string runText = navigator.GetTextInRun(LogicalDirection.Forward);
+                        //Debug.WriteLine("runText: "+ runText);
                         if (count + runText.Length >= offset)
                         {
                             return navigator.GetPositionAtOffset(offset - count);
                         }
                         count += runText.Length;
                     }
-
                     navigator = navigator.GetNextContextPosition(LogicalDirection.Forward);
                 }
-
                 return null;
             }
             public TextRange GetSelectedTextRange(TextPointer origin, int start, int end)
             {
+                //Debug.Write("start: ");
                 TextPointer targetStart = GetTextPointerFromOffset(origin, start);
-                TextPointer targetEnd = GetTextPointerFromOffset(origin, end);
+                //Debug.WriteLine("targetStart: " + targetStart.GetTextInRun(LogicalDirection.Backward));
+                //Debug.Write("end: ");
+                TextPointer targetEnd = GetTextPointerFromOffset(targetStart, end-start);
+                //TextPointer targetEnd = targetStart.GetPositionAtOffset(end-start);
+                //Debug.WriteLine("targetEnd: " + targetEnd.GetTextInRun(LogicalDirection.Backward));
+
 
                 if (targetStart == null || targetEnd == null)
                 {
@@ -155,7 +161,7 @@ namespace Utiliy
                     result.Y = Convert.ToDouble(item[1]);
                 });
 
-                Deconnect();
+                Disconnect();
 
                 return result;
             }
@@ -174,7 +180,27 @@ namespace Utiliy
                     result.Add(data);
                 });
 
-                Deconnect();
+                Disconnect();
+
+                return result;
+            }
+
+            public Point GetSentenceFromDB(int textid, int idx)
+            {
+                Point result;
+                List<object[]> dbResult = new List<object[]>();
+                string[] columns = { "start", "end" };
+
+                Connect();
+                dbResult = ExecuteQuery($"select start, end from sentence where textid={textid} and start<={idx} and end>={idx}", columns);
+
+                dbResult.ForEach(item =>
+                {
+                    result.X = Convert.ToDouble(item[0]);
+                    result.Y = Convert.ToDouble(item[1]);
+                });
+
+                Disconnect();
 
                 return result;
             }
