@@ -14,6 +14,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentenceManager", "modules\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translate", "modules\Translate\Translate.csproj", "{68092497-BAB8-C52A-8554-78CE9FDE9024}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAccountManager", "..\UserAccountManager\UserAccountManager.csproj", "{B0BA55B9-F799-44DC-B6CF-C7BD9A548F5B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +46,10 @@ Global
 		{68092497-BAB8-C52A-8554-78CE9FDE9024}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68092497-BAB8-C52A-8554-78CE9FDE9024}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68092497-BAB8-C52A-8554-78CE9FDE9024}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0BA55B9-F799-44DC-B6CF-C7BD9A548F5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0BA55B9-F799-44DC-B6CF-C7BD9A548F5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0BA55B9-F799-44DC-B6CF-C7BD9A548F5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0BA55B9-F799-44DC-B6CF-C7BD9A548F5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
