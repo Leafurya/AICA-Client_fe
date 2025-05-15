@@ -84,3 +84,5 @@ appsettings.Local.json
 # Rider & JetBrains
 .idea/
 *.sln.iml
+
+ModuleTest/

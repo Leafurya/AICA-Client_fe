@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net8.0-windows</TargetFramework>
@@ -8,16 +8,5 @@
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
   </PropertyGroup>
-
-  <ItemGroup>
-    <Compile Remove="Python\**" />
-    <EmbeddedResource Remove="Python\**" />
-    <None Remove="Python\**" />
-    <Page Remove="Python\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Uility\Utility.csproj" />
-  </ItemGroup>
 
 </Project>
