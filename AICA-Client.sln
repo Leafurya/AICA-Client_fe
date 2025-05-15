@@ -13,6 +13,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SentenceManager", "modules\SentenceManager\SentenceManager.csproj", "{86F64494-2B97-43E5-8EA0-9F4E46F24FF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VocabNote", "modules\VocabNote\VocabNote.csproj", "{A287119A-0379-41D1-9521-10AF236C8847}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Translate", "modules\Translate\Translate.csproj", "{68092497-BAB8-C52A-8554-78CE9FDE9024}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserAccountManager", "..\UserAccountManager\UserAccountManager.csproj", "{B0BA55B9-F799-44DC-B6CF-C7BD9A548F5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

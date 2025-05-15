@@ -15,7 +15,8 @@
                 </Paragraph>
             </FlowDocument>
         </RichTextBox>
-        <TextBox x:Name="MeaningBox" Height="100" Margin="515,117,36,217" FontSize="16" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
+        <TextBox x:Name="MeaningBox" Margin="446,36,36,193" FontSize="16" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
         <Canvas HorizontalAlignment="Left" Height="242" Margin="27,22,0,0" VerticalAlignment="Top" Width="355" Background="Transparent" MouseLeftButtonUp="Canvas_MouseLeftButtonUp" MouseMove="Canvas_MouseMove" Cursor="Hand" MouseWheel="Canvas_MouseWheel"/>
+        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="23" Margin="512,283,0,0" VerticalAlignment="Top" Width="82"/>
     </Grid>
 </Window>
