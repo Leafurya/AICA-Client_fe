@@ -1,0 +1,19 @@
+﻿<UserControl x:Class="CustomControl.SentenceItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CustomControl"
+             xmlns:viewmodel="clr-namespace:CustomControl.ViewModel"
+             d:DataContext="{d:DesignInstance Type=viewmodel:SharedViewModel}"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800" Height="20" HorizontalAlignment="Stretch">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20"></ColumnDefinition>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <ToggleButton Height="20" Width="20" Unchecked="ToggleButton_Unchecked" Name="toggleBtn"></ToggleButton>
+        <TextBlock TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Name="Text" Grid.Column="1" MouseLeftButtonUp="Text_MouseLeftButtonUp" Text="{Binding sentence}" Tag="{Binding sentenceId}"></TextBlock>
+    </Grid>
+</UserControl>

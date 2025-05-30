@@ -8,69 +8,66 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using UserAccountManager.Models;
 
+using Utility.RequestConst;
+
 namespace UserAccountManager.Services
 {
     public static class UserInfoService
     {
-        public static async Task<(bool Success, UserInfo Data, string Message)> GetUserInfoAsync()
-        {
-            using var client = new HttpClient();
+        private static readonly HttpClient client = RequestConst.client;
+        private static string host = RequestConst.host;
 
-            // ✅ TokenManager에서 AccessToken 직접 가져옴
+        public static async Task<(bool Success, string Message, UserInfoData? Data)> GetUserInfoAsync()
+        {
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", TokenManager.AccessToken);
 
             try
             {
-                var response = await client.GetAsync("https://your-api.com/api/user/me");
+                var response = await client.GetAsync($"{host}/api/user/me");
                 var json = await response.Content.ReadAsStringAsync();
 
-                if (!response.IsSuccessStatusCode)
-                    return (false, null, "회원 정보 요청 실패");
-
-                var data = JsonSerializer.Deserialize<UserInfo>(json, new JsonSerializerOptions
+                var result = JsonSerializer.Deserialize<UserInfoResponse>(json, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-                return (true, data, "회원 정보 불러오기 성공");
+                if (result?.Code == 200 && result.Data != null)
+                    return (true, result.Message, result.Data);
+
+                return (false, result?.Message ?? "회원 정보 요청 실패", null);
             }
-            catch
+            catch (Exception ex)
             {
-                return (false, null, "서버에 연결할 수 없습니다.");
+                return (false, $"서버 오류: {ex.Message}", null);
             }
         }
 
-        public static async Task<bool> VerifyPasswordAsync(string password)
+        // ✅ 회원정보 수정 진입 전 비밀번호 확인 기능 리팩터링
+        public static async Task<(bool Success, string Message)> VerifyPasswordAsync(string password)
         {
             try
             {
-                using var client = new HttpClient();
-
                 var content = new StringContent(JsonSerializer.Serialize(new
                 {
-                    password = password
+                    password
                 }), Encoding.UTF8, "application/json");
 
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", TokenManager.AccessToken);
 
-                var response = await client.PostAsync("https://your-api.com/api/user/verify-password", content);
-
-                if (!response.IsSuccessStatusCode)
-                    return false;
-
+                var response = await client.PostAsync($"{host}/api/user/verify-password", content);
                 var json = await response.Content.ReadAsStringAsync();
-                var result = JsonSerializer.Deserialize<PasswordVerifyResponse>(json, new JsonSerializerOptions
-                {
-                    PropertyNameCaseInsensitive = true
-                });
 
-                return result != null && result.Success;
+                var result = JsonSerializer.Deserialize<PasswordVerifyResponse>(json);
+
+                return result?.Success == true
+                    ? (true, "비밀번호 확인 성공")
+                    : (false, "비밀번호가 일치하지 않습니다.");
             }
-            catch
+            catch (Exception ex)
             {
-                return false;
+                return (false, $"서버 오류: {ex.Message}");
             }
         }
     }

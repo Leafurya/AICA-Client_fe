@@ -26,7 +26,8 @@ namespace VocabNote
     class WordList
     {
         private GetWordBody body;
-        private List<JustWord> data;
+        //private List<JustWord> data;
+        private List<WordMeanings> data;
         public WordList(string stringifiedBody)
         {
             body = JsonSerializer.Deserialize<GetWordBody>(stringifiedBody);
@@ -42,9 +43,17 @@ namespace VocabNote
                 Debug.WriteLine(item.word + " " + item.wordId);
             });
         }
-        public List<JustWord> GetWordList()
+        public List<WordMeanings> GetWordList()
         {
             return data;
+        }
+        public void Add(string word, int wordId)
+        {
+            data.Add(new WordMeanings { word = word, wordId = wordId });
+        }
+        public void Add(WordMeanings wordMeanings)
+        {
+            data.Add(wordMeanings);
         }
     }
 }

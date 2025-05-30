@@ -8,6 +8,10 @@ using System.Windows.Documents;
 using System.Windows;
 
 using Utility.TextSelector;
+using Utility.Data.Sentence;
+using System.Collections.ObjectModel;
+using System.Security.Cryptography;
+using Utility;
 
 namespace SentenceManager
 {
@@ -58,8 +62,9 @@ namespace SentenceManager
 
         static public int PreProcess(string sentence)
         {
-            sentence=sentence.Replace("\n", "\\n");
-            sentence=sentence.Replace("\"", "\\\"");
+            sentence.Trim();
+            sentence = sentence.Replace("\n", "\\n");
+            sentence = sentence.Replace("\"", "\\\"");
             
             var psi = new ProcessStartInfo
             {
@@ -131,14 +136,17 @@ namespace SentenceManager
             string resopnseBody = await Request.GetTextList("http://127.0.0.1:8080/api/sentence");
             sentenceList=new SentenceList(resopnseBody);
         }
-        static public void ShowTextList(ListBox listBox)
+        static public ObservableCollection<SentenceData> GetTextList()
         {
-            List<SentenceData> data= sentenceList.getData();
-            listBox.Items.Clear();
-            foreach (SentenceData sentenceData in data)
-            { 
-                listBox.Items.Add(sentenceData);
-            }
+            ObservableCollection < SentenceData > result= new ObservableCollection<SentenceData >(sentenceList.getData());
+            return result;
+            //listBox.Items.Clear();
+            //foreach (SentenceData sentenceData in data)
+            //{
+            //    SentenceItem sentenceItem = new SentenceItem();
+            //    sentenceItem.SetText(sentenceData.sentence);
+            //    listBox.AddItem(sentenceItem);
+            //}
         }
         static public async void DeleteText(int textId,string accessToken)
         {
@@ -148,6 +156,27 @@ namespace SentenceManager
                 sentenceList.DeteleSentence(textId);
                 Debug.WriteLine($"delete text {textId}");
             }
+        }
+        static public SentenceData AddText(string text,int textId)
+        {
+            SentenceData result= new SentenceData();
+            result.sentenceId = textId;
+            result.sentence = text;
+            sentenceList.AppendSentence(text,textId);
+
+            return result;
+        }
+        static public bool IsExistText(string text)
+        {
+            if(text.Length == 0)
+            {
+                return false;
+            }
+            string temp=text.Trim();
+            Debug.WriteLine("target text " + temp);
+            string hashed=HashHelper.ComputeSha256Hash(temp);
+            Debug.WriteLine("hashed " + hashed);
+            return sentenceList.IsExist(hashed);
         }
     }
 }

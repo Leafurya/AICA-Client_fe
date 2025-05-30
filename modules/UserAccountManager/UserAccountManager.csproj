@@ -10,24 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Handlers\UserRegistrationHandler.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
-    <Compile Update="Services\UserRegistrationService.cs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Compile>
+    <ProjectReference Include="..\Uility\Utility.csproj" />
   </ItemGroup>
-
-	<ItemGroup>
-		<None Update="Properties\Settings.settings">
-			<Generator>SettingsSingleFileGenerator</Generator>
-			<LastGenOutput>Settings.Designer.cs</LastGenOutput>
-		</None>
-		<Compile Update="Properties\Settings.Designer.cs">
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Settings.settings</DependentUpon>
-		</Compile>
-	</ItemGroup>
-
 
 </Project>

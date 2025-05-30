@@ -9,22 +9,16 @@ namespace UserAccountManager.Handlers
 {
     public static class LoginHandler
     {
-        public static async Task HandleLoginAsync(string userId, string password, Action<string> notify)
+        public static async Task<(bool Success, string Message)> HandleLoginAsync(string userId, string password)
         {
             if (string.IsNullOrWhiteSpace(userId))
-            {
-                notify("아이디를 입력해주세요.");
-                return;
-            }
+                return (false, "아이디를 입력해주세요.");
 
             if (string.IsNullOrWhiteSpace(password))
-            {
-                notify("비밀번호를 입력해주세요.");
-                return;
-            }
-            
+                return (false, "비밀번호를 입력해주세요.");
+
             var (success, message) = await LoginService.LoginAsync(userId, password);
-            notify(message);
+            return (success, message);
         }
     }
 

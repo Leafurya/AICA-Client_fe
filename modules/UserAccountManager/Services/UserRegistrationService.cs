@@ -8,51 +8,59 @@ using System.Threading.Tasks;
 using System.Windows;
 using UserAccountManager.Models;
 
+using Utility.RequestConst;
 
 namespace UserAccountManager.Services
 {
     public static class UserRegistrationService
     {
+        private static readonly HttpClient client = RequestConst.client;
+        private static readonly string host = RequestConst.host;
+
         public static async Task<bool> IsIdDuplicateAsync(string userId)
         {
-            using (HttpClient client = new HttpClient())
+            string url = $"{host}/api/users/check-id?userId={userId}";
+
+            try
             {
-                string url = $"http://서버주소/api/users/check-id?userId={userId}";
                 HttpResponseMessage response = await client.GetAsync(url);
                 string result = await response.Content.ReadAsStringAsync();
 
-                return result.Contains("true");
+                return result.Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return true; // 네트워크 오류 시 중복된 것으로 처리
             }
         }
 
         public static async Task<(bool Success, string Message)> RegisterUserAsync(UserRegistrationData data)
         {
-            // 나중에 실제 API 엔드포인트로 교체할 것
-            string apiUrl = "https://yourapi.com/api/users/register";
+            string apiUrl = $"{host}/api/auth/register";
 
-            var json = JsonSerializer.Serialize(data);
+            string json = JsonSerializer.Serialize(data);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             try
             {
-                using (HttpClient client = new HttpClient())
-                {
-                    var response = await client.PostAsync(apiUrl, content);
-                    if (!response.IsSuccessStatusCode)
-                        return (false, "서버 응답 오류");
+                HttpResponseMessage response = await client.PostAsync(apiUrl, content);
+                string resultJson = await response.Content.ReadAsStringAsync();
 
-                    string result = await response.Content.ReadAsStringAsync();
-                    return (true, "회원가입이 완료되었습니다.");
-                }
+                RegistrationResponse? result = JsonSerializer.Deserialize<RegistrationResponse>(resultJson, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                });
+
+                if (result?.Code == 201)
+                    return (true, result.Message);
+                else
+                    return (false, result?.Message ?? "회원가입 실패");
+
             }
             catch (Exception ex)
             {
-                return (false, $"에러: {ex.Message}");
+                return (false, $"서버 오류: {ex.Message}");
             }
         }
     }
-
-
-
-
 }

@@ -5,14 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using UserAccountManager.Handlers;
 using UserAccountManager.Interfaces;
+using UserAccountManager.Models;
 
 namespace UserAccountManager.InterfacesWrapper
 {
     public static class UserInfoInterface
     {
-        public static async Task LoadUserInfoAsync(IUserInfoView view)
+        public static Task LoadUserInfoAsync(IUserInfoView view)
         {
-            await UserInfoHandler.HandleLoadUserInfoAsync(view);
+            return UserInfoHandler.HandleLoadUserInfoAsync(view);
         }
     }
 }

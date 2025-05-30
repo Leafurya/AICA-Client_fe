@@ -10,10 +10,9 @@ namespace UserAccountManager.InterfacesWrapper
 {
     public static class LoginInterface
     {
-        public static async Task LoginAsync(ILoginView view)
+        public static Task<(bool Success, string Message)> LoginAsync(ILoginView view)
         {
-            await LoginHandler.HandleLoginAsync(view.UserId, view.Password, view.ShowMessage);
+            return LoginHandler.HandleLoginAsync(view.UserId, view.Password);
         }
     }
-
 }

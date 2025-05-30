@@ -4,19 +4,55 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AICA_Client"
+        xmlns:ctrl="clr-namespace:CustomControl;assembly=CustomControl"
+        xmlns:viewmodel="clr-namespace:CustomControl.ViewModel;assembly=CustomControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <RichTextBox x:Name="richTextBox" HorizontalAlignment="Left" Height="242" Margin="27,22,0,0"  VerticalAlignment="Top" Width="373" IsReadOnly="True" Focusable="True" VerticalScrollBarVisibility="Auto"
-                    AcceptsReturn="True">
-            <FlowDocument>
-                <Paragraph>
-                    <Run Text=""/>
-                </Paragraph>
-            </FlowDocument>
-        </RichTextBox>
-        <TextBox x:Name="MeaningBox" Margin="446,36,36,193" FontSize="16" IsReadOnly="True" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto"/>
-        <Canvas HorizontalAlignment="Left" Height="242" Margin="27,22,0,0" VerticalAlignment="Top" Width="355" Background="Transparent" MouseLeftButtonUp="Canvas_MouseLeftButtonUp" MouseMove="Canvas_MouseMove" Cursor="Hand" MouseWheel="Canvas_MouseWheel"/>
-        <Button x:Name="button" Content="Button" HorizontalAlignment="Left" Height="23" Margin="512,283,0,0" VerticalAlignment="Top" Width="82"/>
+        Title="MainWindow" Height="1024" Width="1440">
+    <Window.Resources>
+        <viewmodel:SentenceViewModel x:Key="vmSentence"></viewmodel:SentenceViewModel>
+        <viewmodel:SharedViewModel x:Key="vmShared"></viewmodel:SharedViewModel>
+        
+    </Window.Resources>
+    <Grid DataContext="{StaticResource vmShared}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="45"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid>
+            <DockPanel HorizontalAlignment="Right">
+                <Button x:Name="Ligin" Content="로그인" Padding="20,10,20,10" Click="Ligin_Click"></Button>
+                <Button x:Name="Regist" Content="회원가입" Padding="20,10,20,10" Click="Regist_Click"></Button>
+            </DockPanel>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="308*"></ColumnDefinition>
+                <ColumnDefinition Width="233*"></ColumnDefinition>
+                <ColumnDefinition Width="259*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <ctrl:SearchBox/>
+            <ctrl:DictBox Grid.Column="1"></ctrl:DictBox>
+            <TabControl x:Name="tabControl" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <TabControl.Resources>
+                    <Style TargetType="TabItem">
+                        <Setter Property="Width" Value="auto"></Setter>
+                    </Style>
+                </TabControl.Resources>
+
+                <TabItem Header="단어장">
+                    <ctrl:WordList></ctrl:WordList>
+                </TabItem>
+                <TabItem Header="문장 리스트" Height="20" VerticalAlignment="Bottom">
+                    <ctrl:SentenceList></ctrl:SentenceList>
+                </TabItem>
+                <TabItem Header="AICA 단어장">
+                    <TextBlock>hello</TextBlock>
+                </TabItem>
+            </TabControl>
+        </Grid>
+        <Grid x:Name="FrameContainer" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2">
+            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Canvas>
+            <Frame x:Name="subFrame" HorizontalAlignment="Center" VerticalAlignment="Center" Width="816" Height="816" NavigationUIVisibility="Hidden"/>
+        </Grid>
     </Grid>
 </Window>
