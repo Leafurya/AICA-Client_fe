@@ -6,10 +6,16 @@ using System.Threading.Tasks;
 
 namespace UserAccountManager.Models
 {
-    public class LoginResponse
+    public class LoginData
     {
-        public bool Success { get; set; }            // ✅ 서버에서 success 플래그 반환
         public string AccessToken { get; set; }
         public string RefreshToken { get; set; }
+    }
+
+    public class LoginResponse
+    {
+        public int Code { get; set; }
+        public string Message { get; set; }
+        public LoginData Data { get; set; }
     }
 }

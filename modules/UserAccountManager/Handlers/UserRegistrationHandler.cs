@@ -9,35 +9,18 @@ using UserAccountManager.Models;
 
 namespace UserAccountManager.Handlers
 {
-    public class UserRegistrationHandler
+    public static class UserRegistrationHandler
     {
-        public static async Task HandleIdCheckAsync(string userId, Action<string> notify)
-        {
-            if (string.IsNullOrWhiteSpace(userId))
-            {
-                notify("아이디를 입력해주세요.");
-                return;
-            }
-
-            bool isDuplicate = await UserRegistrationService.IsIdDuplicateAsync(userId);
-
-            if (isDuplicate)
-                notify("이미 사용 중인 아이디입니다.");
-            else
-                notify("사용 가능한 아이디입니다.");
-        }
-
-        public static async Task HandleRegisterAsync(
-           string userId,
-           string password,
-           string confirmPassword,
-           string nickname,
-           string email,
-           string authCode,
-           bool isTermsChecked1,
-           bool isTermsChecked2,
-            bool isTermsChecked3,
-           Action<string> notify)
+        public static async Task<(bool Success, string Message)> HandleRegisterAsync(
+            string userId,
+            string password,
+            string confirmPassword,
+            string nickname,
+            string email,
+            string authCode,
+            bool isTermsChecked1,
+            bool isTermsChecked2,
+            bool isTermsChecked3)
         {
             if (string.IsNullOrWhiteSpace(userId) ||
                 string.IsNullOrWhiteSpace(password) ||
@@ -46,38 +29,25 @@ namespace UserAccountManager.Handlers
                 string.IsNullOrWhiteSpace(email) ||
                 string.IsNullOrWhiteSpace(authCode))
             {
-                notify("모든 필드를 입력해주세요.");
-                return;
+                return (false, "모든 필드를 입력해주세요.");
             }
 
-            if (!isTermsChecked1 || !isTermsChecked2)
-            {
-                notify("필수 약관에 동의해주세요.");
-                return;
-            }
+            var terms = UserRegistrationValidator.ValidateTerms(isTermsChecked1, isTermsChecked2);
+            if (!terms.IsValid)
+                return (false, terms.ErrorMessage);
 
             var pwResult = UserRegistrationValidator.ValidatePasswords(password, confirmPassword);
             if (!pwResult.IsValid)
-            {
-                notify(pwResult.ErrorMessage);
-                return;
-            }
+                return (false, pwResult.ErrorMessage);
 
             var emailResult = UserRegistrationValidator.ValidateEmail(email);
             if (!emailResult.IsValid)
-            {
-                notify(emailResult.ErrorMessage);
-                return;
-            }
+                return (false, emailResult.ErrorMessage);
 
-            // 이메일 인증 여부만 확인
             if (!EmailVerificationHandler.IsVerified)
-            {
-                notify("이메일 인증이 완료되지 않았습니다.");
-                return;
-            }
+                return (false, "이메일 인증이 완료되지 않았습니다.");
 
-            var registrationData = new UserRegistrationData
+            var data = new UserRegistrationData
             {
                 UserId = userId,
                 Password = password,
@@ -86,17 +56,19 @@ namespace UserAccountManager.Handlers
                 AgreeMarketing = isTermsChecked3
             };
 
-            var (success, message) = await UserRegistrationService.RegisterUserAsync(registrationData);
+            return await UserRegistrationService.RegisterUserAsync(data);
+        }
 
-            if (success)
-            {
-                notify("회원가입 완료!");
-                EmailVerificationHandler.IsVerified = false; //  인증 상태 초기화
-            }
-            else
-            {
-                notify($"회원가입 실패: {message}");
-            }
+        public static async Task<(bool Success, string Message)> HandleIdCheckAsync(string userId)
+        {
+            if (string.IsNullOrWhiteSpace(userId))
+                return (false, "아이디를 입력해주세요.");
+
+            bool isDuplicate = await UserRegistrationService.IsIdDuplicateAsync(userId);
+
+            return isDuplicate
+                ? (false, "이미 사용 중인 아이디입니다.")
+                : (true, "사용 가능한 아이디입니다.");
         }
     }
 }

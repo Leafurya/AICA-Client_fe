@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="CustomControl.WordList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CustomControl"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="243.797">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"></RowDefinition>
+            <RowDefinition Height="40"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <TextBox Grid.Row="0" Margin="20,10,20,10"></TextBox>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <DockPanel>
+                <ToggleButton x:Name="toggleButtonSelectAll" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0" Checked="toggleButtonSelectAll_Checked" Unchecked="toggleButtonSelectAll_Unchecked"></ToggleButton>
+                <TextBlock VerticalAlignment="Center">전체 선택</TextBlock>
+            </DockPanel>
+            <DockPanel Grid.Column="1">
+                <Button Content="선택 삭제" Width="98" Height="28" VerticalAlignment="Center" HorizontalAlignment="right" Margin="0 0 20 0" Click="Button_Click"/>
+            </DockPanel>
+        </Grid>
+        <ScrollViewer Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <StackPanel>
+                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding WordsList}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <local:WordItem></local:WordItem>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

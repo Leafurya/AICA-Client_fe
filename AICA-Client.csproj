@@ -12,7 +12,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="modules\**" />
+    <Compile Remove="ModuleTest\**" />
+    <EmbeddedResource Remove="modules\**" />
+    <EmbeddedResource Remove="ModuleTest\**" />
+    <None Remove="modules\**" />
+    <None Remove="ModuleTest\**" />
+    <Page Remove="modules\**" />
+    <Page Remove="ModuleTest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="modules\CustomControl\CustomControl.csproj" />
+    <ProjectReference Include="modules\SentenceManager\SentenceManager.csproj" />
+    <ProjectReference Include="modules\VocabNote\VocabNote.csproj" />
+    <ProjectReference Include="modules\WordSearch\WordSearch.csproj" />
   </ItemGroup>
 
   <ItemGroup>

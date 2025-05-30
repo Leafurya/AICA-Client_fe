@@ -30,16 +30,22 @@ namespace Utility
         }
         public class Selector:DBManager
         {
-            private TextRange text;
+            static private TextRange text;
             public int GetCharIndexFromPoint(RichTextBox rtb, Point point)
             {
-                TextPointer pointer = rtb.GetPositionFromPoint(point, true);
-                //return 0;
+                try
+                {
+                    TextPointer pointer = rtb.GetPositionFromPoint(point, true);
+                    if (pointer == null) return -1;
 
-                if (pointer == null) return -1;
-
-                TextPointer start = rtb.Document.ContentStart;
-                return GetOffsetFromTextPointer(start, pointer);
+                    TextPointer start = rtb.Document.ContentStart;
+                    return GetOffsetFromTextPointer(start, pointer);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    return -1;
+                }
             }
 
             int GetOffsetFromTextPointer(TextPointer start, TextPointer target)

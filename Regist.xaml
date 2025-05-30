@@ -1,0 +1,95 @@
+﻿<Page x:Class="AICA_Client.Regist"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AICA_Client"
+      mc:Ignorable="d" 
+      d:DesignHeight="1816" d:DesignWidth="816"
+      Title="Regist">
+
+    <Grid>
+        <Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10" Background="White">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="3*"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <ScrollViewer Grid.Column="1">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                            <RowDefinition Height="*"></RowDefinition>
+                        </Grid.RowDefinitions>
+                            
+                        <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">회원가입</TextBlock>
+                        <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="20,30,20,30">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBox VerticalAlignment="Center" BorderThickness="0" Margin="20,0,0,0">ID</TextBox>
+                                <Button Grid.Column="1" Content="중복확인" Margin="20"></Button>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="20,30,20,30">
+                            <Grid>
+                                <TextBox VerticalAlignment="Center" BorderThickness="0" Margin="20">PW</TextBox>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="3" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="20,30,20,30">
+                            <Grid>
+                                <TextBox VerticalAlignment="Center" BorderThickness="0" Margin="20">PW 확인</TextBox>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="4" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="20,30,20,30">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"></ColumnDefinition>
+                                    <ColumnDefinition Width="100"></ColumnDefinition>
+                                </Grid.ColumnDefinitions>
+                                <TextBox VerticalAlignment="Center" BorderThickness="0" Margin="20,0,0,0">E-mail</TextBox>
+                                <Button Grid.Column="1" Content="인증번호" Margin="20"></Button>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="5" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="20,30,20,30">
+                            <Grid>
+                                <TextBox VerticalAlignment="Center" BorderThickness="0" Margin="20">인증 번호</TextBox>
+                            </Grid>
+                        </Border>
+                        <Border Grid.Row="6" BorderBrush="Gray" BorderThickness="1" CornerRadius="10" Margin="20,30,20,30">
+                            <Grid>
+                                <TextBox VerticalAlignment="Center" BorderThickness="0" Margin="20">닉네임</TextBox>
+                            </Grid>
+                        </Border>
+                        <DockPanel Grid.Row="7" Margin="10">
+                            <ToggleButton Width="20" Height="20" VerticalAlignment="Center"></ToggleButton>
+                            <TextBlock VerticalAlignment="Center">이용약관 (필수)</TextBlock>
+                        </DockPanel>
+                        <DockPanel Grid.Row="8" Margin="10">
+                            <ToggleButton Width="20" Height="20" VerticalAlignment="Center"></ToggleButton>
+                            <TextBlock VerticalAlignment="Center">개인정보의 수집 및 이용에 대한 동의(필수)</TextBlock>
+                        </DockPanel>
+                        <DockPanel Grid.Row="9" Margin="10">
+                            <ToggleButton Width="20" Height="20" VerticalAlignment="Center"></ToggleButton>
+                            <TextBlock VerticalAlignment="Center">마케팅 정보 수신에 동의합니다.(선택)</TextBlock>
+                        </DockPanel>
+                        <Button Grid.Row="10" Margin="10" Content="로그인"></Button>
+                    </Grid>
+                </ScrollViewer>
+                <Button x:Name="Close" Grid.Column="2" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="top" Content="❌" Click="Close_Click"></Button>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

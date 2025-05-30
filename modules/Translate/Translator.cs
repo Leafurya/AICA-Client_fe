@@ -14,6 +14,7 @@ namespace Translate
         public static async Task<string> TranslateAsync(string text)
         {
             string exePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "translate.exe");
+            Debug.WriteLine("exePath " + exePath);
 
 
             ProcessStartInfo psi = new ProcessStartInfo

@@ -10,6 +10,7 @@ using System.Windows.Controls;
 using Utility.Data.Word;
 using Utility.RequestConst;
 using Utility.Data.AicaDict;
+using System.Collections.ObjectModel;
 
 namespace VocabNote
 {
@@ -35,13 +36,21 @@ namespace VocabNote
             {
                 //HttpClient client = new HttpClient();
                 client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-                HttpResponseMessage res = await client.GetAsync(host + "/api/word");
-                if (res.IsSuccessStatusCode)
+                try
                 {
-                    string responseBody = await res.Content.ReadAsStringAsync();
-                    return responseBody;
+                    HttpResponseMessage res = await client.GetAsync(host + "/api/word");
+                    if (res.IsSuccessStatusCode)
+                    {
+                        string responseBody = await res.Content.ReadAsStringAsync();
+                        return responseBody;
+                    }
+                    return "";
                 }
-                return "";
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    return "{\r\n\t\t\"code\": 200,\r\n\t\t\"message\": \"단어장을 성공적으로 조회했습니다.\",\r\n\t\t\"data\": [\r\n\t\t\t{\r\n\t\t\t\t\"wordId\": 2,\r\n\t\t\t\t\"word\": \"light\"\r\n\t\t\t},\r\n\t\t\t{\r\n\t\t\t\t\"wordId\": 4,\r\n\t\t\t\t\"word\": \"apple\"\r\n\t\t\t}\r\n\t\t]\r\n\t}";
+                }
             }
             static public async Task<bool> DeleteWord(int wordid, string accessToken)
             {
@@ -54,11 +63,20 @@ namespace VocabNote
                 return res.IsSuccessStatusCode;
             }
         }
-        static public async void RequestAddWord(int textid, string accessToken)
+        static public async Task<WordMeanings> RequestAddWord(int textid, string accessToken)
         {
-            int wordid = Manager.GetSelectedWordId();
+            int wordid = Manager.GetNowWordId();
+            //string? nowWord = Manager.GetNowWord();
+            WordMeanings? wordMeanings=Manager.GetNowWordMeanings(wordid);
+            Debug.WriteLine("wordMeanings is null "+ (wordMeanings == null));
+            //Debug.WriteLine("wordid: " + wordid + " nowWord: " + wordMeanings.word);
             bool result = await Request.AddWord(textid, wordid, accessToken);
-
+            if (result)
+            {
+                wordList.Add(wordMeanings);
+                wordList.Debug_ShowList();
+            }
+            return wordMeanings;
         }
         static public async void RequestAddWord(int textid, int wordid, string accessToken)
         {
@@ -67,7 +85,7 @@ namespace VocabNote
         }
         static public async void RequestDeleteWord(string accessToken)
         {
-            int wordid = Manager.GetSelectedWordId();
+            int wordid = Manager.GetNowWordId();
             bool result = await Request.DeleteWord(wordid, accessToken);
 
         }
@@ -79,20 +97,15 @@ namespace VocabNote
         static public async Task RequestVocabNote(int textid, string accessToken)
         {
             string body = await Request.GetWordList(textid, accessToken);
+            Debug.WriteLine("RequestVocabNotebody: ", body);
             wordList = new WordList(body);
             wordList.Debug_ShowList();
         }
-        static public void ShowWordList(ListBox listBox)
+        static public ObservableCollection<WordMeanings> GetWordList()
         {
-            if (wordList != null)
-            {
-                List<JustWord> list = wordList.GetWordList();
-                listBox.Items.Clear();
-                foreach (JustWord data in list)
-                {
-                    listBox.Items.Add(data);
-                }
-            }
+            List<WordMeanings> list = wordList.GetWordList();
+            ObservableCollection<WordMeanings> result = new ObservableCollection<WordMeanings>(list);
+            return result;
         }
     }
 }

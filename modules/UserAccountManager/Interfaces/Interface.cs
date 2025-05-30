@@ -19,41 +19,42 @@ namespace UserAccountManager.Interfaces
         bool IsTermsAgreed1 { get; }
         bool IsTermsAgreed2 { get; }
         bool IsTermsAgreed3 { get; }
-
-        void ShowMessage(string message);
-        void SetTimerText(string text);
-        void SetSendButtonText(string text);
     }
 
     public interface ILoginView
     {
         string UserId { get; }
         string Password { get; }
-        void ShowMessage(string message);
-    }
-    public interface IUserInfoView
-    {
-        void ShowUserInfo(string nickname, string email, string createdAt);
-        void ShowError(string message);
-    }
-
-
-    public interface ILogoutView
-    {
-        RichTextBox UserIdBox { get; }
-        RichTextBox PasswordBox { get; }
-        void ShowMessage(string message);
-        void NavigateToLogin();
     }
 
     public interface IUserInfoEditView
     {
         string PasswordForCheck { get; }
         string Nickname { get; set; }
+        string Email { get; set; }
+        string NewPassword { get; }
+        string ConfirmPassword { get; }
 
         void SetEditMode(bool enabled); // true면 편집 가능, false면 보기모드
-        void ShowPasswordCheckPanel(bool visible);
-        void ShowMessage(string msg);
+        void ShowPasswordCheckPanel(bool visible); // 비밀번호 입력창 표시/숨김
+        void ShowMessage(string message);
     }
+
+
+    public interface ILogoutView
+    {
+        System.Windows.Controls.RichTextBox UserIdBox { get; }
+        System.Windows.Controls.PasswordBox PasswordBox { get; }
+
+        void NavigateToLogin();
+    }
+    public interface IUserInfoView
+    {
+        void SetUserId(string userId);
+        void SetNickname(string nickname);
+        void SetEmail(string email);
+        void ShowMessage(string message);
+    }
+
 
 }

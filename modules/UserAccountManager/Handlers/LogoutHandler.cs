@@ -11,17 +11,17 @@ namespace UserAccountManager.Handlers
 {
     public static class LogoutHandler
     {
-        public static void HandleLogout(ILogoutView view)
+        public static async Task<(bool Success, string Message)> HandleLogoutAsync()
         {
-            // 1. 토큰 초기화
-            TokenManager.SetTokens(null, null);
+            var (success, message) = await LogoutService.LogoutAsync();
 
-            // 2. 입력창 초기화 (RichTextBox 기준)
-            UIResetHelper.ResetLoginFields(view.UserIdBox, view.PasswordBox);
+            if (success)
+            {
+                TokenManager.SetTokens(null, null);
+            }
 
-            // 3. 메시지 출력 및 화면 전환
-            view.ShowMessage("로그아웃 되었습니다.");
-            view.NavigateToLogin();
+            return (success, message);
         }
     }
+
 }

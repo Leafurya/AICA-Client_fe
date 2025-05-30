@@ -10,27 +10,18 @@ namespace UserAccountManager.Handlers
 {
     public static class UserInfoUpdateHandler
     {
-        public static async Task TryEnterEditModeAsync(IUserInfoEditView view)
+       public static async Task<(bool Success, string Message)> TryEnterEditModeAsync(string password)
         {
-            var pw = view.PasswordForCheck;
-
-            if (string.IsNullOrWhiteSpace(pw))
+            if (string.IsNullOrWhiteSpace(password))
             {
-                view.ShowMessage("비밀번호를 입력해주세요.");
-                return;
+                return (false, "비밀번호를 입력해주세요.");
             }
 
-            var success = await UserInfoService.VerifyPasswordAsync(pw);
+            var (success, message) = await UserInfoService.VerifyPasswordAsync(password);
 
-            if (!success)
-            {
-                view.ShowMessage("비밀번호가 일치하지 않습니다.");
-                return;
-            }
-
-            // 비밀번호 검증 성공 → 편집모드 진입
-            view.ShowPasswordCheckPanel(false);
-            view.SetEditMode(true);
+            return success
+                ? (true, "비밀번호 확인 성공")
+                : (false, "비밀번호가 일치하지 않습니다.");
         }
     }
 }

@@ -11,6 +11,7 @@ using Utility.TextSelector;
 using Utility.RequestConst;
 using Utility.Data.AicaDict;
 using Utility.Data.Word;
+using System.Runtime.CompilerServices;
 
 namespace WordSearch
 {
@@ -43,7 +44,7 @@ namespace WordSearch
     public class Interface
     {
         private static Selector selector = new Selector();
-        private static int textId = 23;
+        static private int textId = -1;
         /// <summary>
         /// 선택된 문자열 표시 메서드 
         /// <para>
@@ -80,7 +81,7 @@ namespace WordSearch
         {
             textBox.Cursor = Cursors.Hand;
         }
-        static public async Task PrintMeaning(TextBox outputBox)
+        static public async Task<string> GetMeaning()
         {
             //HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
             string word = selector.GetText();
@@ -94,7 +95,7 @@ namespace WordSearch
                 result = wordMeanings.ToString();
             }
             //string result = await req.GetDictionaryResult(word); // 해석 받아오기
-            outputBox.Text = result;                             // 화면에 띄우기
+            return result;                             // 화면에 띄우기
         }
         static public void HighlightPOS(RichTextBox textBox)
         {
@@ -117,6 +118,14 @@ namespace WordSearch
         {
             //return selector.GetWordId();
             return 0;
+        }
+        static public void SetTextId(int _textId)
+        {
+            textId = _textId;
+        }
+        static public int GetTextId()
+        {
+            return textId;
         }
     }
 }

@@ -8,11 +8,11 @@ using UserAccountManager.Interfaces;
 
 namespace UserAccountManager.InterfacesWrapper
 {
-    public static class LogoutInterface
+    public static class UserInfoInterface
     {
-        /*public static void Logout(ILogoutView view)
+        public static async Task LoadUserInfoAsync(IUserInfoView view)
         {
-            LogoutHandler.HandleLogout(view);
-        }*/
+            await UserInfoHandler.HandleLoadUserInfoAsync(view);
+        }
     }
 }

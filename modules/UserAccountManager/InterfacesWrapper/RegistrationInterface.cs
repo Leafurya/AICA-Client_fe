@@ -9,35 +9,26 @@ using UserAccountManager.Services;
 
 namespace UserAccountManager.InterfacesWrapper
 {
-    public class RegistrationInterface
+    public static class RegistrationInterface
     {
-        public static async Task HandleIdCheck(IUserRegistrationView view)
+        public static Task<(bool Success, string Message)> HandleIdCheck(IUserRegistrationView view)
         {
-            await UserRegistrationHandler.HandleIdCheckAsync(view.UserId, view.ShowMessage);
+            return UserRegistrationHandler.HandleIdCheckAsync(view.UserId);
         }
 
-        public static async Task SendEmailCode(IUserRegistrationView view)
+        public static Task<(bool Success, string Message)> SendEmailCode(IUserRegistrationView view)
         {
-            await EmailVerificationHandler.HandleSendCodeAsync(
-                view.Email,
-                view.ShowMessage,
-                view.SetTimerText,
-                view.SetSendButtonText
-            );
+            return EmailVerificationHandler.HandleSendCodeAsync(view.Email);
         }
 
-        public static async Task VerifyEmailCode(IUserRegistrationView view)
+        public static Task<(bool Success, string Message)> VerifyEmailCode(IUserRegistrationView view)
         {
-            await EmailVerificationHandler.HandleVerifyCodeAsync(
-                view.Email,
-                view.AuthCode,
-                view.ShowMessage
-            );
+            return EmailVerificationHandler.HandleVerifyCodeAsync(view.Email, view.AuthCode);
         }
 
-        public static async Task RegisterUser(IUserRegistrationView view)
+        public static Task<(bool Success, string Message)> RegisterUser(IUserRegistrationView view)
         {
-            await UserRegistrationHandler.HandleRegisterAsync(
+            return UserRegistrationHandler.HandleRegisterAsync(
                 view.UserId,
                 view.Password,
                 view.ConfirmPassword,
@@ -46,10 +37,7 @@ namespace UserAccountManager.InterfacesWrapper
                 view.AuthCode,
                 view.IsTermsAgreed1,
                 view.IsTermsAgreed2,
-                view.IsTermsAgreed3,
-                view.ShowMessage
-            );
+                view.IsTermsAgreed3);
         }
-
     }
 }

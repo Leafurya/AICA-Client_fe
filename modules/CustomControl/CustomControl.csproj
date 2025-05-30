@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+	<GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MvvmLightLibs" Version="5.4.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SentenceManager\SentenceManager.csproj" />
+    <ProjectReference Include="..\Translate\Translate.csproj" />
+    <ProjectReference Include="..\Uility\Utility.csproj" />
+    <ProjectReference Include="..\VocabNote\VocabNote.csproj" />
+    <ProjectReference Include="..\WordSearch\WordSearch.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="SearchBox.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="SentenceItem.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="WordItem.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+</Project>
