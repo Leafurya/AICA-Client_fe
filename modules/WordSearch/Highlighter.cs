@@ -31,7 +31,7 @@ namespace WordSearch
             //    //Debug.WriteLine($"{row["textid"]}, {row["text"]}");
             //}
 
-            Deconnect();
+            Disconnect();
         }
     }
 }
