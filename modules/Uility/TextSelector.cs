@@ -89,6 +89,7 @@ namespace Utility
                 }
 
                 text?.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
+                //text?.ApplyPropertyValue(TextElement.ForegroundProperty, text?.GetPropertyValue(TextElement.ForegroundProperty));
                 text = target;
                 text.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
             }
@@ -99,6 +100,7 @@ namespace Utility
                     return;
                 }
                 target.ApplyPropertyValue(TextElement.BackgroundProperty, color);
+                //target.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
                 //text?.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
                 //text = target;
                 //text.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);

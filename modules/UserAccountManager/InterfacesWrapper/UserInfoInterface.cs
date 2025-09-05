@@ -9,11 +9,12 @@ using UserAccountManager.Models;
 
 namespace UserAccountManager.InterfacesWrapper
 {
+    [Obsolete]
     public static class UserInfoInterface
     {
-        public static Task LoadUserInfoAsync(IUserInfoView view)
-        {
-            return UserInfoHandler.HandleLoadUserInfoAsync(view);
-        }
+        //public static Task LoadUserInfoAsync(IUserInfoView view)
+        //{
+        //    //return UserInfoHandler.HandleLoadUserInfoAsync(view);
+        //}
     }
 }

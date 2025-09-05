@@ -8,9 +8,10 @@ namespace UserAccountManager.Models
 {
     public class UserInfoData
     {
-        public string UserId { get; set; }
-        public string UserEmail { get; set; }
-        public string UserNickname { get; set; }
+        public int id {  get; set; }
+        public string userId { get; set; }
+        public string email { get; set; }
+        public string nickname { get; set; }
     }
 
     public class UserInfoResponse

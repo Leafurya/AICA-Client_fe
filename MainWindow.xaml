@@ -7,21 +7,17 @@
         xmlns:ctrl="clr-namespace:CustomControl;assembly=CustomControl"
         xmlns:viewmodel="clr-namespace:CustomControl.ViewModel;assembly=CustomControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1024" Width="1440">
-    <Window.Resources>
-        <viewmodel:SentenceViewModel x:Key="vmSentence"></viewmodel:SentenceViewModel>
-        <viewmodel:SharedViewModel x:Key="vmShared"></viewmodel:SharedViewModel>
-        
-    </Window.Resources>
-    <Grid DataContext="{StaticResource vmShared}">
+        Title="MainWindow" Height="1024" Width="1440"
+        DataContext="{StaticResource vmShared}">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid>
             <DockPanel HorizontalAlignment="Right">
-                <Button x:Name="Ligin" Content="로그인" Padding="20,10,20,10" Click="Ligin_Click"></Button>
-                <Button x:Name="Regist" Content="회원가입" Padding="20,10,20,10" Click="Regist_Click"></Button>
+                <Button Visibility="Visible" x:Name="Ligin" Content="로그인" Padding="20,10,20,10" Click="Ligin_Click"></Button>
+                <Button Visibility="Collapsed" x:Name="MyPage" Content="내 정보" Padding="20,10,20,10" Click="MyPage_Click"></Button>
             </DockPanel>
         </Grid>
         <Grid Grid.Row="1">
@@ -46,13 +42,23 @@
                     <ctrl:SentenceList></ctrl:SentenceList>
                 </TabItem>
                 <TabItem Header="AICA 단어장">
-                    <TextBlock>hello</TextBlock>
+                    <ctrl:AicaList></ctrl:AicaList>
                 </TabItem>
             </TabControl>
         </Grid>
-        <Grid x:Name="FrameContainer" Visibility="Collapsed" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2">
-            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></Canvas>
-            <Frame x:Name="subFrame" HorizontalAlignment="Center" VerticalAlignment="Center" Width="816" Height="816" NavigationUIVisibility="Hidden"/>
+        <Grid x:Name="FrameContainer" Visibility="Visible"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="312"></ColumnDefinition>
+                <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="312"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="104"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+                <RowDefinition Height="104"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="3" Grid.ColumnSpan="3"></Canvas>
+            <Frame x:Name="subFrame" NavigationUIVisibility="Hidden" Grid.Row="1" Grid.Column="1"/>
         </Grid>
     </Grid>
 </Window>

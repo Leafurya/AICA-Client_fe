@@ -12,53 +12,114 @@ using Utility.Data.Sentence;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
 using Utility;
+using Utility.RequestConst;
+using Utility.TokenManager;
+using System.Text.Json;
 
 namespace SentenceManager
 {
     public class Request
     {
-        static private string host = "http://127.0.0.1:8080";
-        static public async Task<bool> SaveText(int textid, string accessToken, string text)
+        static private string host = RequestConst.host;
+        static private HttpClient client=RequestConst.client;
+        static public async Task<bool> SaveText(int textid, string text)
         {
-            HttpClient client = new HttpClient();
-            Dictionary<string, string> data = new Dictionary<string, string>
-            {
-                {"sentenceId",""+textid},
-                {"sentence",text }
-            };
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
-            string jsonData = $"{{ \"sentenceId\": {textid}, \"sentence\": \"{text}\" }}";
+            //HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
+            SentenceData data = new SentenceData { sentenceId=textid,sentence=text};
+            string jsonData = JsonSerializer.Serialize(data);
+            //string jsonData = $"{{ \"sentenceId\": {textid}, \"sentence\": \"{text}\" }}";
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage res = await client.PostAsync(host+"/api/sentence", content);
-            return res.IsSuccessStatusCode;
-        }
-        static public async Task<string> GetTextList(string url)
-        {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage res = await client.GetAsync(host+ "/api/sentence");
-            if (res.IsSuccessStatusCode)
+            try
             {
-                string responseBody = await res.Content.ReadAsStringAsync();
+                (bool suc, HttpResponseMessage? response) = await TokenManager.RequestWithTokenCheck("post", $"{host}/api/sentence", content);
+                if (response == null)
+                {
+                    return false;
+                }
+                //HttpResponseMessage res = await client.PostAsync(host + "/api/word/add", content);
+                //HttpResponseMessage res = await client.PostAsync(host + "/api/sentence", content);
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+
+            
+            //return res.IsSuccessStatusCode;
+        }
+        static public async Task<string> GetTextList()
+        {
+            //HttpClient client = new HttpClient();
+            //if (!TokenManager.IsTokenValid())
+            //{
+            //    return "invalid token";
+            //}
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
+            try
+            {
+                (bool suc, HttpResponseMessage? response) = await TokenManager.RequestWithTokenCheck("get", $"{host}/api/sentence");
+                if (response == null)
+                {
+                    return "";
+                }
+                string responseBody = await response.Content.ReadAsStringAsync();
+                //HttpResponseMessage res = await client.PostAsync(host + "/api/word/add", content);
+                //HttpResponseMessage res = await client.GetAsync(host + "/api/sentence");
                 return responseBody;
             }
-            return "";
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return "";
+            }
+            //HttpResponseMessage res = await client.GetAsync(host+ "/api/sentence");
+            //string responseBody = await res.Content.ReadAsStringAsync();
+            //if (!res.IsSuccessStatusCode)
+            //{
+            //    Debug.WriteLine("SentenceManager.Interface.Request.GetTextList "+res.StatusCode);
+            //}
+            //return responseBody;
         }
-        static public async Task<bool> DeleteText(int textId,string accessToken)
+        static public async Task<bool> DeleteText(int textId)
         {
-            HttpClient client = new HttpClient();
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
+            //if (!TokenManager.IsTokenValid())
+            //{
+            //    Debug.WriteLine("SentenceManager.Interface.Request.DeleteText invalid token");
+            //    return false;
+            //}
+            //HttpClient client = new HttpClient();
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
 
-            Debug.WriteLine($"req start {host}/api/sentence/{textId}");
-            HttpResponseMessage res = await client.DeleteAsync($"{host}/api/sentence/{textId}");
-            Debug.WriteLine("req");
-            return res.IsSuccessStatusCode;
+            //Debug.WriteLine($"req start {host}/api/sentence/{textId}");
+            try
+            {
+                (bool suc, HttpResponseMessage? response) = await TokenManager.RequestWithTokenCheck("delete", $"{host}/api/sentence/{textId}");
+                if (response == null)
+                {
+                    return false;
+                }
+                //HttpResponseMessage res = await client.PostAsync(host + "/api/word/add", content);
+                //HttpResponseMessage res = await client.DeleteAsync($"{host}/api/sentence/{textId}");
+                return response.IsSuccessStatusCode;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return false;
+            }
+            
+            //return res.IsSuccessStatusCode;
         }
     }
     public class Interface
     {
         private static Selector selector = new Selector();
         private static SentenceList sentenceList=new SentenceList();
+        private static int selectedTextId=-1;
 
         static public int PreProcess(string sentence)
         {
@@ -94,9 +155,9 @@ namespace SentenceManager
             }
             return textid;
         }
-        static public async void SaveText(int textid, string accessToken, string text)
+        static public async void SaveText(int textid, string text)
         {
-            if(await Request.SaveText(textid, accessToken, text))
+            if(await Request.SaveText(textid, text))
             {
                 Debug.WriteLine("success");
             }
@@ -133,13 +194,53 @@ namespace SentenceManager
         }
         static public async Task RequestTextList()
         {
-            string resopnseBody = await Request.GetTextList("http://127.0.0.1:8080/api/sentence");
-            sentenceList=new SentenceList(resopnseBody);
+            string resopnseBody = await Request.GetTextList();
+            Debug.WriteLine(resopnseBody);
+            SentenceList recvedList= new SentenceList(resopnseBody);
+            if (recvedList.getData() != null)
+            {
+                Debug.WriteLine("recvedList.getData() != null");
+                UpdateTextList(recvedList);
+            }
+            else
+            {
+                sentenceList.getData().ForEach(data =>
+                {
+                    SaveText(data.sentenceId, data.sentence);
+                });
+            }
+            //return GetTextList();
+        }
+        static private void UpdateTextList(SentenceList list)
+        {
+            List<SentenceData> oldList = sentenceList.getData();
+            List<SentenceData> newList = list.getData();
+
+            List<SentenceData> newDiffOld = newList.Except(oldList).ToList();
+            List<SentenceData> oldDiffNew = oldList.Except(newList).ToList();
+            oldDiffNew.ForEach(data =>
+            {
+                //Debug.WriteLine(data.sentenceId + " " + data.sentence);
+                SaveText(data.sentenceId,data.sentence);
+            });
+            newDiffOld.ForEach(data =>
+            {
+                sentenceList.AppendSentence(data.sentence,data.sentenceId,false);
+            });
+            //return newDiffOld;
         }
         static public ObservableCollection<SentenceData> GetTextList()
         {
-            ObservableCollection < SentenceData > result= new ObservableCollection<SentenceData >(sentenceList.getData());
-            return result;
+            try
+            {
+                ObservableCollection<SentenceData> result = new ObservableCollection<SentenceData>(sentenceList.getData());
+                return result;
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+                return new ObservableCollection<SentenceData>();
+            }
             //listBox.Items.Clear();
             //foreach (SentenceData sentenceData in data)
             //{
@@ -148,14 +249,14 @@ namespace SentenceManager
             //    listBox.AddItem(sentenceItem);
             //}
         }
-        static public async void DeleteText(int textId,string accessToken)
+        static public async void DeleteText(int textId)
         {
-            bool result = await Request.DeleteText(textId, accessToken);
-            if (result)
-            {
-                sentenceList.DeteleSentence(textId);
-                Debug.WriteLine($"delete text {textId}");
-            }
+            bool result = await Request.DeleteText(textId);
+            sentenceList.DeteleSentence(textId);
+            Debug.WriteLine($"delete text {textId}");
+            //if (result)
+            //{
+            //}
         }
         static public SentenceData AddText(string text,int textId)
         {
@@ -173,10 +274,28 @@ namespace SentenceManager
                 return false;
             }
             string temp=text.Trim();
-            Debug.WriteLine("target text " + temp);
             string hashed=HashHelper.ComputeSha256Hash(temp);
-            Debug.WriteLine("hashed " + hashed);
             return sentenceList.IsExist(hashed);
+        }
+        static public void UpdateTextId(int from, int to)
+        {
+            sentenceList.UpdateTextId(from, to);
+        }
+        static public int GetSelectedTextId()
+        {
+            return selectedTextId;
+        }
+        static public void InitSelectedTextId()
+        {
+            selectedTextId = -1;
+        }
+        static public void SetSelectedTextId(int id)
+        {
+            selectedTextId = id;
+        }
+        static public int GetTextId(string text)
+        {
+            return sentenceList.GetTextId(text);
         }
     }
 }

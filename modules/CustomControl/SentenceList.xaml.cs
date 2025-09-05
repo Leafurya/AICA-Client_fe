@@ -31,7 +31,38 @@ namespace CustomControl
         public SentenceList()
         {
             InitializeComponent();
+            this.Loaded += SentenceList_Loaded;
         }
+
+        private void SentenceList_Loaded(object sender, RoutedEventArgs e)
+        {
+            if(this.DataContext is SharedViewModel vm)
+            {
+                //문장리스트 싱크 맞추기
+                //문장 받고 로컬에 있는거랑 비교해서 다른 거 있으면 전송하기
+                vm.IsLogin_LoadSentenceButtonHandler += Vm_IsLogin_LoadSentenceButtonHandler;
+            }
+        }
+
+        private async void Vm_IsLogin_LoadSentenceButtonHandler(object? sender, EventArgs e)
+        {
+            if (this.DataContext is SharedViewModel vm)
+            {
+                //문장리스트 싱크 맞추기
+                //문장 받고 로컬에 있는거랑 비교해서 다른 거 있으면 전송하기
+                if (vm.IsLogin)
+                {
+                    await SentenceManager.Interface.RequestTextList();
+                    vm.SentenceList = SentenceManager.Interface.GetTextList();
+                }
+                //diff.ForEach(data =>
+                //{
+                //    vm.SentenceList.Add(data);
+                //});
+            }
+
+        }
+
         private void Text_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             //TextDisplayService.Display(text);
@@ -72,25 +103,38 @@ namespace CustomControl
         {
             List<SentenceItem> items = ControlUtil.FindVisualChildren<SentenceItem>(itemsControl).ToList();
             List<int> removeTargetIdx= new List<int>();
+            int nowTextId = WordSearch.Interface.GetTextId();
+
+            
             for (int i = 0; i < items.Count(); i++)
             {
                 SentenceItem item = items[i];
                 if (item.IsChecked())
                 {
                     int textId = item.GetTextId();
-                    SentenceManager.Interface.DeleteText(textId, "mangoAccessToken");
+                    SentenceManager.Interface.DeleteText(textId);
+                    if (nowTextId == textId)
+                    {
+                        if (this.DataContext is SharedViewModel sharedVm)
+                        {
+                            VocabNote.Interface.ClearAicaList(nowTextId);
+                            sharedVm.AicaList = VocabNote.Interface.GetAicaList(nowTextId);
+                            sharedVm.NowText = "";
+                            WordSearch.Interface.SetTextId(-1);
+                        }
+                    }
                     removeTargetIdx.Add(i);
                 }
             }
 
             if (this.DataContext is SharedViewModel vm)
             {
-                //SentenceData data= vm.SentenceList
                 foreach (int index in removeTargetIdx.OrderByDescending(i => i))
                 {
                     vm.SentenceList.RemoveAt(index);
                 }
             }
+            //SentenceData data= vm.SentenceList
 
             //foreach (SentenceItem item in items)
             //{

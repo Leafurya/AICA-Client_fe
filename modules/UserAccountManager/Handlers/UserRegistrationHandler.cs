@@ -11,6 +11,7 @@ namespace UserAccountManager.Handlers
 {
     public static class UserRegistrationHandler
     {
+        private static bool doIdDuplicate=false;//test용으로 강제로 true로 지정함 
         public static async Task<(bool Success, string Message)> HandleRegisterAsync(
             string userId,
             string password,
@@ -47,15 +48,21 @@ namespace UserAccountManager.Handlers
             if (!EmailVerificationHandler.IsVerified)
                 return (false, "이메일 인증이 완료되지 않았습니다.");
 
+            if (!doIdDuplicate)
+            {
+                return (false, "아이디 중복 검사가 완료되지 않았습니다.");
+            }
+
             var data = new UserRegistrationData
             {
-                UserId = userId,
-                Password = password,
-                Nickname = nickname,
-                Email = email,
-                AgreeMarketing = isTermsChecked3
+                userId = userId,
+                password = password,
+                userNickname = nickname,
+                email = email
             };
 
+            EmailVerificationHandler.IsVerified = false;
+            doIdDuplicate = false;
             return await UserRegistrationService.RegisterUserAsync(data);
         }
 
@@ -66,9 +73,10 @@ namespace UserAccountManager.Handlers
 
             bool isDuplicate = await UserRegistrationService.IsIdDuplicateAsync(userId);
 
+            doIdDuplicate = isDuplicate;
             return isDuplicate
-                ? (false, "이미 사용 중인 아이디입니다.")
-                : (true, "사용 가능한 아이디입니다.");
+                ? (true, "사용 가능한 아이디입니다.") :
+                (false, "이미 사용 중인 아이디입니다.");
         }
     }
 }

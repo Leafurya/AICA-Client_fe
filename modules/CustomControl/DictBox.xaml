@@ -11,7 +11,7 @@
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Column="1" Text="{Binding DictionaryMean}"></TextBlock>
-        <Button Grid.Row="1" Margin="10,10,10,10" Content="+" Click="Button_Click"></Button>
+        <TextBlock Grid.Column="1" Text="{Binding DictionaryMean}" TextWrapping="Wrap"></TextBlock>
+        <Button x:Name="AddWord" IsEnabled="{Binding IsLogin}" Grid.Row="1" Margin="10,10,10,10" Content="+" Click="Button_Click"></Button>
     </Grid>
 </UserControl>

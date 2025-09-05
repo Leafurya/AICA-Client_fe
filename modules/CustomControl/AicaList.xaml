@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="CustomControl.WordList"
+﻿<UserControl x:Class="CustomControl.AicaList"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:CustomControl"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="243.797">
+             d:DesignHeight="450" d:DesignWidth="402.896">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50"></RowDefinition>
@@ -28,17 +28,17 @@
         </Grid>
         <ScrollViewer Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
             <StackPanel>
-                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding WordsList}">
+                <ItemsControl x:Name="itemsControl" ItemsSource="{Binding AicaList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <local:WordItem></local:WordItem>
+                            <local:AicaItem></local:AicaItem>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
             </StackPanel>
         </ScrollViewer>
         <TextBlock Grid.Row="2" Visibility="Visible" Name="Notice" Background="AliceBlue">
-            로그인 후 이용 가능
+        로그인 후 이용 가능
         </TextBlock>
     </Grid>
 </UserControl>

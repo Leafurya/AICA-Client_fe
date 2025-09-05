@@ -1,8 +1,6 @@
 ﻿using CustomControl.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,41 +15,41 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Utility;
-using Utility.Data.Word;
 
 namespace CustomControl
 {
     /// <summary>
-    /// WordList.xaml에 대한 상호 작용 논리
+    /// AicaList.xaml에 대한 상호 작용 논리
     /// </summary>
-    public partial class WordList : UserControl
+    public partial class AicaList : UserControl
     {
         private bool _suppressUnchecked = false;
-        public WordList()
+        public AicaList()
         {
             InitializeComponent();
-            this.Loaded += WordList_Loaded;
-            //InitList();
+            this.Loaded += AicaList_Loaded;
         }
 
-        private void WordList_Loaded(object sender, RoutedEventArgs e)
+        private void AicaList_Loaded(object sender, RoutedEventArgs e)
         {
             if(this.DataContext is SharedViewModel vm)
             {
-                vm.IsLogin_WordListHandler += Vm_IsLogin_WordListHandler;
+                vm.IsLogin_AicaListHandler += Vm_IsLogin_AicaListHandler;
             }
         }
 
-        private async void Vm_IsLogin_WordListHandler(object? sender, EventArgs e)
+        private async void Vm_IsLogin_AicaListHandler(object? sender, EventArgs e)
         {
             if (this.DataContext is SharedViewModel vm)
             {
-                //Debug.WriteLine("word list handler call");
                 if (vm.IsLogin)
                 {
-                    await VocabNote.Interface.RequestVocabNote(-1);
-                    vm.WordsList = VocabNote.Interface.GetWordList();
-                    vm.AicaList = VocabNote.Interface.GetAicaList(WordSearch.Interface.GetTextId());
+                    int textId = WordSearch.Interface.GetTextId();
+                    if (textId != -1)
+                    {
+                        //await VocabNote.Interface.RequestAicaList(textId);
+                        vm.AicaList = VocabNote.Interface.GetAicaList(textId);
+                    }
                     Notice.Visibility = Visibility.Collapsed;
                 }
                 else
@@ -90,37 +88,28 @@ namespace CustomControl
             _suppressUnchecked = false;
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
             List<WordItem> items = ControlUtil.FindVisualChildren<WordItem>(itemsControl).ToList();
-            //List<int> removeTargetIdx = new List<int>();
+            List<int> removeTargetIdx = new List<int>();
             for (int i = 0; i < items.Count(); i++)
             {
                 WordItem item = items[i];
                 if (item.IsChecked())
                 {
                     int wordId = item.GetWordId();
-                    Debug.WriteLine($"삭제한 단어 아이디: {wordId}");
-                    if (await VocabNote.Interface.RequestDeleteWord(wordId))
-                    {
-                        //removeTargetIdx.Add(i);
-                    }
+                    VocabNote.Interface.RequestDeleteWord(wordId);
+                    removeTargetIdx.Add(i);
                 }
             }
 
             if (this.DataContext is SharedViewModel vm)
             {
                 //SentenceData data= vm.SentenceList
-                vm.WordsList = VocabNote.Interface.GetWordList();
-                int nowTextId = WordSearch.Interface.GetTextId();
-                if (nowTextId != -1)
+                foreach (int index in removeTargetIdx.OrderByDescending(i => i))
                 {
-                    vm.AicaList = VocabNote.Interface.GetAicaList(nowTextId);
+                    //vm.AicaList.RemoveAt(index);
                 }
-                //foreach (int index in removeTargetIdx.OrderByDescending(i => i))
-                //{
-                //    vm.WordsList.RemoveAt(index);
-                //}
             }
 
             //foreach (SentenceItem item in items)
@@ -137,6 +126,5 @@ namespace CustomControl
             //}
 
         }
-
     }
 }

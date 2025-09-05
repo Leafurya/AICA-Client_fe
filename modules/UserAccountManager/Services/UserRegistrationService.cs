@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -19,14 +20,16 @@ namespace UserAccountManager.Services
 
         public static async Task<bool> IsIdDuplicateAsync(string userId)
         {
-            string url = $"{host}/api/users/check-id?userId={userId}";
+            string url = $"{host}/api/auth/check-uid?userUid={userId}";
 
             try
             {
                 HttpResponseMessage response = await client.GetAsync(url);
                 string result = await response.Content.ReadAsStringAsync();
+                
 
-                return result.Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
+                //return result.Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
+                return response.IsSuccessStatusCode;
             }
             catch
             {
@@ -51,9 +54,11 @@ namespace UserAccountManager.Services
                     PropertyNameCaseInsensitive = true
                 });
 
+                Debug.WriteLine($"regist result code {result?.Code}");
                 if (result?.Code == 201)
                     return (true, result.Message);
                 else
+                    
                     return (false, result?.Message ?? "회원가입 실패");
 
             }

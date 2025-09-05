@@ -30,14 +30,14 @@
                     <DataTemplate>
                         <StackPanel>
                             <TextBlock Text="{Binding partOfSpeech, Converter={StaticResource PosConverter}}"></TextBlock>
-                            <TextBlock Text="{Binding meaning}"></TextBlock>
+                            <TextBlock Text="{Binding meaning}" TextWrapping="Wrap"></TextBlock>
                             <Border BorderBrush="gray" BorderThickness="2,0,0,0" Padding="10,0,0,0">
                                 <ItemsControl ItemsSource="{Binding exampleSentences}">
                                     <ItemsControl.ItemTemplate>
                                         <DataTemplate>
                                             <StackPanel>
-                                                <TextBlock Text="{Binding sentence}"></TextBlock>
-                                                <TextBlock Text="{Binding meaning}"></TextBlock>
+                                                <TextBlock Text="{Binding sentence}" TextWrapping="Wrap"></TextBlock>
+                                                <TextBlock Text="{Binding meaning}" TextWrapping="Wrap"></TextBlock>
                                             </StackPanel>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>

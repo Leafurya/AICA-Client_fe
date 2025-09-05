@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UserAccountManager.Helpers;
 using UserAccountManager.Interfaces;
 using UserAccountManager.Services;
+using Utility.TokenManager;
 
 namespace UserAccountManager.Handlers
 {

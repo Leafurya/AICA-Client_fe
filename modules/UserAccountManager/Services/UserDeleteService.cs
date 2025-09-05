@@ -8,6 +8,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Utility.RequestConst;
 using UserAccountManager.Models;
+using Utility.TokenManager;
 
 namespace UserAccountManager.Services
 {
@@ -24,11 +25,16 @@ namespace UserAccountManager.Services
         public static async Task<(bool Success, string Message)> DeleteUserAsync()
         {
             client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", TokenManager.AccessToken);
+                new AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
 
             try
             {
-                HttpResponseMessage response = await client.DeleteAsync($"{host}/api/user");
+                (bool suc, HttpResponseMessage? response) = await TokenManager.RequestWithTokenCheck("delete", $"{host}/api/member", null);
+                if (response == null)
+                {
+                    return (false, "액세스토큰 재발급 실패");
+                }
+                //HttpResponseMessage response = await client.DeleteAsync($"{host}/api/member");
                 string json = await response.Content.ReadAsStringAsync();
 
                 DeleteUserResponse? result = JsonSerializer.Deserialize<DeleteUserResponse>(json, _jsonOptions);

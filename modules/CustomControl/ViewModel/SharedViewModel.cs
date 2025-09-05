@@ -12,22 +12,105 @@ using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Utility.Data.Sentence;
+using Utility.Data.User;
+using Utility.Data.UserData;
 using Utility.Data.Word;
+using Utility.DataBase;
 
 namespace CustomControl.ViewModel
 {
     public class SharedViewModel : INotifyPropertyChanged
     {
+        //public ObservableCollection<SentenceData> SentenceList
+        //{
+        //    get; set;
+        //}
+        //private UserSettingData _settingData;
+        public UserSettingData SettingData { get; set; } = new UserSettingData();
+        private ObservableCollection<SentenceData> _sentenceList;
         public ObservableCollection<SentenceData> SentenceList
         {
-            get; set;
+            get => _sentenceList;
+            set
+            {
+                if (_sentenceList != value)
+                {
+                    _sentenceList = value;
+                    OnPropertyChanged(nameof(SentenceList));
+                }
+            }
         }
-        public ObservableCollection<WordMeanings> WordsList
+
+        private ObservableCollection<VocabItem>? _wordsList;
+        public ObservableCollection<VocabItem>? WordsList
         {
-            get; set;
+            get => _wordsList;
+            set
+            {
+                if (_wordsList != value)
+                {
+                    _wordsList = value;
+                    OnPropertyChanged(nameof(WordsList));
+                }
+            }
         }
+        private ObservableCollection<VocabItem>? _aicaList;
+        public ObservableCollection<VocabItem>? AicaList
+        {
+            get => _aicaList;
+            set
+            {
+                if (_aicaList != value)
+                {
+                    _aicaList = value;
+                    OnPropertyChanged(nameof(AicaList));
+                }
+            }
+        }
+        //public ObservableCollection<WordMeanings>? WordsList
+        //{
+        //    get; set;
+        //}
 
-
+        private string _userinfoID;
+        public string UserInfoID
+        {
+            get => _userinfoID;
+            set
+            {
+                if (_userinfoID != value)
+                {
+                    _userinfoID = value;
+                    OnPropertyChanged(nameof(UserInfoID));
+                }
+            }
+        }
+        private string _userinfoEmail;
+        public string UserInfoEmail
+        {
+            get => _userinfoEmail;
+            set
+            {
+                if (_userinfoEmail != value)
+                {
+                    _userinfoEmail = value;
+                    OnPropertyChanged(nameof(UserInfoEmail));
+                }
+            }
+        }
+        private string _userinfoAlias;
+        public string UserInfoAlias
+        {
+            get => _userinfoAlias;
+            set
+            {
+                if (_userinfoAlias != value)
+                {
+                    _userinfoAlias = value;
+                    OnPropertyChanged(nameof(UserInfoAlias));
+                }
+            }
+        }
 
         private string _dictionaryMean;
         public string DictionaryMean
@@ -84,13 +167,41 @@ namespace CustomControl.ViewModel
             }
         }
 
+        public event EventHandler? IsLogin_LoginButtonHandler;
+        //public event EventHandler? IsLogin_AddWordButtonHandler;
+        public event EventHandler? IsLogin_LoadSentenceButtonHandler;
+        public event EventHandler? IsLogin_WordListHandler;
+        public event EventHandler? IsLogin_AicaListHandler;
+        private bool _isLogin;
+        public bool IsLogin
+        {
+            get => _isLogin;
+            set
+            {
+                if (_isLogin != value)
+                {
+                    _isLogin = value;
+                    OnPropertyChanged(nameof(IsLogin));
+                    IsLogin_LoginButtonHandler?.Invoke(this, new EventArgs());
+                    //IsLogin_AddWordButtonHandler?.Invoke(this, new EventArgs());
+                    IsLogin_LoadSentenceButtonHandler?.Invoke(this, new EventArgs());
+                    IsLogin_WordListHandler?.Invoke(this, new EventArgs());
+                    IsLogin_AicaListHandler?.Invoke(this,new EventArgs());
+                }
+            }
+        }
+
+        //private User userData {  get; set; }
+
         public SharedViewModel()
         {
 
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 SentenceList = SentenceManager.Interface.GetTextList(); // 런타임 전용
-                InitWordsList();
+                //SettingData = new UserSettingData();
+
+                //InitWordsList();
                 NowText = "";
             }
             else
@@ -102,6 +213,7 @@ namespace CustomControl.ViewModel
                     new SentenceData { sentence = "디자인 타임 문장 1" ,sentenceId=1},
                     new SentenceData { sentence = "디자인 타임 문장 2" ,sentenceId=2}
                 };
+                //userData = new User { alias = "배재", id = "metalhyun", pwd = "123", email = "metal@hyun.com", token = null };
 
                 //WordsList = new ObservableCollection<JustWord>
                 //{
@@ -119,11 +231,8 @@ namespace CustomControl.ViewModel
         }
         private async void InitWordsList()
         {
-            await VocabNote.Interface.RequestVocabNote(-1, "accessTokenMango");
+            await VocabNote.Interface.RequestVocabNote(-1);
             WordsList = VocabNote.Interface.GetWordList();
         }
-
-
-
     }
 }

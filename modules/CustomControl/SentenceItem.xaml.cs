@@ -31,18 +31,25 @@ namespace CustomControl
             InitializeComponent();
         }
 
-        private void Text_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        private async void Text_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             /*richtextbox에 vm 반영하기*/
             if (sender is TextBlock clickedTextBlock)
             {
-                Debug.WriteLine("tag: " + clickedTextBlock.Tag);
-                WordSearch.Interface.SetTextId((int)clickedTextBlock.Tag);
-                ItemsControl? itemsControl =ControlUtil.FindParent<ItemsControl>(this);
+                int textId = (int)clickedTextBlock.Tag;
+                //Debug.WriteLine("tag: " + clickedTextBlock.Tag);
+                //WordSearch.Interface.SetTextId((int)clickedTextBlock.Tag);
+                SentenceManager.Interface.SetSelectedTextId(textId);
+                ItemsControl? itemsControl = ControlUtil.FindParent<ItemsControl>(this);
                 if (itemsControl?.DataContext is SharedViewModel sharedVM)
                 {
                     sharedVM.NowText = clickedTextBlock.Text;
                     sharedVM.IsSearchModeToggleOn = false;
+                    if (sharedVM.IsLogin)
+                    {
+                        //await VocabNote.Interface.RequestAicaList(textId);
+                        sharedVM.AicaList = VocabNote.Interface.GetAicaList(textId);
+                    }
                 }
             }
         }

@@ -37,6 +37,7 @@ namespace CustomControl
         }
         private bool searchMode = false;
         private ScrollViewer? scrollViewer=null;
+        private bool flowTextChangeHandler = true;
         SharedViewModel vm;
         public SearchBox()
         {
@@ -53,7 +54,6 @@ namespace CustomControl
             if (this.DataContext is SharedViewModel vm)
             {
                 vm.PropertyChanged += UpdateText;
-                Debug.WriteLine("구독 완료");
                 this.vm = vm;
 
                 // 초기값 반영
@@ -64,13 +64,13 @@ namespace CustomControl
         {
             if (e.PropertyName == nameof(this.vm.NowText))
             {
-                Debug.WriteLine("text is update "+ this.vm.NowText);
                 Dispatcher.Invoke(() =>
                 {
+                    flowTextChangeHandler = false;
                     FlowDocument doc = new FlowDocument();
                     doc.Blocks.Add(new Paragraph(new Run(this.vm.NowText)));
                     textBoxSearcher.Document = doc;
-                    Debug.WriteLine("invoke");
+                    flowTextChangeHandler = true;
                 });
             }
         }
@@ -78,7 +78,16 @@ namespace CustomControl
         {
             if (this.DataContext is SharedViewModel vm)
             {
-                string result=await TranslatorText.ProcessTranslation();
+                Stopwatch stopwatch = new Stopwatch();
+
+                stopwatch.Start();
+
+                string result = await TranslatorText.ProcessTranslation();
+
+                stopwatch.Stop();
+
+                Debug.WriteLine($"번역 시간: {stopwatch.ElapsedMilliseconds} ms");
+                
                 vm.TranslateResult = result;
             }
         }
@@ -99,8 +108,10 @@ namespace CustomControl
             }
             else
             {
-                WordSearch.Interface.HighlightPOS(textBoxSearcher);
-                GetMeaning();
+                if (WordSearch.Interface.HighlightPOS(textBoxSearcher))
+                {
+                    GetMeaning();
+                }
             }
         }
 
@@ -146,26 +157,55 @@ namespace CustomControl
             canvas.Visibility = Visibility.Visible;
             TextRange textRange = new TextRange(textBoxSearcher.Document.ContentStart, textBoxSearcher.Document.ContentEnd);
             string text = textRange.Text;
+            text=text.Trim();
 
+            //서버에서 받아온 데이터는 클라db에 없으니 해시 값도 없음.
+            //그래서 한 번은 문장을 분석하고 db에 저장하는 과정을 거쳐야 함.
             if (!SentenceManager.Interface.IsExistText(text))
             {
+                int selectedTextId = SentenceManager.Interface.GetSelectedTextId(); //리스트에서 클릭한 문장의 id
+                Debug.WriteLine("selectedTextId " + selectedTextId);
+
+                Stopwatch stopwatch = new Stopwatch();
+
+                stopwatch.Start();
+
                 textId = SentenceManager.Interface.PreProcess(text);
-                SentenceManager.Interface.SaveText(textId, "mangoAccessToken", text);
 
-                if (this.DataContext is SharedViewModel vm)
+                stopwatch.Stop();
+
+                Debug.WriteLine($"문장 분석 시간: {stopwatch.ElapsedMilliseconds} ms");
+
+                if (selectedTextId != -1)
                 {
-                    Debug.WriteLine("input update");
-                    vm.NowText = text;
-                    vm.SentenceList.Add(SentenceManager.Interface.AddText(text, textId));
+                    SentenceManager.Interface.UpdateTextId(textId, selectedTextId); //db에 넣은 textid의 값을 기존의 것으로 변경
+                    textId = selectedTextId;
+                    SentenceManager.Interface.InitSelectedTextId();
                 }
+                else
+                {
+                    SentenceManager.Interface.SaveText(textId, text); //서버로 문장 데이터 전송
 
-                WordSearch.Interface.SetTextId(textId);
+                    if (this.DataContext is SharedViewModel vm)
+                    {
+                        Debug.WriteLine("input update");
+                        vm.NowText = text;
+                        vm.SentenceList.Add(SentenceManager.Interface.AddText(text, textId));
+                    }
+                }
             }
             else
             {
-                textId= WordSearch.Interface.GetTextId();
+                //SentenceManager.Interface.GetSelectedTextId()를 하면 안되는 이유:
+                //프로그램이 해당 문장의 해시 값이 이미 가지고 있음
+                //문장을 수정했다가 원상 복구 하면 GetSelectedTextId의 출력 값이 달라짐.
+                //그럼 해시 값은 같은 데 GetSelectedTextId가 -1이 되어 textid의 값이 -1이 됨
+                //이를 방지하고자 해당 텍스트의 id를 직접 가져옴
+                textId = SentenceManager.Interface.GetTextId(text);
+                Debug.WriteLine("selected id " + textId);
             }
-                Debug.WriteLine(textId);
+            WordSearch.Interface.SetTextId(textId);
+            Debug.WriteLine(textId);
         }
 
         private void ToggleBtnMode_Unchecked(object sender, RoutedEventArgs e)
@@ -195,7 +235,18 @@ namespace CustomControl
             if (dialog.ShowDialog() == true)
             {
                 string selectedImage = dialog.FileName;
+
+                Stopwatch stopwatch = new Stopwatch();
+
+                stopwatch.Start();
+
                 string result = SentenceManager.Interface.GetStringFromImg(selectedImage);
+
+                stopwatch.Stop();
+
+                Debug.WriteLine($"문장 추출 시간: {stopwatch.ElapsedMilliseconds} ms");
+
+                
                 if(this.DataContext is SharedViewModel vm)
                 {
                     vm.NowText = result;
@@ -206,6 +257,10 @@ namespace CustomControl
 
         private void textBoxSearcher_TextChanged(object sender, TextChangedEventArgs e)
         {
+            if (flowTextChangeHandler)
+            {
+                SentenceManager.Interface.InitSelectedTextId();
+            }
         }
     }
 }

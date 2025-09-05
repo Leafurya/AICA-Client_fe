@@ -8,6 +8,8 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Utility.RequestConst;
 using UserAccountManager.Models;
+using Utility.TokenManager;
+using System.Diagnostics;
 
 namespace UserAccountManager.Services
 {
@@ -18,21 +20,27 @@ namespace UserAccountManager.Services
 
         public static async Task<(bool Success, string Message)> LogoutAsync()
         {
-            var body = new
-            {
-                accessToken = TokenManager.AccessToken
-            };
+            //var body = new
+            //{
+            //    accessToken = TokenManager.GetAccessToken()
+            //};
 
-            var content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+            //var content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
+
 
             client.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", TokenManager.AccessToken);
+                new AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
 
             try
             {
-                HttpResponseMessage response = await client.PostAsync($"{host}/api/logout", content);
+                (bool suc, HttpResponseMessage? response)=await TokenManager.RequestWithTokenCheck("post",$"{host}/api/logout", null);
+                if (response == null)
+                {
+                    return (false, "액세스토큰 재발급 실패");
+                }
+                //HttpResponseMessage response = await client.PostAsync(, null);
                 string json = await response.Content.ReadAsStringAsync();
-
+                Debug.WriteLine("logout response body " + json);
                 LogoutResponse? result = JsonSerializer.Deserialize<LogoutResponse>(json, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true

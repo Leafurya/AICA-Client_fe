@@ -9,6 +9,9 @@ using Utility.DataBase;
 using Utility.Data.Sentence;
 using Utility.Data.Json;
 using System.Diagnostics;
+using static System.Net.Mime.MediaTypeNames;
+using Utility;
+using System.Windows.Documents;
 
 namespace SentenceManager
 {
@@ -32,9 +35,15 @@ namespace SentenceManager
         public SentenceList(string stringifiedBody)
         {
             body = JsonSerializer.Deserialize<SentenceBody>(stringifiedBody);
+            if (body.code != 200)
+            {
+                Debug.WriteLine(body.message);
+                return;
+            }
             if (body != null)
             {
                 data = body.data;
+
             }
         }
         public SentenceList()
@@ -44,24 +53,35 @@ namespace SentenceManager
             string selectTextsQuery = $"SELECT textid, text, hash FROM texts";
             string[] columns = { "textid", "text", "hash" };
             List<object[]> dbResult = new List<object[]>();
-
-            dbResult=ExecuteQuery(selectTextsQuery, columns);
-
-            Disconnect();
-
             data = new List<SentenceData>(0);
             hashs = new List<string>();
-
-            dbResult.ForEach(item =>
+            try
             {
-                //Debug.WriteLine($"{item[0]}, {item[1]}");
+                dbResult = ExecuteQuery(selectTextsQuery, columns);
 
-                data.Add(new SentenceData() { sentence = Convert.ToString(item[1]),  sentenceId = Convert.ToInt32(item[0]) });//{ Convert.ToInt32(item[0]), item[1]}
-                Debug.WriteLine("Convert.ToString(item[2]) "+ Convert.ToString(item[2]));
-                hashs.Add(Convert.ToString(item[2]));
-                //result.X = Convert.ToDouble(item[0]);
-                //result.Y = Convert.ToDouble(item[1]);
-            });
+                Disconnect();
+
+                
+
+                dbResult.ForEach(item =>
+                {
+                    //Debug.WriteLine($"{item[0]}, {item[1]}");
+
+                    data.Add(new SentenceData() { sentence = Convert.ToString(item[1]), sentenceId = Convert.ToInt32(item[0]) });//{ Convert.ToInt32(item[0]), item[1]}
+                    Debug.WriteLine("Convert.ToString(item[2]) " + Convert.ToString(item[2]));
+                    hashs.Add(Convert.ToString(item[2]));
+                    //result.X = Convert.ToDouble(item[0]);
+                    //result.Y = Convert.ToDouble(item[1]);
+                });
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.Message);
+            }
+        }
+        public SentenceList(List<SentenceList> list)
+        {
+            //data = list;
         }
         public List<SentenceData> getData()
         {
@@ -83,22 +103,61 @@ namespace SentenceManager
                 SentenceData item = data[i];
                 if (item.sentenceId == textId)
                 {
+                    string hashed = HashHelper.ComputeSha256Hash(item.sentence);
+                    hashs.Remove(hashed);
                     data.RemoveAt(i);
                     break;
                 }
             }
+            
+            //hashs.RemoveAt()
         }
-        public void AppendSentence(string text,int textId)
+        public void AppendSentence(string text,int textId,bool localText=true)
         {
             SentenceData sent = new SentenceData();
             sent.sentenceId = textId;  
             sent.sentence = text;
 
+            string hashed = HashHelper.ComputeSha256Hash(text);
+            if (localText)
+            {
+                hashs.Add(hashed);
+            }
             data.Add(sent);
         }
         public bool IsExist(string text)
         {
             return hashs.Contains(text);
+        }
+        public void UpdateTextId(int from,int to)
+        {
+            Connect();
+            string deleteAtPartsQuery = $"UPDATE parts SET textid={to} WHERE textid={from}";
+            string deleteAtSentenceQuery = $"UPDATE sentence SET textid={to} WHERE textid={from}";
+            string deleteAtTextsQuery = $"UPDATE texts SET  textid={to} WHERE textid={from}";
+            ExecuteNonQuery(deleteAtTextsQuery);
+            ExecuteNonQuery(deleteAtPartsQuery);
+            ExecuteNonQuery(deleteAtSentenceQuery);
+            Disconnect();
+        }
+        public int GetTextId(string text)
+        {
+            string hashed = HashHelper.ComputeSha256Hash(text);
+            for(int i = 0; i < hashs.Count(); i++)
+            {
+                if(hashs[i].Equals(hashed))
+                {
+                    return data[i].sentenceId;
+                }
+            }
+            return -1;
+            //hashs.ForEach((item,idx) =>
+            //{
+            //    if (item.Equals(hashed))
+            //    {
+            //        result = item.sentenceId;
+            //    }
+            //});
         }
     }
 }

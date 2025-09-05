@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -12,7 +13,7 @@ namespace UserAccountManager.Services
 {
     public static class EmailVerificationHandler
     {
-        public static string SentCode { get; private set; }
+        //public static int SentCode { get; private set; }
         public static bool IsVerified { get; set; } = false;
 
         public static async Task<(bool Success, string Message)> HandleSendCodeAsync(string email)
@@ -21,11 +22,11 @@ namespace UserAccountManager.Services
             if (!result.IsValid)
                 return (false, result.ErrorMessage);
 
-            var (success, code, message) = await EmailService.RequestAuthCodeFromServerAsync(email);
+            var (success, message) = await EmailService.RequestAuthCodeFromServerAsync(email);
             if (!success)
                 return (false, message);
 
-            SentCode = code;
+            //SentCode = code;
             IsVerified = false;
             return (true, message);
         }
@@ -35,6 +36,7 @@ namespace UserAccountManager.Services
             var (success, message) = await EmailService.VerifyCodeWithServerAsync(email, userInputCode);
 
             if (success)
+                Debug.WriteLine("이메일 인증 성공 "+success);
                 IsVerified = true;
 
             return (success, message);

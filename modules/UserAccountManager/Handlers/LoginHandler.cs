@@ -9,7 +9,7 @@ namespace UserAccountManager.Handlers
 {
     public static class LoginHandler
     {
-        public static async Task<(bool Success, string Message)> HandleLoginAsync(string userId, string password)
+        public static async Task<(bool Success, string Message)> HandleLoginAsync(string userId, string password,bool rememberMe)
         {
             if (string.IsNullOrWhiteSpace(userId))
                 return (false, "아이디를 입력해주세요.");
@@ -17,7 +17,7 @@ namespace UserAccountManager.Handlers
             if (string.IsNullOrWhiteSpace(password))
                 return (false, "비밀번호를 입력해주세요.");
 
-            var (success, message) = await LoginService.LoginAsync(userId, password);
+            var (success, message) = await LoginService.LoginAsync(userId, password, rememberMe);
             return (success, message);
         }
     }

@@ -12,6 +12,9 @@ using Utility.RequestConst;
 using Utility.Data.AicaDict;
 using Utility.Data.Word;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
+using Utility.Data.Json;
+using Utility.TokenManager;
 
 namespace WordSearch
 {
@@ -27,24 +30,26 @@ namespace WordSearch
         /// RestAPI를 보낼 서버의 주소<br/>
         /// ex) https://127.0.0.1:8080
         /// </param>
-        static public async Task<string> GetDictionaryResult(string word)
+        static public async Task<(bool,string)> GetDictionaryResult(string word)
         {
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", "mangoaccesstoken");
-            Debug.WriteLine(host + "/api/public/word-lookup?word=" + word);
-            HttpResponseMessage res = await client.GetAsync(host + "/api/public/word-lookup?word=" + word);
-            if (res.IsSuccessStatusCode)
-            {
-                string responseBody = await res.Content.ReadAsStringAsync();
-                //return responseBody;
-                return await res.Content.ReadAsStringAsync();
-            }
-            return "해석을 불러올 수 없습니다.";
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
+            Debug.WriteLine(host + "/api/wordinfo?word=" + word);
+            HttpResponseMessage res = await client.GetAsync(host + "/api/wordinfo?word=" + word);
+            
+            //if (res.IsSuccessStatusCode)
+            //{
+            string responseBody = await res.Content.ReadAsStringAsync();
+            //return responseBody;
+            return (res.IsSuccessStatusCode,responseBody);
+            //}
+            //return null;
         }
     }
     public class Interface
     {
         private static Selector selector = new Selector();
         static private int textId = -1;
+        static private List<string> posFilter = ["SPACE", "X", "PUNCT"];
         /// <summary>
         /// 선택된 문자열 표시 메서드 
         /// <para>
@@ -86,8 +91,21 @@ namespace WordSearch
             //HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
             string word = selector.GetText();
 
-            string result = await Request.GetDictionaryResult(word);
-            Debug.WriteLine(result);
+            (bool suc,string result) = await Request.GetDictionaryResult(word);
+            if (!suc)
+            {
+                //Debug.WriteLine("단어 의미 불러오기 실패");
+                Debug.WriteLine(result);
+                try
+                {
+                    GetWordBody? body = JsonSerializer.Deserialize<GetWordBody>(result);
+                    return $"에러 코드: {body.code}\n{body.message}";
+                }
+                catch(Exception e)
+                {
+                    return $"JSON 파싱 에러: {e}";
+                }
+            }
             WordMeanings? wordMeanings = Manager.Append(result);
             if (wordMeanings != null)
             {
@@ -97,12 +115,15 @@ namespace WordSearch
             //string result = await req.GetDictionaryResult(word); // 해석 받아오기
             return result;                             // 화면에 띄우기
         }
-        static public void HighlightPOS(RichTextBox textBox)
+        static public bool HighlightPOS(RichTextBox textBox)
         {
             string word=selector.GetText();
+            bool result=true;
+
             //DB에서 모든 단어를 찾는다
             List<WordData> targets = new List<WordData>();
             targets=selector.GetWordsFromDB(textId, word);
+            
 
             //각 단어의 품사에 맞는 배경색을 지정한다
             targets.ForEach(data =>
@@ -110,9 +131,20 @@ namespace WordSearch
                 TextRange selectedText = selector.GetSelectedTextRange(textBox.Document.ContentStart, data.start, data.end);
                 if (selectedText != null)
                 {
-                    selector.SetBackgroundColorToSelectedText(selectedText, Brushes.Cyan);
+                    Debug.WriteLine($"{data.pos} {data.start} {data.end}");
+                    if (posFilter.Contains(data.pos))
+                    {
+                        result=false;
+                        return;
+                    }
+                    else
+                    {
+                        selector.SetBackgroundColorToSelectedText(selectedText, PosColors.colors[data.pos]);
+                    }
+                    //selector.SetBackgroundColorToSelectedText(selectedText, Brushes.Cyan);
                 }
             });
+            return result;
         }
         static public int GetSelectedWordId()
         {

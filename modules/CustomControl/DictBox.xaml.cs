@@ -1,6 +1,7 @@
 ﻿using CustomControl.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,7 +26,27 @@ namespace CustomControl
         public DictBox()
         {
             InitializeComponent();
+            //this.Loaded += DictBox_Loaded;
         }
+
+        private void DictBox_Loaded(object sender, RoutedEventArgs e)
+        {
+            //if(this.DataContext is SharedViewModel vm)
+            //{
+            //    vm.IsLogin_AddWordButtonHandler += Vm_IsLogin_AddWordButtonHandler;
+            //}
+        }
+
+        //private void Vm_IsLogin_AddWordButtonHandler(object? sender, EventArgs e)
+        //{
+        //    if (this.DataContext is SharedViewModel vm)
+        //    {
+        //        if (vm.IsLogin)
+        //        {
+        //            AddWord.IsEnabled
+        //        }
+        //    }
+        //}
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -34,11 +55,41 @@ namespace CustomControl
         private async void RequestAddWord()
         {
             int textId = WordSearch.Interface.GetTextId();
-            WordMeanings wordMeanings = await VocabNote.Interface.RequestAddWord(textId, "mangoAccessToken");
-
-            if(this.DataContext is SharedViewModel vm)
+            WordMeanings? wordMeanings = await VocabNote.Interface.RequestAddWord(textId);
+            if (wordMeanings == null)
             {
-                vm.WordsList.Add(wordMeanings);
+                Debug.WriteLine("wordMeanings is null");
+                return;
+            }
+
+            if (this.DataContext is SharedViewModel vm)
+            {
+                if (vm.WordsList == null)
+                {
+                    vm.WordsList = VocabNote.Interface.GetWordList();
+                }
+                else
+                {
+                    (bool vocabModi,bool aicaModi)=VocabNote.Interface.GetNoteModified();
+                    VocabItem item = (VocabItem)wordMeanings;
+                    item.sentenceId = textId;
+                    if (vocabModi)
+                    {
+                        vm.WordsList.Add(item);
+                    }
+                    if (aicaModi)
+                    {
+                        vm.AicaList.Add(item);
+                    }
+                }
+                //if (vm.AicaList == null)
+                //{
+                //    vm.AicaList = VocabNote.Interface.GetAicaList();
+                //}
+                //else
+                //{
+                //    vm.AicaList.Add(wordMeanings);
+                //}
             }
         }
     }
