@@ -129,7 +129,7 @@ namespace SentenceManager
             
             var psi = new ProcessStartInfo
             {
-                FileName = "spaCyExe.exe",
+                FileName = "spacy/main.exe",
                 Arguments = "\""+sentence+"\"", // 문장 지정
                 RedirectStandardOutput = true,  // 표준 출력 리디렉션
                 RedirectStandardError = true,   // 표준 에러 리디렉션 (선택)

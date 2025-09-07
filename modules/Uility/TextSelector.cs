@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Navigation;
 using Utility.DataBase;
 
 namespace Utility
@@ -31,6 +32,7 @@ namespace Utility
         public class Selector:DBManager
         {
             static private TextRange text;
+            private Point targetPoint;
             public int GetCharIndexFromPoint(RichTextBox rtb, Point point)
             {
                 try
@@ -168,6 +170,7 @@ namespace Utility
                     result.X = Convert.ToDouble(item[0]);
                     result.Y = Convert.ToDouble(item[1]);
                 });
+                targetPoint = result;
 
                 Disconnect();
 
@@ -175,12 +178,36 @@ namespace Utility
             }
             public List<WordData> GetWordsFromDB(int textid, string word)
             {
-                List<WordData> result=new List<WordData>();
+                List<WordData> result = new List<WordData>();
                 List<object[]> dbResult = new List<object[]>();
-                string[] columns = { "start", "end", "pos"};
+                string[] columns = { "start", "end", "pos" };
 
                 Connect();
                 dbResult = ExecuteQuery($"select start, end, pos from parts where textid={textid} and token='{word}'", columns);
+
+                dbResult.ForEach(item =>
+                {
+                    WordData data = new WordData(Convert.ToInt32(item[0]), Convert.ToInt32(item[1]), Convert.ToString(item[2]));
+                    result.Add(data);
+                });
+
+                Disconnect();
+
+                return result;
+            }
+            public int GetTargetStartPoint()
+            {
+                return (int)this.targetPoint.X;
+            }
+            public List<WordData> GetWordsFromDB(int textid,int targetStartPoint)
+            {
+                List<WordData> result = new List<WordData>();
+                List<object[]> dbResult = new List<object[]>();
+                string[] columns = { "start", "end", "pos" };
+
+                Connect();
+                dbResult = ExecuteQuery($"select start, end, pos from parts where textid={textid} and lemma=(select lemma from parts where textid={textid} and start={targetStartPoint})", columns);
+                Debug.WriteLine($"select start, end, pos from parts where textid={textid} and lemma=(select from parts where textid={textid} and start={targetStartPoint})");
 
                 dbResult.ForEach(item =>
                 {
