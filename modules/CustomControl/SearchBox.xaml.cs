@@ -110,7 +110,7 @@ namespace CustomControl
             {
                 if (WordSearch.Interface.HighlightPOS(textBoxSearcher))
                 {
-                    GetMeaning();
+                    //GetMeaning();
                 }
             }
         }

@@ -122,8 +122,10 @@ namespace WordSearch
 
             //DB에서 모든 단어를 찾는다
             List<WordData> targets = new List<WordData>();
-            targets=selector.GetWordsFromDB(textId, word);
-            
+            int targetStartPoint = selector.GetTargetStartPoint();
+            //targets=selector.GetWordsFromDB(textId, word);
+            targets = selector.GetWordsFromDB(textId, targetStartPoint);
+
 
             //각 단어의 품사에 맞는 배경색을 지정한다
             targets.ForEach(data =>
