@@ -29,6 +29,7 @@
   <ItemGroup>
     <ProjectReference Include="modules\CustomControl\CustomControl.csproj" />
     <ProjectReference Include="modules\SentenceManager\SentenceManager.csproj" />
+    <ProjectReference Include="modules\ThirdParty\ThirdParty.csproj" />
     <ProjectReference Include="modules\UserAccountManager\UserAccountManager.csproj" />
     <ProjectReference Include="modules\VocabNote\VocabNote.csproj" />
     <ProjectReference Include="modules\WordSearch\WordSearch.csproj" />

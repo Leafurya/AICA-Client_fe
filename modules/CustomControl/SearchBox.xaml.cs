@@ -18,6 +18,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Translate;
 using Utility.Data.Json;
+using Utility.Data.Word;
+using Utility.TextSelector;
 using static System.Net.Mime.MediaTypeNames;
 //using static System.Net.Mime.MediaTypeNames;
 
@@ -64,6 +66,7 @@ namespace CustomControl
         {
             if (e.PropertyName == nameof(this.vm.NowText))
             {
+                WordDataMap.Init();
                 Dispatcher.Invoke(() =>
                 {
                     flowTextChangeHandler = false;
@@ -78,15 +81,16 @@ namespace CustomControl
         {
             if (this.DataContext is SharedViewModel vm)
             {
-                Stopwatch stopwatch = new Stopwatch();
+                //Stopwatch stopwatch = new Stopwatch();
 
-                stopwatch.Start();
+                //stopwatch.Start();
 
-                string result = await TranslatorText.ProcessTranslation();
+                //string result = await TranslatorText.ProcessTranslation();
+                string result = ThirdParty.Interface.TranslateText(TranslatorText.ProcessTranslation());
 
-                stopwatch.Stop();
+                //stopwatch.Stop();
 
-                Debug.WriteLine($"번역 시간: {stopwatch.ElapsedMilliseconds} ms");
+                //Debug.WriteLine($"번역 시간: {stopwatch.ElapsedMilliseconds} ms");
                 
                 vm.TranslateResult = result;
             }
@@ -127,7 +131,26 @@ namespace CustomControl
             else
             {
                 sentenceMode = false;
-                WordSearch.Interface.SelectRange(textBoxSearcher, mousePos, textId);
+                Point targetPos=WordSearch.Interface.SelectRange(textBoxSearcher, mousePos, textId);
+                WordData? data = WordDataMap.GetWordData((int)targetPos.X, (int)targetPos.Y);
+                if (data != null)
+                {
+                    Debug.WriteLine(data.pos);
+                    Debug.WriteLine(data.tag);
+                    Debug.WriteLine(data.word);
+                    //여기서 마우스 위치에 오버레이 띄우기
+                    vm.OverlayPos = DataMaps.partOfSpeechMap[data.pos];
+                    vm.OverlayTag = DataMaps.pennTreebankTagMap[data.tag];
+                    vm.OverlayWord = data.word;
+                    wordDataOverlay.HorizontalOffset = mousePos.X;
+                    wordDataOverlay.VerticalOffset = mousePos.Y;
+                    wordDataOverlay.IsOpen = true;
+                }
+                else
+                {
+                    //여기서 오버레이 지우기
+                    wordDataOverlay.IsOpen = false;
+                }
             }
         }
 
@@ -170,7 +193,8 @@ namespace CustomControl
 
                 stopwatch.Start();
 
-                textId = SentenceManager.Interface.PreProcess(text);
+                //textId = SentenceManager.Interface.PreProcess(text);
+                textId=ThirdParty.Interface.AnalyzeSentence(text);
 
                 stopwatch.Stop();
 
@@ -240,7 +264,8 @@ namespace CustomControl
 
                 stopwatch.Start();
 
-                string result = SentenceManager.Interface.GetStringFromImg(selectedImage);
+                string result=ThirdParty.Interface.ExtractText(selectedImage);
+                //string result = SentenceManager.Interface.GetStringFromImg(selectedImage);
 
                 stopwatch.Stop();
 

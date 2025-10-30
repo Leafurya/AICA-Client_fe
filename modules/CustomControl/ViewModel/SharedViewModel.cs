@@ -71,6 +71,45 @@ namespace CustomControl.ViewModel
         //{
         //    get; set;
         //}
+        private string _overlayWord;
+        public string OverlayWord
+        {
+            get => _overlayWord;
+            set
+            {
+                if (_overlayWord != value)
+                {
+                    _overlayWord = value;
+                    OnPropertyChanged(nameof(OverlayWord));
+                }
+            }
+        }
+        private string _overlayPos;
+        public string OverlayPos
+        {
+            get => _overlayPos;
+            set
+            {
+                if (_overlayPos != value)
+                {
+                    _overlayPos = value;
+                    OnPropertyChanged(nameof(OverlayPos));
+                }
+            }
+        }
+        private string _overlayTag;
+        public string OverlayTag
+        {
+            get => _overlayTag;
+            set
+            {
+                if (_overlayTag != value)
+                {
+                    _overlayTag = value;
+                    OnPropertyChanged(nameof(OverlayTag));
+                }
+            }
+        }
 
         private string _userinfoID;
         public string UserInfoID

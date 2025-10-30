@@ -37,6 +37,8 @@ public partial class MainWindow : Window
             vm.IsLogin_LoginButtonHandler += Vm_PropertyChanged;
             Utility.UserSetting.Interface.Init(vm.SettingData);
         }
+        ThirdParty.Interface.Init();
+        ThirdParty.Interface.Echo();
     }
 
     private void Vm_PropertyChanged(object? sender, EventArgs e)

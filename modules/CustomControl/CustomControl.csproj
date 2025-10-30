@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SentenceManager\SentenceManager.csproj" />
+    <ProjectReference Include="..\ThirdParty\ThirdParty.csproj" />
     <ProjectReference Include="..\Translate\Translate.csproj" />
     <ProjectReference Include="..\Uility\Utility.csproj" />
     <ProjectReference Include="..\VocabNote\VocabNote.csproj" />

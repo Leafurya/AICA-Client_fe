@@ -32,7 +32,30 @@
             <Canvas Grid.Row="0" Visibility="Collapsed" Name="canvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
                     Background="Transparent" Cursor="Hand"
                     MouseLeftButtonUp="Canvas_MouseLeftButtonUp" MouseMove="Canvas_MouseMove" MouseWheel="Canvas_MouseWheel">
-
+                <Popup x:Name="wordDataOverlay"
+               PlacementTarget="{Binding ElementName=canvas}"
+               Placement="RelativePoint"
+               StaysOpen="False"
+               AllowsTransparency="True"
+               IsOpen="False">
+                    <Border x:Name="OverlayCard"
+                    Background="#DD222222"
+                    CornerRadius="10"
+                    Padding="12"
+                    Opacity="1">
+                        <StackPanel>
+                            <TextBlock Text="{Binding OverlayWord}" Foreground="White" FontWeight="Bold"/>
+                            <TextBlock Foreground="#DDD" Margin="0,4,0,0">
+                                <Run Text="품사: "/>
+                                <Run Text="{Binding OverlayPos}"/>
+                            </TextBlock>
+                            <TextBlock Foreground="#DDD" Margin="0,4,0,0">
+                                <Run Text="세부태그: "/>
+                                <Run Text="{Binding OverlayTag}"/>
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </Popup>
             </Canvas>
             <TextBlock x:Name="textBlockTranslator" Grid.Row="1" Text="{Binding TranslateResult}" TextWrapping="Wrap" Margin="0,10,0,0"/>
         </Grid>

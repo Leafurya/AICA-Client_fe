@@ -59,6 +59,69 @@ namespace Utility
         }
         namespace Word
         {
+            public class DataMaps
+            {
+                static public Dictionary<string, string> pennTreebankTagMap = new Dictionary<string, string>
+                {
+                    {"CC", "등위접속사"},
+                    {"CD", "기수(숫자, 수사)"},
+                    {"DT", "한정사"},
+                    {"EX", "존재를 나타내는 there"},
+                    {"FW", "외국어"},
+                    {"IN", "전치사/종속접속사"},
+                    {"JJ", "형용사"},
+                    {"JJR", "형용사, 비교급"},
+                    {"JJS", "형용사, 최상급"},
+                    {"LS", "목록 표지"},
+                    {"MD", "조동사"},
+                    {"NN", "명사, 단수/집합"},
+                    {"NNS", "명사, 복수"},
+                    {"NNP", "고유명사, 단수"},
+                    {"NNPS", "고유명사, 복수"},
+                    {"PDT", "전한정사"},
+                    {"POS", "소유격 어미('s)"},
+                    {"PRP", "인칭대명사"},
+                    {"PRP$", "소유대명사"},
+                    {"RB", "부사"},
+                    {"RBR", "부사, 비교급"},
+                    {"RBS", "부사, 최상급"},
+                    {"RP", "불변화사"},
+                    {"SYM", "기호"},
+                    {"TO", "to (부정사/전치사)"},
+                    {"UH", "감탄사"},
+                    {"VB", "동사 원형"},
+                    {"VBD", "동사, 과거형"},
+                    {"VBG", "동명사/현재분사"},
+                    {"VBN", "동사, 과거분사"},
+                    {"VBP", "동사, 현재형(3인칭 단수 이외)"},
+                    {"VBZ", "동사, 현재형(3인칭 단수)"},
+                    {"WDT", "의문한정사"},
+                    {"WP", "의문대명사"},
+                    {"WP$", "소유격 의문대명사"},
+                    {"WRB", "의문부사"}
+                };
+
+                static public Dictionary<string, string> partOfSpeechMap = new Dictionary<string, string>()
+                {
+                    {"NN", "명사"},
+                    {"ADJ", "형용사"},
+                    {"ADP", "전치사/조사"},
+                    {"ADV", "부사"},
+                    {"AUX", "조동사"},
+                    {"CCONJ", "등위접속사"},
+                    {"DET", "한정사"},
+                    {"INTJ", "감탄사"},
+                    {"NOUN", "일반명사"},
+                    {"NUM", "수사"},
+                    {"PART", "불변화사"},
+                    {"PRON", "대명사"},
+                    {"PROPN", "고유명사"},
+                    {"PUNCT", "구두점"},
+                    {"SCONJ", "종속접속사"},
+                    {"SYM", "기호"},
+                    {"VERB", "동사"}
+                };
+            }
             public class PosColors
             {
                 static public Dictionary<string, SolidColorBrush> colors = new Dictionary<string, SolidColorBrush>(){
