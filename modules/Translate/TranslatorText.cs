@@ -15,19 +15,19 @@ namespace Translate
     public static class TranslatorText
     {
         static private Selector selector = new Selector();
-        public static async Task<string> ProcessTranslation()
+        public static string ProcessTranslation()
         {
             string? input = selector.GetText();
-            if (input == null)
-            {
-                Debug.WriteLine("input is null");
-                return "";
-            }
-            Debug.WriteLine("input: "+input);
-            // 번역 실행
-            string result = await Translator.TranslateAsync(input);
-            Debug.WriteLine("result: "+ result);
-            return result;
+            //if (input == null)
+            //{
+            //    Debug.WriteLine("input is null");
+            //    return "";
+            //}
+            //Debug.WriteLine("input: "+input);
+            //// 번역 실행
+            //string result = await Translator.TranslateAsync(input);
+            //Debug.WriteLine("result: "+ result);
+            return input;
         }
     }
 

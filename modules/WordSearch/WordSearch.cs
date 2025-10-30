@@ -60,7 +60,7 @@ namespace WordSearch
         /// </summary>
         /// <param name="textBox"></param>
         /// <param name="mousePt"></param>
-        static public void SelectRange(RichTextBox textBox, Point mousePt, int textId)
+        static public Point SelectRange(RichTextBox textBox, Point mousePt, int textId)
         {
 
             //마우스 위치에 있는 문자의 위치(인덱스)를 가져옴
@@ -76,6 +76,7 @@ namespace WordSearch
             {
                 selector.SetTextColorToSelectedText(selectedText);
             }
+            return targetPos;
         }
         /// <summary>
         /// 텍스트 박스 스타일 초기화<br/>
@@ -125,6 +126,11 @@ namespace WordSearch
             int targetStartPoint = selector.GetTargetStartPoint();
             //targets=selector.GetWordsFromDB(textId, word);
             targets = selector.GetWordsFromDB(textId, targetStartPoint);
+            targets.ForEach(target =>
+            {
+                WordDataMap.InsertWordData(target);
+            });
+            //WordDataMap.InsertWordData()
 
 
             //각 단어의 품사에 맞는 배경색을 지정한다

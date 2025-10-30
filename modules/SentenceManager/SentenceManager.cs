@@ -126,18 +126,18 @@ namespace SentenceManager
             sentence.Trim();
             sentence = sentence.Replace("\n", "\\n");
             sentence = sentence.Replace("\"", "\\\"");
-            
+
             var psi = new ProcessStartInfo
             {
                 FileName = "spacy/main.exe",
-                Arguments = "\""+sentence+"\"", // 문장 지정
+                Arguments = "\"" + sentence + "\"", // 문장 지정
                 RedirectStandardOutput = true,  // 표준 출력 리디렉션
                 RedirectStandardError = true,   // 표준 에러 리디렉션 (선택)
                 UseShellExecute = false,        // 반드시 false여야 리디렉션 가능
                 CreateNoWindow = true           // 창을 띄우지 않음
             };
 
-            int textid = -1;
+            int textId = -1;
             using (var process = Process.Start(psi))
             {
                 string output = process.StandardOutput.ReadToEnd();  // 표준 출력 읽기
@@ -150,10 +150,10 @@ namespace SentenceManager
                 }
                 else
                 {
-                    textid = int.Parse(output);
+                    textId = int.Parse(output);
                 }
             }
-            return textid;
+            return textId;
         }
         static public async void SaveText(int textid, string text)
         {

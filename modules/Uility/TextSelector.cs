@@ -11,22 +11,59 @@ namespace Utility
 {
     namespace TextSelector
     {
+        
         public class WordData
         {
             public int start, end;
-            public string pos;
+            public string? pos;
+            public string? tag;
+            public string? word;
 
             public WordData(int start,int end)
             {
                 this.start = start;
                 this.end = end;
-                pos = null;
+                this.word = null;
+                this.pos = null;
+                this.tag = null;
             }
-            public WordData(int start,int end,string pos)
+            public WordData(int start,int end,string pos,string tag,string word)
             {
                 this.start = start;
                 this.end = end;
                 this.pos = pos;
+                this.tag = tag;
+                this.word = word;
+            }
+        }
+        public class WordDataMap
+        {
+            static private Dictionary<ulong, WordData> map=new Dictionary<ulong, WordData>();
+            static private ulong MakeKey(int start,int end)
+            {
+                ulong key=0;
+                key = ((ulong)start << 32|(ulong)end);
+                return key;
+            }
+            static public WordData? GetWordData(int start,int end)
+            {
+                ulong key = MakeKey(start, end);
+                try
+                {
+                    WordData result = map[key];
+                    return result;
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+            static public void InsertWordData(WordData data)
+            {
+                ulong key=MakeKey(data.start, data.end);
+                map[key] = data;
+            }
+            static public void Init()
+            {
+                map.Clear();
             }
         }
         public class Selector:DBManager
@@ -176,19 +213,20 @@ namespace Utility
 
                 return result;
             }
+            //안쓸지도?
             public List<WordData> GetWordsFromDB(int textid, string word)
             {
                 List<WordData> result = new List<WordData>();
                 List<object[]> dbResult = new List<object[]>();
-                string[] columns = { "start", "end", "pos" };
+                string[] columns = { "start", "end", "pos", "tag" };
 
                 Connect();
-                dbResult = ExecuteQuery($"select start, end, pos from parts where textid={textid} and token='{word}'", columns);
+                dbResult = ExecuteQuery($"select start, end, pos, tag from parts where textid={textid} and token='{word}'", columns);
 
                 dbResult.ForEach(item =>
                 {
-                    WordData data = new WordData(Convert.ToInt32(item[0]), Convert.ToInt32(item[1]), Convert.ToString(item[2]));
-                    result.Add(data);
+                    //WordData data = new WordData(Convert.ToInt32(item[0]), Convert.ToInt32(item[1]), Convert.ToString(item[2]), Convert.ToString(item[3]));
+                    //result.Add(data);
                 });
 
                 Disconnect();
@@ -203,15 +241,15 @@ namespace Utility
             {
                 List<WordData> result = new List<WordData>();
                 List<object[]> dbResult = new List<object[]>();
-                string[] columns = { "start", "end", "pos" };
+                string[] columns = { "start", "end", "pos", "tag", "token" };
 
                 Connect();
-                dbResult = ExecuteQuery($"select start, end, pos from parts where textid={textid} and lemma=(select lemma from parts where textid={textid} and start={targetStartPoint})", columns);
-                Debug.WriteLine($"select start, end, pos from parts where textid={textid} and lemma=(select from parts where textid={textid} and start={targetStartPoint})");
+                dbResult = ExecuteQuery($"select start, end, pos, tag, token from parts where textid={textid} and lemma=(select lemma from parts where textid={textid} and start={targetStartPoint})", columns);
+                //Debug.WriteLine($"select start, end, pos from parts where textid={textid} and lemma=(select from parts where textid={textid} and start={targetStartPoint})");
 
                 dbResult.ForEach(item =>
                 {
-                    WordData data = new WordData(Convert.ToInt32(item[0]), Convert.ToInt32(item[1]), Convert.ToString(item[2]));
+                    WordData data = new WordData(Convert.ToInt32(item[0]), Convert.ToInt32(item[1]), Convert.ToString(item[2]), Convert.ToString(item[3]), Convert.ToString(item[4]));
                     result.Add(data);
                 });
 
