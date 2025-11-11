@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="config.json" />
     <None Remove="styles\Image\congrats.png" />
     <None Remove="styles\Image\delete.png" />
     <None Remove="styles\Image\login.png" />
@@ -31,6 +32,12 @@
     <None Remove="styles\Image\tip2.png" />
     <None Remove="styles\Image\User.png" />
     <None Remove="styles\Image\welcome.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>

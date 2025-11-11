@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using CustomControl;
+using CustomControl.ViewModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,12 +12,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Utility.Data.Sentence;
-using CustomControl.ViewModel;
-using System.ComponentModel;
-using Utility.TokenManager;
-using CustomControl;
 using UserAccountManager.Handlers;
+using Utility.Data.Sentence;
+using Utility.RequestConst;
+using Utility.TokenManager;
 //using WordSearch;
 
 namespace AICA_Client;
@@ -54,7 +55,7 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-        
+        RequestConst.LoadConst();
         this.Loaded += OnSearchBoxLoaded;
         this.Loaded += DoAutoLogin;
         this.ContentRendered += MainWindow_ContentRendered;
