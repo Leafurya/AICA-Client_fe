@@ -86,3 +86,5 @@ appsettings.Local.json
 *.sln.iml
 
 ModuleTest/
+
+config.json
