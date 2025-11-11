@@ -1,0 +1,35 @@
+﻿<Page x:Class="AICA_Client.QuitMemberSuccess"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:AICA_Client"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="QuitMemberSuccess">
+
+    <Grid>
+        <Border x:Name="RegisterSuccessPopup" Padding="36" CornerRadius="20"
+        Background="{StaticResource Brush.Card}"
+        BorderBrush="#000"
+        HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="60">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="Close" Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top"
+                Background="Transparent" BorderThickness="0"
+                FontSize="18" Foreground="#666" Cursor="Hand"
+                Click="Close_Click"/>
+                <StackPanel Grid.Row="1" HorizontalAlignment="Center" Width="420" Margin="0,8,0,0">
+                    <Image Source="pack://application:,,,/styles/Image/login.png"
+                   Width="206" Height="154" Stretch="Uniform" Margin="0,0,0,50"
+                   RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="즐거웠습니다!" FontSize="22" FontWeight="Bold" Foreground="#6EDDBF" TextAlignment="Center"/>
+                    <TextBlock Text="회원 탈퇴에 성공했습니다!" Margin="0,6,0,16" Foreground="#666" TextAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</Page>

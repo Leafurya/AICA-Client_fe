@@ -7,46 +7,97 @@
         xmlns:ctrl="clr-namespace:CustomControl;assembly=CustomControl"
         xmlns:viewmodel="clr-namespace:CustomControl.ViewModel;assembly=CustomControl"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1024" Width="1440"
-        DataContext="{StaticResource vmShared}">
-    <Grid>
+        Title="MainWindow" Height="784" Width="1227"
+        DataContext="{StaticResource vmShared}"
+        ctrl:WordItem.OpenPronunciationFrame="OpenPronunciationFrame"
+        ctrl:SearchBox.OpenLoadingPage="Window_OpenLoadingPage"
+        ctrl:SearchBox.CloseLoadingPage="Window_CloseLoadingPage">
+    <Grid Background="{StaticResource Brush.Card}">
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Grid>
+        <Border Grid.Row="0" Background="#FBFCFD" BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,0,0,1">
+            <Grid Margin="20,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Image Height="40" Width="117" Stretch="Fill" Source="pack://application:,,,/styles/Image/Logo.png"/>
+                </StackPanel>
+
+                <!-- 오른쪽: 로그인/회원가입 or 내정보 -->
+                <Grid Grid.Column="2" VerticalAlignment="Center">
+                    <DockPanel HorizontalAlignment="Right">
+                        <Button Visibility="Visible" Content="로그인" Style="{StaticResource RoundedButton}"
+                                MinWidth="88" Height="34" Margin="0,0,8,0" Name="Login" Click="Login_Click"/>
+
+                        <Button Visibility="Visible" Content="회원가입" Style="{StaticResource RoundedButton}"
+                                MinWidth="88" Height="34" Margin="0,0,8,0" x:Name="RegistButton"
+                                Click="OpenRegistFrame"/>
+
+                        <Button Visibility="Collapsed" Content="내정보" Style="{StaticResource RoundedButton}"
+                        MinWidth="88" Height="34" Name="MyPage" Click="MyPage_Click" 
+                        />
+                    </DockPanel>
+                </Grid>
+            </Grid>
+        </Border>
+        <!--<Grid> origin
             <DockPanel HorizontalAlignment="Right">
                 <Button Visibility="Visible" x:Name="Ligin" Content="로그인" Padding="20,10,20,10" Click="Ligin_Click"></Button>
                 <Button Visibility="Collapsed" x:Name="MyPage" Content="내 정보" Padding="20,10,20,10" Click="MyPage_Click"></Button>
             </DockPanel>
-        </Grid>
-        <Grid Grid.Row="1">
+        </Grid>-->
+        <Grid Grid.Row="1" Background="{StaticResource Brush.Card}">
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="420"/>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="360"/>
+            </Grid.ColumnDefinitions>
+            <!--<Grid.ColumnDefinitions> origin
                 <ColumnDefinition Width="308*"></ColumnDefinition>
                 <ColumnDefinition Width="233*"></ColumnDefinition>
                 <ColumnDefinition Width="259*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <ctrl:SearchBox/>
-            <ctrl:DictBox Grid.Column="1"></ctrl:DictBox>
-            <TabControl x:Name="tabControl" Grid.Column="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <TabControl.Resources>
-                    <Style TargetType="TabItem">
-                        <Setter Property="Width" Value="auto"></Setter>
-                    </Style>
-                </TabControl.Resources>
+            </Grid.ColumnDefinitions>-->
+            <Border Background="{StaticResource Brush.Card}" Grid.Column="0"
+                    BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,0,1,0">
+                <ctrl:SearchBox/>
+            </Border>
 
-                <TabItem Header="단어장">
-                    <ctrl:WordList></ctrl:WordList>
-                </TabItem>
-                <TabItem Header="문장 리스트" Height="20" VerticalAlignment="Bottom">
-                    <ctrl:SentenceList></ctrl:SentenceList>
-                </TabItem>
-                <TabItem Header="AICA 단어장">
-                    <ctrl:AicaList></ctrl:AicaList>
-                </TabItem>
-            </TabControl>
+            <Border Grid.Column="1" Background="{StaticResource Brush.Surface}" BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,0,1,0">
+                <ctrl:DictBox Grid.Column="1"></ctrl:DictBox>
+            </Border>
+
+            <Border Grid.Column="2" Background="{StaticResource Brush.Mint}">
+                <TabControl x:Name="tabControl" Grid.Row="0" Margin="18"
+                                Style="{StaticResource FlatTabs}"
+                                TabStripPlacement="Top" Background="Transparent"
+                                HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TabControl.Resources>
+                        <Style TargetType="TabItem">
+                            <Setter Property="Width" Value="auto"></Setter>
+                        </Style>
+                    </TabControl.Resources>
+
+                    <TabItem Header="단어장" Style="{StaticResource FlatTabItem}" Margin="4,0,-4,0">
+                        <ctrl:WordList></ctrl:WordList>
+                    </TabItem>
+                    <TabItem Header="문장 리스트" Height="20" VerticalAlignment="Bottom"
+                                 Style="{StaticResource FlatTabItem}" Margin="22,0,-22,0">
+                        <ctrl:SentenceList></ctrl:SentenceList>
+                    </TabItem>
+                    <TabItem Header="AICA 단어장"
+                                 Style="{StaticResource FlatTabItem}" Margin="44,0,-42,0">
+                        <ctrl:AicaList></ctrl:AicaList>
+                    </TabItem>
+                </TabControl>
+            </Border>
         </Grid>
-        <Grid x:Name="FrameContainer" Visibility="Visible"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2">
+        <Grid x:Name="FrameContainer" Visibility="Collapsed"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="312"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -57,8 +108,10 @@
                 <RowDefinition Height="*"></RowDefinition>
                 <RowDefinition Height="104"></RowDefinition>
             </Grid.RowDefinitions>
-            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.RowSpan="3" Grid.ColumnSpan="3"></Canvas>
-            <Frame x:Name="subFrame" NavigationUIVisibility="Hidden" Grid.Row="1" Grid.Column="1"/>
+            <Canvas HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                    Grid.RowSpan="3" Grid.ColumnSpan="3" Panel.ZIndex="50"
+                    Background="#80000000"></Canvas>
+            <Frame x:Name="subFrame" NavigationUIVisibility="Hidden" Grid.Row="1" Grid.Column="1" Panel.ZIndex="60"/>
         </Grid>
     </Grid>
 </Window>

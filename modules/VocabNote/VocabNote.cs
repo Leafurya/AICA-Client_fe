@@ -275,6 +275,14 @@ namespace VocabNote
                 Console.WriteLine(ex.Message);
             }
         }
+        static public void Clear()
+        {
+            wordList = null;
+        }
+        static public void DeleteWordsAtText(int textId)
+        {
+
+        }
         //static public bool IsExistAtWordList(int id)
         //{
         //    try

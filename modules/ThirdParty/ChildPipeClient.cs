@@ -54,17 +54,18 @@ namespace ThirdParty
         {
             // 파이프 이름은 충돌 방지를 위해 GUID 사용
             string pipeName = "myapp_rpc_" + Guid.NewGuid().ToString("N");
+            string exeDir = AppDomain.CurrentDomain.BaseDirectory;
 
             var psi = new ProcessStartInfo
             {
-                //FileName = "E:\\GitHub\\capstone\\thirdparty\\dist\\MyOCRApp\\MyOCRApp.exe",                         // 예: "python" 또는 전체 경로
-                //Arguments = $"{pipeName}", 
-                FileName = pythonExe,
-                Arguments = $"{childScriptPath} {pipeName}",
+                FileName = $"{exeDir}\\child\\child.exe",                         // 예: "python" 또는 전체 경로
+                Arguments = $"{pipeName}",
+                //FileName = pythonExe,
+                //Arguments = $"{childScriptPath} {pipeName}",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 StandardErrorEncoding = Encoding.UTF8,
-                CreateNoWindow = false
+                CreateNoWindow = true
             };
             psi.Environment["PARENT_PID"] = Environment.ProcessId.ToString(); 
 

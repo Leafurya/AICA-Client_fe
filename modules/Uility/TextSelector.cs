@@ -1,5 +1,6 @@
 
 using System.Diagnostics;
+using System.Printing;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -68,13 +69,14 @@ namespace Utility
         }
         public class Selector:DBManager
         {
-            static private TextRange text;
+            static private TextRange? text;
             private Point targetPoint;
+            private string lemma;
             public int GetCharIndexFromPoint(RichTextBox rtb, Point point)
             {
                 try
                 {
-                    TextPointer pointer = rtb.GetPositionFromPoint(point, true);
+                    TextPointer pointer = rtb.GetPositionFromPoint(point, false);
                     if (pointer == null) return -1;
 
                     TextPointer start = rtb.Document.ContentStart;
@@ -119,7 +121,10 @@ namespace Utility
                 return offset;
             }
 
-
+            public void SelectText(TextRange? target)
+            {
+                text = target;
+            }
             public void SetTextColorToSelectedText(TextRange target)
             {
                 if (target == text)
@@ -129,8 +134,8 @@ namespace Utility
 
                 text?.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
                 //text?.ApplyPropertyValue(TextElement.ForegroundProperty, text?.GetPropertyValue(TextElement.ForegroundProperty));
-                text = target;
-                text.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
+                SelectText(target);
+                text?.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
             }
             public void SetBackgroundColorToSelectedText(TextRange target, SolidColorBrush color)
             {
@@ -166,7 +171,7 @@ namespace Utility
                 }
                 return null;
             }
-            public TextRange GetSelectedTextRange(TextPointer origin, int start, int end)
+            public TextRange? GetSelectedTextRange(TextPointer origin, int start, int end)
             {
                 //Debug.Write("start: ");
                 TextPointer targetStart = GetTextPointerFromOffset(origin, start);
@@ -186,19 +191,23 @@ namespace Utility
                 return targetRange;
             }
 
-            public string GetText()
+            public string? GetText()
             {
                 return text?.Text;
+            }
+            public string GetLemma()
+            {
+                return lemma;
             }
 
             public Point GetWordFromDB(int textid, int idx)
             {
                 Point result;
                 List<object[]> dbResult = new List<object[]>();
-                string[] columns = { "start", "end" };
+                string[] columns = { "start", "end", "lemma" };
 
                 Connect();
-                dbResult = ExecuteQuery($"select start, end from parts where textid={textid} and start<={idx} and end>={idx}", columns);
+                dbResult = ExecuteQuery($"select start, end, lemma from parts where textid={textid} and start<={idx} and end>={idx}", columns);
 
                 //Debug.WriteLine("GetTextfromDB");
                 dbResult.ForEach(item =>
@@ -206,6 +215,7 @@ namespace Utility
                     //Debug.WriteLine($"{item[0]}, {item[1]}");
                     result.X = Convert.ToDouble(item[0]);
                     result.Y = Convert.ToDouble(item[1]);
+                    this.lemma = Convert.ToString(item[2]);
                 });
                 targetPoint = result;
 
@@ -213,20 +223,21 @@ namespace Utility
 
                 return result;
             }
-            //안쓸지도?
+            //안쓸지도? 있으면 다 쓴다~
             public List<WordData> GetWordsFromDB(int textid, string word)
             {
                 List<WordData> result = new List<WordData>();
                 List<object[]> dbResult = new List<object[]>();
-                string[] columns = { "start", "end", "pos", "tag" };
+                string[] columns = { "start", "end", "pos", "tag", "token" };
 
                 Connect();
-                dbResult = ExecuteQuery($"select start, end, pos, tag from parts where textid={textid} and token='{word}'", columns);
-
+                dbResult = ExecuteQuery($"select start, end, pos, tag, token from parts where textid={textid} and LOWER(lemma)=\"{word.ToLower()}\"", columns);
+                
+                 
                 dbResult.ForEach(item =>
                 {
-                    //WordData data = new WordData(Convert.ToInt32(item[0]), Convert.ToInt32(item[1]), Convert.ToString(item[2]), Convert.ToString(item[3]));
-                    //result.Add(data);
+                    WordData data = new WordData(Convert.ToInt32(item[0]), Convert.ToInt32(item[1]), Convert.ToString(item[2]), Convert.ToString(item[3]), Convert.ToString(item[4]));
+                    result.Add(data);
                 });
 
                 Disconnect();
@@ -257,6 +268,7 @@ namespace Utility
 
                 return result;
             }
+
 
             public Point GetSentenceFromDB(int textid, int idx)
             {

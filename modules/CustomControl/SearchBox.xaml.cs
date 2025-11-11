@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -12,6 +13,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -40,7 +42,33 @@ namespace CustomControl
         private bool searchMode = false;
         private ScrollViewer? scrollViewer=null;
         private bool flowTextChangeHandler = true;
+        private Point? nullableTargetPos = null;
         SharedViewModel vm;
+
+        public static readonly RoutedEvent OpenLoadingPageEvent = EventManager.RegisterRoutedEvent(
+            nameof(OpenLoadingPage),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(WordItem));
+
+        public event RoutedEventHandler OpenLoadingPage
+        {
+            add => AddHandler(OpenLoadingPageEvent, value);
+            remove => RemoveHandler(OpenLoadingPageEvent, value);
+        }
+
+        public static readonly RoutedEvent CloseLoadingPageEvent = EventManager.RegisterRoutedEvent(
+            nameof(CloseLoadingPage),
+            RoutingStrategy.Bubble,
+            typeof(RoutedEventHandler),
+            typeof(WordItem));
+
+        public event RoutedEventHandler CloseLoadingPage
+        {
+            add => AddHandler(CloseLoadingPageEvent, value);
+            remove => RemoveHandler(CloseLoadingPageEvent, value);
+        }
+
         public SearchBox()
         {
             InitializeComponent();
@@ -67,6 +95,8 @@ namespace CustomControl
             if (e.PropertyName == nameof(this.vm.NowText))
             {
                 WordDataMap.Init();
+                DisableSearchMode();
+                
                 Dispatcher.Invoke(() =>
                 {
                     flowTextChangeHandler = false;
@@ -74,6 +104,7 @@ namespace CustomControl
                     doc.Blocks.Add(new Paragraph(new Run(this.vm.NowText)));
                     textBoxSearcher.Document = doc;
                     flowTextChangeHandler = true;
+                    vm.TranslateResult = "";
                 });
             }
         }
@@ -99,8 +130,18 @@ namespace CustomControl
         {
             if (DataContext is SharedViewModel vm)
             {
-                string result = await WordSearch.Interface.GetMeaning();
-                vm.DictionaryMean = result;
+                string result;
+                WordMeanings? means;
+                (result,means) = await WordSearch.Interface.GetMeaning();
+                //vm.DictionaryMean = result;
+                if (means != null)
+                {
+                    vm.DictionaryMeans = means.meanings;
+                    vm.DictWord=means.word;
+                    return;
+                }
+                vm.DictionaryMeans = new List<Meaning>();
+                vm.DictWord = result;
             }
         }
 
@@ -109,16 +150,24 @@ namespace CustomControl
             if (sentenceMode)
             {
                 Translate();
+                return;
             }
-            else
+            
+            if (!IsMouseOnWord())
             {
-                if (WordSearch.Interface.HighlightPOS(textBoxSearcher))
-                {
-                    //GetMeaning();
-                }
+                return;
+            }
+            if (WordSearch.Interface.HighlightPOS(textBoxSearcher))
+            {
+                GetMeaning();
+                return;
             }
         }
-
+        
+        private bool IsMouseOnWord()
+        {
+            return (nullableTargetPos != null);
+        }
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             Point mousePos = e.GetPosition(textBoxSearcher);
@@ -127,31 +176,51 @@ namespace CustomControl
             {
                 sentenceMode = true;
                 SentenceManager.Interface.SelectRange(textBoxSearcher, mousePos, textId);
+                return;
             }
-            else
+            //else
+            //{
+            sentenceMode = false;
+            nullableTargetPos = WordSearch.Interface.SelectRange(textBoxSearcher, mousePos, textId);
+            if (nullableTargetPos == null)
             {
-                sentenceMode = false;
-                Point targetPos=WordSearch.Interface.SelectRange(textBoxSearcher, mousePos, textId);
-                WordData? data = WordDataMap.GetWordData((int)targetPos.X, (int)targetPos.Y);
-                if (data != null)
-                {
-                    Debug.WriteLine(data.pos);
-                    Debug.WriteLine(data.tag);
-                    Debug.WriteLine(data.word);
-                    //여기서 마우스 위치에 오버레이 띄우기
-                    vm.OverlayPos = DataMaps.partOfSpeechMap[data.pos];
-                    vm.OverlayTag = DataMaps.pennTreebankTagMap[data.tag];
-                    vm.OverlayWord = data.word;
-                    wordDataOverlay.HorizontalOffset = mousePos.X;
-                    wordDataOverlay.VerticalOffset = mousePos.Y;
-                    wordDataOverlay.IsOpen = true;
-                }
-                else
-                {
-                    //여기서 오버레이 지우기
-                    wordDataOverlay.IsOpen = false;
-                }
+                wordDataOverlay.IsOpen = false;
+                return;
             }
+            Point targetPos = nullableTargetPos.Value;
+            //Point targetPos = WordSearch.Interface.SelectRange(textBoxSearcher, mousePos, textId);
+            WordData? data = WordDataMap.GetWordData((int)targetPos.X, (int)targetPos.Y);
+            Debug.WriteLine("hoverd word data is not null " + (data != null));
+            if (data == null)
+            {
+                wordDataOverlay.IsOpen = false;
+                return;
+            }
+            //if (data != null)
+            //{
+            try
+            {
+                Debug.WriteLine(data.pos);
+                Debug.WriteLine(data.tag);
+                Debug.WriteLine(data.word);
+                //여기서 마우스 위치에 오버레이 띄우기
+                vm.OverlayPos = DataMaps.partOfSpeechMap[data.pos];
+                vm.OverlayTag = DataMaps.pennTreebankTagMap[data.tag];
+                vm.OverlayWord = data.word;
+                wordDataOverlay.HorizontalOffset = mousePos.X;
+                wordDataOverlay.VerticalOffset = mousePos.Y;
+                wordDataOverlay.IsOpen = true;
+            }
+            catch (Exception ex)
+            {
+            }
+            //}
+            //else
+            //{
+            //    //여기서 오버레이 지우기
+            //    wordDataOverlay.IsOpen = false;
+            //}
+        //}
         }
 
         private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
@@ -173,14 +242,90 @@ namespace CustomControl
             e.Handled = true; // 이벤트 버블링 방지 (필수)
         }
 
+        //private Task AnalyzeSentence(SharedViewModel vm)
+        //{
+        //    searchMode = true;
+            
+        //    TextRange textRange = new TextRange(textBoxSearcher.Document.ContentStart, textBoxSearcher.Document.ContentEnd);
+        //    string text = textRange.Text;
+        //    text = text.Trim();
 
-        private void ToggleBtnMode_Checked(object sender, RoutedEventArgs e)
+        //    //if (this.DataContext is not SharedViewModel vm)
+        //    //{
+        //    //    return Task.CompletedTask;
+        //    //}
+
+        //    //서버에서 받아온 데이터는 클라db에 없으니 해시 값도 없음.
+        //    //그래서 한 번은 문장을 분석하고 db에 저장하는 과정을 거쳐야 함.
+        //    if (!SentenceManager.Interface.IsExistText(text))
+        //    {
+        //        int selectedTextId = SentenceManager.Interface.GetSelectedTextId(); //리스트에서 클릭한 문장의 id
+        //        Debug.WriteLine("selectedTextId " + selectedTextId);
+
+        //        Stopwatch stopwatch = new Stopwatch();
+
+        //        stopwatch.Start();
+
+        //        //textId = SentenceManager.Interface.PreProcess(text);
+        //        textId = ThirdParty.Interface.AnalyzeSentence(text);
+
+
+        //        Debug.WriteLine($"문장 분석 시간: {stopwatch.ElapsedMilliseconds} ms");
+
+        //        if (selectedTextId != -1)
+        //        {
+        //            SentenceManager.Interface.UpdateTextId(textId, selectedTextId); //db에 넣은 textid의 값을 기존의 것으로 변경
+        //            textId = selectedTextId;
+        //            SentenceManager.Interface.InitSelectedTextId();
+        //        }
+        //        else
+        //        {
+        //            SentenceManager.Interface.SaveText(textId, text); //서버로 문장 데이터 전송
+
+        //            //if (this.DataContext is SharedViewModel vm)
+        //            //{
+        //            Debug.WriteLine("input update");
+        //            vm.NowText = text;
+        //            vm.SentenceList.Add(SentenceManager.Interface.AddText(text, textId));
+        //            //}
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //SentenceManager.Interface.GetSelectedTextId()를 하면 안되는 이유:
+        //        //프로그램이 해당 문장의 해시 값이 이미 가지고 있음
+        //        //문장을 수정했다가 원상 복구 하면 GetSelectedTextId의 출력 값이 달라짐.
+        //        //그럼 해시 값은 같은 데 GetSelectedTextId가 -1이 되어 textid의 값이 -1이 됨
+        //        //이를 방지하고자 해당 텍스트의 id를 직접 가져옴
+        //        textId = SentenceManager.Interface.GetTextId(text);
+        //        Debug.WriteLine("selected id " + textId);
+        //    }
+        //    WordSearch.Interface.SetTextId(textId);
+
+            
+
+        //    Debug.WriteLine(textId);
+        //    return Task.CompletedTask;
+        //}
+        private async void ToggleBtnMode_Checked(object sender, RoutedEventArgs e)
         {
+            string[] msgs = { "분석 중.  ", "분석 중.. ", "분석 중..." };
+            if (this.DataContext is not SharedViewModel vm)
+            {
+                return;
+            }
+            
+
             searchMode = true;
-            canvas.Visibility = Visibility.Visible;
+
             TextRange textRange = new TextRange(textBoxSearcher.Document.ContentStart, textBoxSearcher.Document.ContentEnd);
             string text = textRange.Text;
-            text=text.Trim();
+            text = text.Trim();
+
+            //if (this.DataContext is not SharedViewModel vm)
+            //{
+            //    return Task.CompletedTask;
+            //}
 
             //서버에서 받아온 데이터는 클라db에 없으니 해시 값도 없음.
             //그래서 한 번은 문장을 분석하고 db에 저장하는 과정을 거쳐야 함.
@@ -194,29 +339,35 @@ namespace CustomControl
                 stopwatch.Start();
 
                 //textId = SentenceManager.Interface.PreProcess(text);
-                textId=ThirdParty.Interface.AnalyzeSentence(text);
+                RaiseEvent(new LoadingPageArgs(OpenLoadingPageEvent, msgs));
+                textId = await Task.Run(() => ThirdParty.Interface.AnalyzeSentence(text));
+                RaiseEvent(new RoutedEventArgs(CloseLoadingPageEvent));
 
-                stopwatch.Stop();
 
                 Debug.WriteLine($"문장 분석 시간: {stopwatch.ElapsedMilliseconds} ms");
 
-                if (selectedTextId != -1)
-                {
-                    SentenceManager.Interface.UpdateTextId(textId, selectedTextId); //db에 넣은 textid의 값을 기존의 것으로 변경
-                    textId = selectedTextId;
-                    SentenceManager.Interface.InitSelectedTextId();
-                }
-                else
-                {
-                    SentenceManager.Interface.SaveText(textId, text); //서버로 문장 데이터 전송
+                //if (selectedTextId != -1) // 이미 있던 문장을 덮어 쓴다면(문장을 수정했다면. 그러면 검색하고 새로운 문장을 어떻게 넣지?) 문장을 수정하면 다른 문장으로 보고 새로 저장함
+                //{
+                //    SentenceManager.Interface.UpdateTextId(textId, selectedTextId); //db에 넣은 textid의 값을 기존의 것으로 변경
+                //    textId = selectedTextId;
+                //    SentenceManager.Interface.InitSelectedTextId();
+                //}
+                //else
+                //{
+                //    SentenceManager.Interface.SaveText(textId, text); //서버로 문장 데이터 전송
 
-                    if (this.DataContext is SharedViewModel vm)
-                    {
-                        Debug.WriteLine("input update");
-                        vm.NowText = text;
-                        vm.SentenceList.Add(SentenceManager.Interface.AddText(text, textId));
-                    }
-                }
+                //    //if (this.DataContext is SharedViewModel vm)
+                //    //{
+                //    Debug.WriteLine("input update");
+                //    vm.NowText = text;
+                //    vm.SentenceList.Add(SentenceManager.Interface.AddText(text, textId));
+                //    //}
+                //}
+                SentenceManager.Interface.SaveText(textId, text); //서버로 문장 데이터 전송
+
+                Debug.WriteLine("input update");
+                vm.NowText = text;
+                vm.SentenceList.Add(SentenceManager.Interface.AddText(text, textId));
             }
             else
             {
@@ -229,12 +380,46 @@ namespace CustomControl
                 Debug.WriteLine("selected id " + textId);
             }
             WordSearch.Interface.SetTextId(textId);
+            
             Debug.WriteLine(textId);
+
+            if (vm.AicaList != null)
+            {
+                Debug.WriteLine("vm.AicaList != null");
+                List<VocabItem> aicaItems = vm.AicaList.ToList();
+
+                aicaItems.ForEach(item =>
+                {
+                    Debug.WriteLine(item.word);
+                    WordSearch.Interface.HighlightAICAPOS(textBoxSearcher, item.word);
+                });
+            }
+
+            canvas.Visibility = Visibility.Visible;
+            vm.AicaList = VocabNote.Interface.GetAicaList(textId);
+
+            //this.AnalyzeSentence().ContinueWith(task =>
+            //{
+            //    RaiseEvent(new RoutedEventArgs(CloseLoadingPageEvent, this));
+            //});
         }
 
         private void ToggleBtnMode_Unchecked(object sender, RoutedEventArgs e)
         {
+            DisableSearchMode();
+        }
+        private void DisableSearchMode()
+        {
             searchMode = false;
+            TextRange tr = new TextRange(
+                textBoxSearcher.Document.ContentStart,
+                textBoxSearcher.Document.ContentEnd
+            );
+
+            tr.ApplyPropertyValue(TextElement.BackgroundProperty, null);
+            //toggleBtnMode.IsChecked = false;
+            vm.IsSearchModeToggleOn = false;
+            vm.TranslateResult = "";
             canvas.Visibility = Visibility.Collapsed;
         }
         public static T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
@@ -252,24 +437,28 @@ namespace CustomControl
             return null;
         }
 
-        private void btnSelectImg_Click(object sender, RoutedEventArgs e)
+        private async void btnSelectImg_Click(object sender, RoutedEventArgs e)
         {
+            string[] msgs = { "추출 중.  ", "추출 중.. ", "추출 중..." };
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.Filter = "이미지 파일 (*.png;*.jpg;*.jpeg;*.bmp)|*.png;*.jpg;*.jpeg;*.bmp";
             if (dialog.ShowDialog() == true)
             {
                 string selectedImage = dialog.FileName;
 
-                Stopwatch stopwatch = new Stopwatch();
+                //Stopwatch stopwatch = new Stopwatch();
 
-                stopwatch.Start();
+                //stopwatch.Start();
 
-                string result=ThirdParty.Interface.ExtractText(selectedImage);
+                RaiseEvent(new LoadingPageArgs(OpenLoadingPageEvent, msgs));
+                string result = await Task.Run(() =>ThirdParty.Interface.ExtractText(selectedImage));
+                RaiseEvent(new RoutedEventArgs(CloseLoadingPageEvent));
+                
                 //string result = SentenceManager.Interface.GetStringFromImg(selectedImage);
 
-                stopwatch.Stop();
+                //stopwatch.Stop();
 
-                Debug.WriteLine($"문장 추출 시간: {stopwatch.ElapsedMilliseconds} ms");
+                //Debug.WriteLine($"문장 추출 시간: {stopwatch.ElapsedMilliseconds} ms");
 
                 
                 if(this.DataContext is SharedViewModel vm)

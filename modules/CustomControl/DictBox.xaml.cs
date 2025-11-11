@@ -55,15 +55,32 @@ namespace CustomControl
         private async void RequestAddWord()
         {
             int textId = WordSearch.Interface.GetTextId();
+            Debug.WriteLine("textId "+textId);
+            //SharedViewModel vm;
+            if (this.DataContext is not SharedViewModel vm)
+            {
+                Debug.WriteLine("this.DataContext is not SharedViewModel vm @ DictBox.xaml.cs");
+                return;
+            }
+            if (!vm.IsLogin)
+            {
+                Debug.WriteLine("로그인 필요 @ DictBox.xaml.cs");
+                return;
+            }
+            if (textId == -1)
+            {
+                Debug.WriteLine("textId == -1 @ DictBox.xaml.cs");
+                return;
+            }
             WordMeanings? wordMeanings = await VocabNote.Interface.RequestAddWord(textId);
             if (wordMeanings == null)
             {
-                Debug.WriteLine("wordMeanings is null");
+                Debug.WriteLine("wordMeanings is null @ DictBox.xaml.cs");
                 return;
             }
 
-            if (this.DataContext is SharedViewModel vm)
-            {
+            //if (this.DataContext is SharedViewModel vm)
+            //{
                 if (vm.WordsList == null)
                 {
                     vm.WordsList = VocabNote.Interface.GetWordList();
@@ -90,7 +107,7 @@ namespace CustomControl
                 //{
                 //    vm.AicaList.Add(wordMeanings);
                 //}
-            }
+            //}
         }
     }
 }

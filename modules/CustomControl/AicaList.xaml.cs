@@ -1,6 +1,7 @@
 ﻿using CustomControl.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,7 @@ namespace CustomControl
     public partial class AicaList : UserControl
     {
         private bool _suppressUnchecked = false;
+        
         public AicaList()
         {
             InitializeComponent();
@@ -38,7 +40,7 @@ namespace CustomControl
             }
         }
 
-        private async void Vm_IsLogin_AicaListHandler(object? sender, EventArgs e)
+        private void Vm_IsLogin_AicaListHandler(object? sender, EventArgs e)
         {
             if (this.DataContext is SharedViewModel vm)
             {
@@ -59,34 +61,34 @@ namespace CustomControl
             }
         }
 
-        private void toggleButtonSelectAll_Checked(object sender, RoutedEventArgs e)
-        {
-            IEnumerable<ToggleButton> toggleButtons = ControlUtil.FindVisualChildren<ToggleButton>(itemsControl).ToList();
+        //private void toggleButtonSelectAll_Checked(object sender, RoutedEventArgs e)
+        //{
+        //    IEnumerable<ToggleButton> toggleButtons = ControlUtil.FindVisualChildren<ToggleButton>(itemsControl).ToList();
 
-            foreach (ToggleButton toggle in toggleButtons)
-            {
-                toggle.IsChecked = true; // 전체 On
-            }
-        }
+        //    foreach (ToggleButton toggle in toggleButtons)
+        //    {
+        //        toggle.IsChecked = true; // 전체 On
+        //    }
+        //}
 
-        private void toggleButtonSelectAll_Unchecked(object sender, RoutedEventArgs e)
-        {
-            if (!_suppressUnchecked)
-            {
-                IEnumerable<ToggleButton> toggleButtons = ControlUtil.FindVisualChildren<ToggleButton>(itemsControl).ToList();
+        //private void toggleButtonSelectAll_Unchecked(object sender, RoutedEventArgs e)
+        //{
+        //    if (!_suppressUnchecked)
+        //    {
+        //        IEnumerable<ToggleButton> toggleButtons = ControlUtil.FindVisualChildren<ToggleButton>(itemsControl).ToList();
 
-                foreach (ToggleButton toggle in toggleButtons)
-                {
-                    toggle.IsChecked = false; // 전체 Off
-                }
-            }
-        }
-        public void UncheckSelectAllTogglButton()
-        {
-            _suppressUnchecked = true;
-            toggleButtonSelectAll.IsChecked = false;
-            _suppressUnchecked = false;
-        }
+        //        foreach (ToggleButton toggle in toggleButtons)
+        //        {
+        //            toggle.IsChecked = false; // 전체 Off
+        //        }
+        //    }
+        //}
+        //public void UncheckSelectAllTogglButton()
+        //{
+        //    _suppressUnchecked = true;
+        //    toggleButtonSelectAll.IsChecked = false;
+        //    _suppressUnchecked = false;
+        //}
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -108,7 +110,7 @@ namespace CustomControl
                 //SentenceData data= vm.SentenceList
                 foreach (int index in removeTargetIdx.OrderByDescending(i => i))
                 {
-                    //vm.AicaList.RemoveAt(index);
+                    vm.AicaList?.RemoveAt(index);
                 }
             }
 
@@ -126,5 +128,6 @@ namespace CustomControl
             //}
 
         }
+        
     }
 }

@@ -14,8 +14,12 @@ namespace Utility
         public class RequestConst
         {
             static public HttpClient client=new HttpClient();
-            static public string host="http://3.38.30.238";
+            //static public string host = "http://127.0.0.1";
+            //static public string wsEntryPoint = "ws://127.0.0.1/ws/pronunciation";
+            static public string host = "http://52.79.93.151";
+            static public string wsEntryPoint = "ws://52.79.93.151/ws/pronunciation";
             //static public string host = "http://127.0.0.1:8080";
+            //static public string wsEntryPoint = "ws://127.0.0.1/ws/pronunciation";
         }
     }
 }

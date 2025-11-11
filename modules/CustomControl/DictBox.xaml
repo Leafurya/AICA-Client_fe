@@ -3,15 +3,120 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:CustomControl"
+             xmlns:local="clr-namespace:CustomControl" xmlns:viewmodel="clr-namespace:CustomControl.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="226.097" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
     <Grid>
         <Grid.RowDefinitions>
+            <!-- 제목 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 의미 리스트 -->
+            <RowDefinition Height="Auto"/>
+            <!-- 스페이서 -->
+            <RowDefinition Height="*"/>
+            <!-- 문맥 의미 -->
+            <RowDefinition Height="Auto"/>
+            <!-- + 버튼 -->
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="50"></RowDefinition>
-        </Grid.RowDefinitions>
-        <TextBlock Grid.Column="1" Text="{Binding DictionaryMean}" TextWrapping="Wrap"></TextBlock>
-        <Button x:Name="AddWord" IsEnabled="{Binding IsLogin}" Grid.Row="1" Margin="10,10,10,10" Content="+" Click="Button_Click"></Button>
+        </Grid.RowDefinitions>-->
+        
+        <!-- 제목 -->
+        <StackPanel Grid.Row="0" Margin="24,18,24,8">
+            <TextBlock Text="{Binding DictWord}" FontSize="18" FontWeight="Bold"  TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <!-- ✅ 중앙 의미 리스트 (DictionarySenses) -->
+        <Border Grid.Row="1" Margin="24,8,24,0" Padding="16"
+         Background="#FFFFFF" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1"
+         CornerRadius="10">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Visible"/>
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding DictionaryMeans}" Value="{x:Null}">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding DictionaryMeans.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+
+            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                <StackPanel>
+                    <ItemsControl ItemsSource="{Binding DictionaryMeans}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,8,0,8">
+                                    <!-- 품사/헤딩 -->
+                                    <TextBlock Text="{Binding partOfSpeech, Converter={StaticResource convPOS}}" FontWeight="Bold" />
+                                    <!-- 정의 -->
+                                    <TextBlock Text="{Binding meaning}" TextWrapping="Wrap" Margin="0,2,0,0"/>
+                                    <!-- 예문 -->
+                                    <ItemsControl ItemsSource="{Binding exampleSentences}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="0,4,0,0">
+                                                    <TextBlock Text="{Binding sentence}" TextWrapping="Wrap"/>
+                                                    <TextBlock Text="{Binding meaning}" TextWrapping="Wrap" Foreground="#666"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- 스페이서 -->
+        <Border Grid.Row="2" Background="Transparent"/>
+
+        <!-- AICA 문맥 의미 (AICA 탭일 때만) -->
+        <Border Grid.Row="3" Margin="24,14,24,12" Padding="14" CornerRadius="10"
+        Background="#FFFFFF" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1">
+            <Border.Style>
+                <Style TargetType="Border">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding RightTabIndex}" Value="2"/>
+                                <Condition Binding="{Binding HasContextMeaning}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,6" VerticalAlignment="Center">
+                    <Image Source="E:\GitHub\AICA-Client_fe\styles\Image\tip.png"
+               Width="26" Height="26" Margin="0,0,6,0"
+              RenderOptions.BitmapScalingMode="HighQuality"/>
+                    <TextBlock Text="  이 문장에서는 이런 의미로 쓰였어요!" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                </StackPanel>
+                <TextBlock Text="{Binding ContextMeaning}" TextWrapping="Wrap"/>
+            </StackPanel>
+        </Border>
+
+        <!-- + 버튼: 맨 아래 고정 -->
+        <Button Grid.Row="4" Width="220" Height="44"
+                HorizontalAlignment="Center" VerticalAlignment="Center"
+                Style="{StaticResource RoundedButton}"
+                x:Name="AddWord"
+                Click="Button_Click">
+            <TextBlock Text="+" FontSize="18"/>
+        </Button>
+
+        <!--<TextBlock Grid.Column="1" Text="{Binding DictionaryMean}" TextWrapping="Wrap"></TextBlock>
+        <Button x:Name="AddWord" IsEnabled="{Binding IsLogin}" Grid.Row="1" Margin="10,10,10,10" Content="+" Click="Button_Click"></Button>-->
     </Grid>
 </UserControl>

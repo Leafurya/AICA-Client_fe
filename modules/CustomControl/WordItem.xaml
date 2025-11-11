@@ -6,47 +6,76 @@
              xmlns:local="clr-namespace:CustomControl"
              xmlns:viewmodel="clr-namespace:CustomControl.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="800"
-             Height="auto">
+             d:DesignHeight="400" d:DesignWidth="300">
     <UserControl.Resources>
         <viewmodel:POSConverter x:Key="PosConverter"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid Margin="0,7,0,0">
         <Grid.RowDefinitions>
             <RowDefinition Height="20"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20"></ColumnDefinition>
+                <ColumnDefinition Width="30"></ColumnDefinition>
                 <ColumnDefinition Width="*"></ColumnDefinition>
+                <ColumnDefinition Width="32"/>
             </Grid.ColumnDefinitions>
-            <ToggleButton x:Name="toggleBtn" Height="20" Width="20"></ToggleButton>
-            <TextBlock x:Name="Word" Grid.Column="1" Text="{Binding word}" Tag="{Binding wordId}" MouseLeftButtonUp="Word_MouseLeftButtonUp"></TextBlock>
+            <!--선택-->
+            <CheckBox x:Name="toggleBtn" VerticalAlignment="Center"></CheckBox>
+            <!--단어-->
+            <TextBlock d:Text="hello" FontSize="15" x:Name="Word" Grid.Column="1" Text="{Binding word}" Tag="{Binding wordId}" MouseLeftButtonUp="Word_MouseLeftButtonUp"></TextBlock>
+            <!--녹음 아이콘-->
+            <Button x:Name="btnPronuncTest" Grid.Column="2" Background="Transparent" BorderThickness="0" ToolTip="녹음" Click="btnPronuncTest_Click">
+                <Button.Template>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Path x:Name="Mic" Data="M12,3 C9.79,3 8,4.79 8,7 L8,11 C8,13.21 9.79,15 12,15 C14.21,15 16,13.21 16,11 L16,7 C16,4.79 14.21,3 12,3 z M19,11 C19,14.31 16.31,17 13,17 L11,17 C7.69,17 5,14.31 5,11 L7,11 C7,13.76 9.24,16 12,16 C14.76,16 17,13.76 17,11 L19,11 z M12,19 L12,22 L10,22 L10,19 L12,19 z" Fill="#666" Stretch="Uniform"/>
+                            <Ellipse x:Name="RecDot" Width="6" Height="6" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,2,2,0" Fill="Transparent"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Mic" Property="Fill" Value="#444"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
-        <Grid x:Name="MeaningsGrid" Grid.Row="1" Visibility="Collapsed">
-            <ItemsControl ItemsSource="{Binding meanings}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <StackPanel>
-                            <TextBlock Text="{Binding partOfSpeech, Converter={StaticResource PosConverter}}"></TextBlock>
-                            <TextBlock Text="{Binding meaning}" TextWrapping="Wrap"></TextBlock>
-                            <Border BorderBrush="gray" BorderThickness="2,0,0,0" Padding="10,0,0,0">
-                                <ItemsControl ItemsSource="{Binding exampleSentences}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding sentence}" TextWrapping="Wrap"></TextBlock>
-                                                <TextBlock Text="{Binding meaning}" TextWrapping="Wrap"></TextBlock>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </Border>
-                        </StackPanel>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </Grid>
+        
+        <!--뜻 카드-->
+        <Border Grid.Row="1" x:Name="MeaningsGrid" Visibility="Collapsed" CornerRadius="12"
+                Background="#E6FAF3" Padding="12" Margin="28,6,0,0">
+            <StackPanel>
+                <Rectangle  Style="{StaticResource DottedTopDivider}"/>
+                <Grid>
+                    <ItemsControl ItemsSource="{Binding meanings}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Margin="0,8,0,0">
+                                    <TextBlock FontWeight="Bold" Foreground="#333" FontSize="15"
+                                               Text="{Binding partOfSpeech, Converter={StaticResource PosConverter}}"></TextBlock>
+                                    <TextBlock Text="{Binding meaning}" TextWrapping="Wrap"
+                                               Margin="0,4,0,0" FontSize="16"></TextBlock>
+                                    <Border BorderBrush="gray" BorderThickness="2,0,0,0" Padding="10,0,0,0">
+                                        <ItemsControl ItemsSource="{Binding exampleSentences}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="0,6,0,0">
+                                                        <TextBlock Text="{Binding sentence}" TextWrapping="Wrap" FontSize="14"></TextBlock>
+                                                        <TextBlock Text="{Binding meaning}" TextWrapping="Wrap"
+                                                                   Foreground="#666" FontSize="13"></TextBlock>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </Border>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

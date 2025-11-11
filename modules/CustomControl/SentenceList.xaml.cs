@@ -70,7 +70,7 @@ namespace CustomControl
         }
 
 
-        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        private void toggleButtonSelectAll_Checked(object sender, RoutedEventArgs e)
         {
             IEnumerable<ToggleButton> toggleButtons = ControlUtil.FindVisualChildren<ToggleButton>(itemsControl).ToList();
 
@@ -80,7 +80,7 @@ namespace CustomControl
             }
         }
 
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
+        private void toggleButtonSelectAll_Unchecked(object sender, RoutedEventArgs e)
         {
             if (!_suppressUnchecked)
             {
@@ -99,7 +99,7 @@ namespace CustomControl
             _suppressUnchecked = false;
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             List<SentenceItem> items = ControlUtil.FindVisualChildren<SentenceItem>(itemsControl).ToList();
             List<int> removeTargetIdx= new List<int>();
@@ -112,15 +112,28 @@ namespace CustomControl
                 if (item.IsChecked())
                 {
                     int textId = item.GetTextId();
-                    SentenceManager.Interface.DeleteText(textId);
-                    if (nowTextId == textId)
+                    await SentenceManager.Interface.DeleteText(textId); // 문장 삭제
+                    if (this.DataContext is SharedViewModel sharedVm)
                     {
-                        if (this.DataContext is SharedViewModel sharedVm)
+                        //VocabNote.Interface.ClearAicaList(textId); // 관련 aica 리스트 삭제
+                        // 관련 단어 삭제 
+
+                        if (sharedVm.IsLogin)
                         {
-                            VocabNote.Interface.ClearAicaList(nowTextId);
+                            VocabNote.Interface.Clear();
+                            await VocabNote.Interface.RequestVocabNote(-1);
+                            sharedVm.WordsList = VocabNote.Interface.GetWordList();
+                        }
+                        if (nowTextId != -1)
+                        {
                             sharedVm.AicaList = VocabNote.Interface.GetAicaList(nowTextId);
+                        }
+
+                        if (nowTextId == textId) // 지금 떠있는 문장을 삭제했다면
+                        {
+                            WordSearch.Interface.SetTextId(-1); //
+                            //sharedVm.AicaList = VocabNote.Interface.GetAicaList(nowTextId);
                             sharedVm.NowText = "";
-                            WordSearch.Interface.SetTextId(-1);
                         }
                     }
                     removeTargetIdx.Add(i);

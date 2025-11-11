@@ -49,6 +49,7 @@ namespace CustomControl
                     {
                         //await VocabNote.Interface.RequestAicaList(textId);
                         sharedVM.AicaList = VocabNote.Interface.GetAicaList(textId);
+                        // 문장에 에이카 단어 표시하기
                     }
                 }
             }

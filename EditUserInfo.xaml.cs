@@ -53,19 +53,19 @@ namespace AICA_Client
             this.mainWnd.CloseFrameContainer();
         }
 
-        private async void Confirm_Click(object sender, RoutedEventArgs e)
-        {
-            string pwd = PasswordInput.Password;
-            (bool suc,string msg)=await UserInfoHandler.HandlePasswordCheckAsync(pwd);
-            if (suc)
-            {
-                CheckPasswordGrid.Visibility = Visibility.Collapsed;
-            }
-            else
-            {
-                MessageBox.Show(msg, "알림", MessageBoxButton.OK);
-            }
-        }
+        //private async void Confirm_Click(object sender, RoutedEventArgs e)
+        //{
+        //    string pwd = PasswordInput.Password;
+        //    (bool suc, string msg) = await UserInfoHandler.HandlePasswordCheckAsync(pwd);
+        //    if (suc)
+        //    {
+        //        CheckPasswordGrid.Visibility = Visibility.Collapsed;
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show(msg, "알림", MessageBoxButton.OK);
+        //    }
+        //}
 
         private async void SendVerifyCodeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -82,6 +82,30 @@ namespace AICA_Client
             (bool success, string result) = await RegistrationInterface.VerifyEmailCode(email, verifyCode);
 
             MessageBox.Show(result, "알림", MessageBoxButton.OK);
+        }
+        private void ViewPwdBtn_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordBox pwd = NewPasswordInput; //this.FindName("RegPwdBox") as PasswordBox;
+            TextBox txt = NewPasswordInputVisible;
+
+            if (sender.Equals(ViewConfirmPwd))
+            {
+                pwd = ReNewPasswordInput;//this.FindName("RegPwdBox") as PasswordBox;
+                txt = ReNewPasswordInputVisible;//this.FindName("RegPwdText") as TextBox;
+            }
+
+            if (pwd.Visibility == Visibility.Visible)
+            {
+                txt.Text = pwd.Password;
+                pwd.Visibility = Visibility.Collapsed;
+                txt.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                pwd.Password = txt.Text;
+                txt.Visibility = Visibility.Collapsed;
+                pwd.Visibility = Visibility.Visible;
+            }
         }
     }
 }

@@ -13,6 +13,36 @@ namespace Utility
         public class UserSetting : DBManager
         {
             private UserSettingData data { get; set; }
+            public UserSetting()
+            {
+                Connect();
+                try
+                {
+                    string query = "CREATE TABLE setting (rememberMe BOOLEAN DEFAULT 0)";
+                    ExecuteNonQuery(query);
+                    query = "INSERT INTO setting VALUES (0)";
+                    ExecuteNonQuery(query);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+                try
+                {
+                    string[] columns = { "rememberMe" };
+                    string query = "SELECT rememberMe FROM setting;";
+                    List<object[]> result=ExecuteQuery(query, columns);
+                    data = new UserSettingData();
+                    data.rememberMe = Convert.ToBoolean(result[0][0]);
+                }catch(Exception ex) {
+                    Debug.WriteLine(ex.Message);
+                }
+                Disconnect();
+            }
+            public bool GetRememberMe()
+            {
+                return data.rememberMe;
+            }
             public UserSetting(UserSettingData data)
             {
                 Connect();
@@ -67,6 +97,11 @@ namespace Utility
             static public void UpdateRememberMe(bool val)
             {
                 setting.UpdateRememberMe(val);
+            }
+            static public bool IsRememberMe()
+            {
+                UserSetting us=new UserSetting();
+                return us.GetRememberMe();
             }
         }
     }

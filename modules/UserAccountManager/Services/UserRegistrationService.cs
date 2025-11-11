@@ -33,7 +33,8 @@ namespace UserAccountManager.Services
             }
             catch
             {
-                return true; // 네트워크 오류 시 중복된 것으로 처리
+                Debug.WriteLine("regist: netword error");
+                return false; // 네트워크 오류 시 중복된 것으로 처리
             }
         }
 

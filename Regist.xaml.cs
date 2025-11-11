@@ -35,6 +35,49 @@ namespace AICA_Client
         {
             this.mainWnd.CloseFrameContainer();
         }
+        private void ViewPwdBtn_Click(object sender, RoutedEventArgs e)
+        {
+            PasswordBox pwd = PasswordTextBox; //this.FindName("RegPwdBox") as PasswordBox;
+            TextBox txt= PasswordTextBoxVisible;
+
+            if (sender.Equals(ViewConfirmPwd))
+            {
+                pwd = RePasswordTextBox;//this.FindName("RegPwdBox") as PasswordBox;
+                txt = RePasswordTextBoxVisible;//this.FindName("RegPwdText") as TextBox;
+            }
+
+            if (pwd.Visibility == Visibility.Visible)
+            {
+                txt.Text = pwd.Password;
+                pwd.Visibility = Visibility.Collapsed;
+                txt.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                pwd.Password = txt.Text;
+                txt.Visibility = Visibility.Collapsed;
+                pwd.Visibility = Visibility.Visible;
+            }
+        }
+        //private void ViewBtn_Click(object sender, RoutedEventArgs e)
+        //{
+        //    var pwd = this.FindName("RegPwdConfirmBox") as PasswordBox;
+        //    var txt = this.FindName("RegPwdConfirmText") as TextBox;
+        //    if (pwd == null || txt == null) return;
+
+        //    if (pwd.Visibility == Visibility.Visible)
+        //    {
+        //        txt.Text = pwd.Password;
+        //        pwd.Visibility = Visibility.Collapsed;
+        //        txt.Visibility = Visibility.Visible;
+        //    }
+        //    else
+        //    {
+        //        pwd.Password = txt.Text;
+        //        txt.Visibility = Visibility.Collapsed;
+        //        pwd.Visibility = Visibility.Visible;
+        //    }
+        //}
 
         private async void DoRegistButton_Click(object sender, RoutedEventArgs e)
         {
@@ -53,11 +96,11 @@ namespace AICA_Client
             bool isTermsAgreed2 = (bool)AgreeCheckBox2.IsChecked;
             bool isTermsAgreed3 = (bool)AgreeCheckBox3.IsChecked;
             (bool success, string msg)=await RegistrationInterface.RegistUser(userId, pwd, rePwd, email, alias, verifyCode, isTermsAgreed1, isTermsAgreed2, isTermsAgreed3);
-            MessageBox.Show(msg, "알림");
+            //MessageBox.Show(msg, "알림");
             Debug.WriteLine(success);
             if (success)
             {
-                this.mainWnd.OpenLoginFrame();
+                this.mainWnd.OpenRegistSuccessFrame();
             }
         }
 

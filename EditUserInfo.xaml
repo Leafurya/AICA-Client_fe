@@ -12,7 +12,92 @@
     </Page.DataContext>
 
     <Grid>
-        <Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10" Background="White">
+        <Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10" Background="{StaticResource Brush.Card}"
+        HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="60">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top"
+                Background="Transparent" BorderThickness="0" FontSize="18" Foreground="#666" Cursor="Hand"
+                Click="Close_Click"/>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,12" HorizontalAlignment="Center" Width="420">
+                        <Border Width="88" Height="88" CornerRadius="44" Background="{StaticResource Brush.MintAccent}"
+                                HorizontalAlignment="Center" Margin="0,0,0,10">
+                            <Image Source="E:\GitHub\AICA-Client_fe\styles\Image\User.png" Stretch="Fill"/>
+                        </Border>
+
+                        <DockPanel>
+                            <TextBlock Style="{StaticResource EditInfoLable}">아이디:</TextBlock>
+                            <TextBlock Style="{StaticResource EditInfoLable}" Text="{Binding UserInfoID}"></TextBlock>
+                        </DockPanel>
+
+                        <DockPanel Margin="0,10,0,0">
+                            <TextBlock Style="{StaticResource EditInfoLable}">이메일:</TextBlock>
+                            <TextBlock Style="{StaticResource EditInfoLable}" Text="{Binding UserInfoEmail}"/>
+                        </DockPanel>
+
+                        <TextBlock>새 이메일</TextBlock>
+                        <Grid Margin="0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="94"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="EmailInput" Grid.Column="0" Style="{StaticResource InputBox}" Tag="E-mail" Margin="0,0,8,0"/>
+                            <Button x:Name="SendVerifyCodeButton" Grid.Column="1" Content="인증번호 전송" Style="{StaticResource RoundedButton}" Height="34"
+                                    Click="SendVerifyCodeButton_Click"/>
+                        </Grid>
+
+                        <DockPanel Margin="0,10,0,0">
+                            <TextBlock>인증 번호</TextBlock>
+                            <TextBlock x:Name="TimerTextBlock"></TextBlock>
+                        </DockPanel>
+                        <Grid Margin="0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="94"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="VerifyCodeInput" Grid.Column="0" Style="{StaticResource InputBox}" Margin="0,0,8,0"/>
+                            <Button x:Name="CodeVerifyButton" Grid.Column="1" Content="인증번호 확인" Style="{StaticResource RoundedButton}" Height="34"
+                                    Click="CodeVerifyButton_Click"/>
+                        </Grid>
+
+                        <DockPanel Margin="0,10,0,0">
+                            <TextBlock Style="{StaticResource EditInfoLable}">닉네임:</TextBlock>
+                            <TextBlock Style="{StaticResource EditInfoLable}" Text="{Binding UserInfoAlias}"></TextBlock>
+                        </DockPanel>
+
+                        <TextBlock>새 닉네임</TextBlock>
+                        <TextBox x:Name="AliasInput" Style="{StaticResource InputBox}" Margin="0,6" Tag="닉네임"/>
+
+
+                        <TextBlock Margin="0,10,0,0">새 비밀번호</TextBlock>
+                        <Grid Margin="0,6" Height="38">
+                            <PasswordBox x:Name="NewPasswordInput" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Visible"/>
+                            <TextBox x:Name="NewPasswordInputVisible" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Collapsed"/>
+                            <Button x:Name="ViewPwd" Width="24" Height="24" Content="👁" Background="Transparent" BorderThickness="0"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"
+                                    Click="ViewPwdBtn_Click"/>
+                        </Grid>
+                        <TextBlock>새 비밀번호 확인</TextBlock>
+                        <Grid Margin="0,6" Height="38">
+                            <PasswordBox x:Name="ReNewPasswordInput" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Visible"/>
+                            <TextBox x:Name="ReNewPasswordInputVisible" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Collapsed"/>
+                            <Button x:Name="ViewConfirmPwd" Width="24" Height="24" Content="👁" Background="Transparent" BorderThickness="0"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"
+                                    Click="ViewPwdBtn_Click"/>
+                        </Grid>
+                        <Button Content="저장하기" Style="{StaticResource RoundedButton}" Height="40" Margin="0,10,0,0"
+                                x:Name="SaveButton" Click="SaveButton_Click"/>
+                        <Button Content="취소" Style="{StaticResource RoundedButton}" Height="40" Margin="0,10,0,0"
+                                x:Name="CancelButton" Click="CancelButton_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+        </Border>
+        <!--<Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10" Background="White">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
@@ -88,7 +173,7 @@
                         <Button x:Name="CancelButton" Grid.Column="1" Margin="10" Content="취소" Click="CancelButton_Click"></Button>
                     </Grid>
                 </Grid>
-                <Grid x:Name="CheckPasswordGrid" Grid.Column="1" Visibility="Visible" Background="White">
+                --><!--<Grid x:Name="CheckPasswordGrid" Grid.Column="1" Visibility="Visible" Background="White">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="55*"></ColumnDefinition>
                         <ColumnDefinition Width="320*"></ColumnDefinition>
@@ -97,9 +182,9 @@
                     <TextBlock VerticalAlignment="Center" Grid.ColumnSpan="2" Height="16" Margin="0,0,165,0">비밀번호:</TextBlock>
                     <PasswordBox x:Name="PasswordInput" Grid.Column="1" VerticalAlignment="Center" Height="18" Margin="0,0,2,0"/>
                     <Button x:Name="Confirm" Grid.Column="2" VerticalAlignment="Center" Content="비밀번호 확인" Height="20" Click="Confirm_Click"></Button>
-                </Grid>
+                </Grid>--><!--
                 <Button x:Name="Close" Grid.Column="2" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="top" Content="❌" Click="Close_Click"/>
             </Grid>
-        </Border>
+        </Border>-->
     </Grid>
 </Page>

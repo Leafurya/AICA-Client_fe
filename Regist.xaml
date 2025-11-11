@@ -11,8 +11,84 @@
         <StaticResource ResourceKey="vmShared" />
     </Page.DataContext>
     <Grid>
-        <Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10" Background="White">
+        <Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10" Background="{StaticResource Brush.Card}"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="60">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button x:Name="Close" Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Background="Transparent" BorderThickness="0" FontSize="18" Foreground="#666" Cursor="Hand"
+                        Click="Close_Click"/>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="0,12" HorizontalAlignment="Center" Width="420">
+                        <Image Source="pack://application:,,,/styles/Image/welcome.png"
+                               Width="180" Height="120" HorizontalAlignment="Center" Margin="0,0,0,4"
+                               Stretch="Uniform" RenderOptions.BitmapScalingMode="HighQuality"/>
+                        <TextBlock>아이디</TextBlock>
+                        <Grid Margin="0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="94"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox Grid.Column="0" Style="{StaticResource InputBox}" Margin="0,0,8,0"
+                                     x:Name="UserIdTextBox"/>
+                            <Button Grid.Column="1" Content="중복확인" Style="{StaticResource RoundedButton}" Height="34"
+                                    x:Name="VerifyIdButton" Click="VerifyIdButton_Click"/>
+                        </Grid>
+                        <TextBlock>비밀번호</TextBlock>
+                        <Grid Margin="0,6" Height="38">
+                            <PasswordBox x:Name="PasswordTextBox" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Visible"/>
+                            <TextBox x:Name="PasswordTextBoxVisible" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Collapsed"/>
+                            <Button x:Name="ViewPwd" Width="24" Height="24" Content="👁" Background="Transparent" BorderThickness="0"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"
+                                    Click="ViewPwdBtn_Click"/>
+                        </Grid>
+                        <TextBlock>비밀번호 확인</TextBlock>
+                        <Grid Margin="0,6" Height="38">
+                            <PasswordBox x:Name="RePasswordTextBox" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Visible"/>
+                            <TextBox x:Name="RePasswordTextBoxVisible" Padding="10" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" Visibility="Collapsed"/>
+                            <Button x:Name="ViewConfirmPwd" Width="24" Height="24" Content="👁" Background="Transparent" BorderThickness="0"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,8,0"
+                                    Click="ViewPwdBtn_Click"/>
+                        </Grid>
+                        <TextBlock>이메일</TextBlock>
+                        <Grid Margin="0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="94"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="EmailTextBox" Grid.Column="0" Style="{StaticResource InputBox}" Tag="E-mail" Margin="0,0,8,0"/>
+                            <Button x:Name="SendVerifyCodeButton" Grid.Column="1" Content="인증번호 전송" Style="{StaticResource RoundedButton}" Height="34"
+                                    Click="SendVerifyCodeButton_Click"/>
+                        </Grid>
+                        <DockPanel>
+                            <TextBlock>인증 번호</TextBlock>
+                            <TextBlock x:Name="TimerTextBlock"></TextBlock>
+                        </DockPanel>
+                        <Grid Margin="0,6">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition Width="94"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="VerifyCodeTextBox" Grid.Column="0" Style="{StaticResource InputBox}" Margin="0,0,8,0"/>
+                            <Button x:Name="VerifyCodeButton" Grid.Column="1" Content="인증번호 확인" Style="{StaticResource RoundedButton}" Height="34"
+                                    Click="VerifyCodeButton_Click"/>
+                        </Grid>
+                        <TextBlock>닉네임</TextBlock>
+                        <TextBox x:Name="AliasTextBox" Style="{StaticResource InputBox}" Margin="0,6" Tag="닉네임"/>
+                        <StackPanel Margin="0,10">
+                            <CheckBox x:Name="AgreeCheckBox1" Content="이용약관 (필수)"/>
+                            <CheckBox x:Name="AgreeCheckBox2" Content="개인정보 수집/이용 동의 (필수)"/>
+                            <CheckBox x:Name="AgreeCheckBox3" Content="마케팅 정보 수신 동의 (선택)"/>
+                        </StackPanel>
+                        <Button Content="회원가입" Style="{StaticResource RoundedButton}" Height="40" Margin="0,10,0,0"
+                                x:Name="DoRegistButton" Click="DoRegistButton_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </Grid>
+            <!--<Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -107,7 +183,7 @@
                     </Grid>
                 </ScrollViewer>
                 <Button x:Name="Close" Grid.Column="2" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="top" Content="❌" Click="Close_Click"></Button>
-            </Grid>
+            </Grid>-->
         </Border>
     </Grid>
 </Page>
