@@ -66,20 +66,23 @@ namespace AICA_Client
             }
         }
 
-
+        // 이거 안 씀
         private void RegistButton_Click(object sender, RoutedEventArgs e)
         {
-            this.mainWnd.OpenRegistFrame();
+            //this.mainWnd.OpenRegistFrame();
         }
 
         private void RememberMeToggleButton_Checked(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("remember me");
             Utility.UserSetting.Interface.UpdateRememberMe(true);
         }
 
         private void RememberMeToggleButton_Unchecked(object sender, RoutedEventArgs e)
         {
+            Debug.WriteLine("dont remember me");
             Utility.UserSetting.Interface.UpdateRememberMe(false);
+            Utility.TokenManager.TokenManager.RemoveTokensFromDB();
         }
     }
 }

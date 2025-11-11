@@ -27,6 +27,7 @@ namespace CustomControl
     public partial class WordList : UserControl
     {
         private bool _suppressUnchecked = false;
+        private WordItem? oldOpenedCard = null;
         public WordList()
         {
             InitializeComponent();
@@ -92,51 +93,57 @@ namespace CustomControl
 
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+            // 단어 삭제
             List<WordItem> items = ControlUtil.FindVisualChildren<WordItem>(itemsControl).ToList();
-            //List<int> removeTargetIdx = new List<int>();
+
             for (int i = 0; i < items.Count(); i++)
             {
+                // 체크된 단어들만 가져옴
                 WordItem item = items[i];
                 if (item.IsChecked())
                 {
                     int wordId = item.GetWordId();
                     Debug.WriteLine($"삭제한 단어 아이디: {wordId}");
-                    if (await VocabNote.Interface.RequestDeleteWord(wordId))
-                    {
-                        //removeTargetIdx.Add(i);
-                    }
+                    await VocabNote.Interface.RequestDeleteWord(wordId); // 단어 삭제 요청
                 }
             }
 
             if (this.DataContext is SharedViewModel vm)
             {
-                //SentenceData data= vm.SentenceList
+                // 업데이트된 단어장에서 AICA 단어장 새로 생성
                 vm.WordsList = VocabNote.Interface.GetWordList();
                 int nowTextId = WordSearch.Interface.GetTextId();
                 if (nowTextId != -1)
                 {
                     vm.AicaList = VocabNote.Interface.GetAicaList(nowTextId);
                 }
-                //foreach (int index in removeTargetIdx.OrderByDescending(i => i))
-                //{
-                //    vm.WordsList.RemoveAt(index);
-                //}
             }
-
-            //foreach (SentenceItem item in items)
-            //{
-            //    int textId = item.GetTextId();
-            //    SentenceManager.Interface.DeleteText(textId, "mangoAccessToken");
-            //    Debug.WriteLine("textId " + textId);
-            //    //item.IsChecked = false; // 전체 Off
-
-
-            //}
-            //if(this.DataContext is SharedViewModel vm)
-            //{
-            //}
-
         }
 
+        private void UserControl_OpenMeaningCard(object sender, RoutedEventArgs e)
+        {
+            Debug.WriteLine("in handler");
+            WordItem? newOpenedCard = e.OriginalSource as WordItem;
+            Debug.WriteLine(newOpenedCard);
+            if (newOpenedCard == null)
+            {
+                return;
+            }
+            if (oldOpenedCard == null)
+            {
+                newOpenedCard.OpenCard();
+                oldOpenedCard = newOpenedCard;
+                return;
+            }
+            if (oldOpenedCard.GetWordId() == newOpenedCard.GetWordId())
+            {
+                newOpenedCard.CloseCard();
+                oldOpenedCard = null;
+                return;
+            }
+            newOpenedCard.OpenCard();
+            oldOpenedCard.CloseCard();
+            oldOpenedCard = newOpenedCard;
+        }
     }
 }

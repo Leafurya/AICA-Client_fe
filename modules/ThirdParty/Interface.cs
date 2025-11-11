@@ -1,10 +1,13 @@
 
+using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.Versioning;
 using System.Text;
 using System.Text.Json;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ThirdParty
 {
@@ -12,9 +15,18 @@ namespace ThirdParty
     public class Interface
     {
         static private ChildPipeClient app;
-        static public void Init()
+        static public Task Init()
         {
-            app = new ChildPipeClient("E:\\DevTools\\Anaconda\\envs\\capstone-thirdparty\\python.exe", "E:\\GitHub\\capstone\\thirdparty\\main.py");
+            try
+            {
+                app = new ChildPipeClient("E:\\DevTools\\Anaconda\\envs\\capstone-thirdparty\\python.exe", "E:\\GitHub\\capstone\\thirdparty\\main.py");
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show("자식프로세스를 찾지 못했습니다.\n./child/child.exe", "에러");
+                throw ex;
+            }
+            return Task.CompletedTask;
         }
         static public void Echo()
         {
@@ -36,7 +48,21 @@ namespace ThirdParty
             };
             using (JsonDocument resp = app.Call("analyze", json))
             {
-                result = resp.RootElement.GetProperty("textId").GetInt32();
+                try
+                {
+                    string pretty = JsonSerializer.Serialize(
+                                    resp.RootElement,
+                                    new JsonSerializerOptions { WriteIndented = true }
+);
+
+                    Debug.WriteLine(pretty);
+                    result = resp.RootElement.GetProperty("textId").GetInt32();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+
+                }
             }
             return result;
         }
@@ -71,7 +97,21 @@ namespace ThirdParty
             };
             using (JsonDocument resp = app.Call("translate", json))
             {
-                result = resp.RootElement.GetProperty("text").GetString();
+                try {
+
+                    string pretty = JsonSerializer.Serialize(
+                                    resp.RootElement,
+                                    new JsonSerializerOptions { WriteIndented = true }
+);
+
+                    Debug.WriteLine(pretty);
+                    result = resp.RootElement.GetProperty("text").GetString();
+                }
+                catch (Exception e)
+                {
+                    Debug.WriteLine(e.Message);
+                    
+                }
             }
             return result;
         }

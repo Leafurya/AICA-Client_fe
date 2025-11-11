@@ -12,8 +12,41 @@
     </Page.DataContext>
 
     <Grid>
-        <Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10" Background="White">
+        <Border BorderBrush="#000" BorderThickness="1" CornerRadius="20" Padding="10"
+                Background="{StaticResource Brush.Card}"
+                HorizontalAlignment="Center" VerticalAlignment="Center" Panel.ZIndex="60">
             <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Button Content="✕" HorizontalAlignment="Right" VerticalAlignment="Top"
+                        Background="Transparent" BorderThickness="0" FontSize="18" Foreground="#666" Cursor="Hand"
+                        x:Name="Close" Click="Close_Click"/>
+                <StackPanel Grid.Row="1" Margin="0,20,0,0" HorizontalAlignment="Center" Width="360">
+                    <TextBlock Text="로그인" FontSize="24" FontWeight="Bold" Foreground="{StaticResource Brush.GrayText}"
+                               HorizontalAlignment="Center" Margin="0,0,0,18"/>
+                    <Border Width="88" Height="88" CornerRadius="44" Background="Transparent"
+                            HorizontalAlignment="Center" Margin="0,0,0,18">
+                        <Image Source="pack://application:,,,/styles/Image/login.png" Width="88" Height="63.3" Stretch="Fill"/>
+                    </Border>
+                    <TextBox x:Name="textBox_id" Style="{StaticResource InputBox}" Margin="0,0,0,10" Tag="ID"/>
+                    <PasswordBox x:Name="textBox_pwd" Height="38" Margin="0,0,0,18" Padding="10"
+                                 BorderBrush="{StaticResource Brush.Border}" BorderThickness="1"/>
+                    <Button Content="로그인" Style="{StaticResource RoundedButton}" Height="42" Margin="0,0,0,14"
+                            Click="Button_Click"/>
+                    <!--<Button Content="회원가입" Style="{StaticResource RoundedButton}" Height="42" Margin="0,0,0,14"
+                            Click="Button_Click"/>-->
+                    <!--<DockPanel Margin="0,0,0,14" HorizontalAlignment="Center">
+                        <ToggleButton x:Name="RememberMeToggleButton" Width="20" Height="20" VerticalAlignment="Center" IsChecked="{Binding SettingData.rememberMe, Mode=TwoWay}" Checked="RememberMeToggleButton_Checked" Unchecked="RememberMeToggleButton_Unchecked"></ToggleButton>
+                        <TextBlock VerticalAlignment="Center" Foreground="#555">로그인 상태 유지</TextBlock>
+                    </DockPanel>-->
+                    <CheckBox Content="로그인 상태 유지" Foreground="#555" HorizontalAlignment="Center" Margin="0,0,0,14"
+                              Checked="RememberMeToggleButton_Checked" Unchecked="RememberMeToggleButton_Unchecked"
+                              x:Name="RememberMeToggleButton"/>
+                </StackPanel>
+            </Grid>
+            <!--<Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="3*"></ColumnDefinition>
@@ -48,7 +81,7 @@
                     <Button x:Name="RegistButton" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" Content="회원가입" Padding="20,10,20,10" Click="RegistButton_Click"></Button>
                 </Grid>
                 <Button x:Name="Close" Grid.Column="2" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="top" Content="❌" Click="Close_Click"/>
-            </Grid>
+            </Grid>-->
         </Border>
     </Grid>
 </Page>

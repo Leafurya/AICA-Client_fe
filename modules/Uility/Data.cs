@@ -212,7 +212,7 @@ namespace Utility
             }
             public class VocabItem: WordMeanings
             {
-                public int sentenceId { get; set; }
+                public int? sentenceId { get; set; }
             }
             //[Obsolete]
             //public class AicaMeanings : WordMeanings
@@ -281,6 +281,7 @@ namespace Utility
                 public WordMeanings? Append(string json)
                 {
                     //WordLookupBody? body = JsonSerializer.Deserialize<WordLookupBody>(json);
+                    Debug.WriteLine("dict data json: "+json);
                     GetWordBody? body = JsonSerializer.Deserialize<GetWordBody>(json);
                     if (body != null)
                     {

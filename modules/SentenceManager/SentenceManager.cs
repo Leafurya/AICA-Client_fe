@@ -182,10 +182,11 @@ namespace SentenceManager
                 selector.SetTextColorToSelectedText(selectedText);
             }
         }
-        static public string GetSelectedText()
-        {
-            return selector.GetText();
-        }
+        //참조 안함
+        //static public string GetSelectedText()
+        //{
+        //    return selector.GetText();
+        //}
         static public string GetStringFromImg(string path)
         {
             Tesseract tesseract = new Tesseract();
@@ -249,11 +250,12 @@ namespace SentenceManager
             //    listBox.AddItem(sentenceItem);
             //}
         }
-        static public async void DeleteText(int textId)
+        static public async Task DeleteText(int textId)
         {
             bool result = await Request.DeleteText(textId);
             sentenceList.DeteleSentence(textId);
             Debug.WriteLine($"delete text {textId}");
+            //return Task.CompletedTask();
             //if (result)
             //{
             //}

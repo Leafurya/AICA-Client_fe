@@ -5,7 +5,14 @@
              xmlns:viewmodel="clr-namespace:CustomControl.ViewModel;assembly=CustomControl"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <viewmodel:SentenceViewModel x:Key="vmSentence"></viewmodel:SentenceViewModel>
-        <viewmodel:SharedViewModel x:Key="vmShared"></viewmodel:SharedViewModel>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/styles/style.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <viewmodel:SentenceViewModel x:Key="vmSentence"></viewmodel:SentenceViewModel>
+            <viewmodel:SharedViewModel x:Key="vmShared"></viewmodel:SharedViewModel>
+            <viewmodel:DictViewModel x:Key="vmDict"></viewmodel:DictViewModel>
+            <viewmodel:POSConverter x:Key="convPOS"></viewmodel:POSConverter>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

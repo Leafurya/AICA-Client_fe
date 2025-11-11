@@ -23,11 +23,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="config.json" />
+    <None Remove="styles\Image\congrats.png" />
+    <None Remove="styles\Image\delete.png" />
+    <None Remove="styles\Image\login.png" />
+    <None Remove="styles\Image\Logo.png" />
+    <None Remove="styles\Image\tip.png" />
+    <None Remove="styles\Image\tip2.png" />
+    <None Remove="styles\Image\User.png" />
+    <None Remove="styles\Image\welcome.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="config.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="styles\Image\User.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="modules\CustomControl\CustomControl.csproj" />
+    <ProjectReference Include="modules\Pronunciation\Pronunciation.csproj" />
     <ProjectReference Include="modules\SentenceManager\SentenceManager.csproj" />
     <ProjectReference Include="modules\ThirdParty\ThirdParty.csproj" />
     <ProjectReference Include="modules\UserAccountManager\UserAccountManager.csproj" />
@@ -39,6 +64,30 @@
     <Reference Include="WordSearch">
       <HintPath>modules\WordSearch\bin\Debug\net8.0-windows\WordSearch.dll</HintPath>
     </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="styles\Image\congrats.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="styles\Image\delete.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="styles\Image\login.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="styles\Image\Logo.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="styles\Image\tip.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="styles\Image\tip2.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="styles\Image\welcome.png">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
 </Project>

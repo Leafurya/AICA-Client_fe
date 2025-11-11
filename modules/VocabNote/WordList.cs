@@ -94,14 +94,21 @@ namespace VocabNote
         }
         private bool AddToAicaList(VocabItem vocabItem)
         {
-            if (!aicaList.ContainsKey(vocabItem.sentenceId))
+
+            int sentenceId = vocabItem.sentenceId??-1;
+            if (sentenceId == -1)
             {
-                aicaList[vocabItem.sentenceId] = new List<VocabItem>();
+                return false;
+            }
+
+            if (!aicaList.ContainsKey(sentenceId))
+            {
+                aicaList[sentenceId] = new List<VocabItem>();
             }
             
-            if (!IsExistAtAicaList(vocabItem.sentenceId,vocabItem.wordId))
+            if (!IsExistAtAicaList(sentenceId, vocabItem.wordId))
             {
-                aicaList[vocabItem.sentenceId].Add(vocabItem);
+                aicaList[sentenceId].Add(vocabItem);
                 return true;
             }
             return false;
@@ -180,5 +187,15 @@ namespace VocabNote
         {
             aicaList[textId]=new List<VocabItem>();
         }
+        //public void Clear()
+        //{
+        //    aicaList.Clear();
+        //    wordIds.Clear();
+        //    data.Clear();
+        //}
+        //public void DeleteWordsFromText(int textId)
+        //{
+
+        //}
     }
 }

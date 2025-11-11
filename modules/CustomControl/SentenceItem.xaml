@@ -7,13 +7,14 @@
              xmlns:viewmodel="clr-namespace:CustomControl.ViewModel"
              d:DataContext="{d:DesignInstance Type=viewmodel:SharedViewModel}"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800" Height="20" HorizontalAlignment="Stretch">
-    <Grid>
+             d:DesignHeight="35" d:DesignWidth="800" Height="35" HorizontalAlignment="Stretch">
+    <Grid Margin="0,7,0,0">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="20"></ColumnDefinition>
+            <ColumnDefinition Width="30"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <ToggleButton Height="20" Width="20" Unchecked="ToggleButton_Unchecked" Name="toggleBtn"></ToggleButton>
-        <TextBlock TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Name="Text" Grid.Column="1" MouseLeftButtonUp="Text_MouseLeftButtonUp" Text="{Binding sentence}" Tag="{Binding sentenceId}"></TextBlock>
+        <CheckBox Unchecked="ToggleButton_Unchecked"
+                  x:Name="toggleBtn" VerticalAlignment="Center"/>
+        <TextBlock VerticalAlignment="Center" FontSize="15" TextTrimming="CharacterEllipsis" TextWrapping="Wrap" Name="Text" Grid.Column="1" MouseLeftButtonUp="Text_MouseLeftButtonUp" Text="{Binding sentence}" Tag="{Binding sentenceId}"></TextBlock>
     </Grid>
 </UserControl>

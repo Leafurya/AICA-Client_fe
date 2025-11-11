@@ -9,6 +9,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Xml.Linq;
 using Utility.Data.Sentence;
@@ -21,11 +22,94 @@ namespace CustomControl.ViewModel
 {
     public class SharedViewModel : INotifyPropertyChanged
     {
+
+        // 발음 비교용
+        private bool _isMicConnected;
+        public bool IsMicConnected
+        {
+            get => _isMicConnected;
+            set
+            {
+                if (_isMicConnected != value)
+                {
+                    _isMicConnected = value;
+                    OnPropertyChanged(nameof(IsMicConnected));
+                }
+            }
+        }
+        private bool _isWSConnected;
+        public bool IsWSConnected
+        {
+            get => _isWSConnected;
+            set
+            {
+                if (_isWSConnected != value)
+                {
+                    _isWSConnected = value;
+                    OnPropertyChanged(nameof(IsWSConnected));
+                }
+            }
+        }
+        private string? _micDeviceName;
+        public string? MicDeviceName
+        {
+            get => _micDeviceName;
+            set
+            {
+                if (_micDeviceName != value)
+                {
+                    _micDeviceName = value;
+                    OnPropertyChanged(nameof(MicDeviceName));
+                }
+            }
+        }
+        private double _pronuncScore;
+        public double PronuncScore
+        {
+            get => _pronuncScore;
+            set
+            {
+                if (_pronuncScore != value)
+                {
+                    _pronuncScore = value;
+                    OnPropertyChanged(nameof(PronuncScore));
+                }
+            }
+        }
+        //
         //public ObservableCollection<SentenceData> SentenceList
         //{
         //    get; set;
         //}
         //private UserSettingData _settingData;
+        private List<Meaning> _dictionaryMeans;
+        public List<Meaning> DictionaryMeans
+        {
+            get => _dictionaryMeans;
+            set
+            {
+                if (_dictionaryMeans != value)
+                {
+                    _dictionaryMeans = value;
+                    OnPropertyChanged(nameof(DictionaryMeans));
+                }
+            }
+        }
+
+        private string _dictword;
+        public string DictWord
+        {
+            get => _dictword;
+            set
+            {
+                if (_dictword != value)
+                {
+                    _dictword = value;
+                    OnPropertyChanged(nameof(DictWord));
+                }
+            }
+        }
+
         public UserSettingData SettingData { get; set; } = new UserSettingData();
         private ObservableCollection<SentenceData> _sentenceList;
         public ObservableCollection<SentenceData> SentenceList
@@ -49,8 +133,11 @@ namespace CustomControl.ViewModel
             {
                 if (_wordsList != value)
                 {
-                    _wordsList = value;
+                    _wordsList = value ?? new ObservableCollection<VocabItem>(); // null 방지
+                                                                                 // WordsList 교체 시 View도 다시 연결
+                    HookFilteredWordListView();
                     OnPropertyChanged(nameof(WordsList));
+                    OnPropertyChanged(nameof(FilteredWordList)); // 바인딩 갱신
                 }
             }
         }
@@ -62,8 +149,11 @@ namespace CustomControl.ViewModel
             {
                 if (_aicaList != value)
                 {
-                    _aicaList = value;
+                    _aicaList = value ?? new ObservableCollection<VocabItem>(); // null 방지
+                                                                                // WordsList 교체 시 View도 다시 연결
+                    HookFilteredAICAListView();
                     OnPropertyChanged(nameof(AicaList));
+                    OnPropertyChanged(nameof(FilteredAICAList)); // 바인딩 갱신
                 }
             }
         }
@@ -230,11 +320,92 @@ namespace CustomControl.ViewModel
             }
         }
 
-        //private User userData {  get; set; }
+
+        // 단어 검색
+        private ICollectionView _filteredWordList;
+        public ICollectionView FilteredWordList
+        {
+            get => _filteredWordList;
+            private set
+            {
+                if (_filteredWordList == value) return;
+                _filteredWordList = value;
+                OnPropertyChanged(nameof(FilteredWordList));
+            }
+        }
+
+        private ICollectionView _filteredAICAList;
+        public ICollectionView FilteredAICAList
+        {
+            get => _filteredAICAList;
+            private set
+            {
+                if (_filteredAICAList == value) return;
+                _filteredAICAList = value;
+                OnPropertyChanged(nameof(FilteredAICAList));
+            }
+        }
+
+        private string _wordSearchQuery = "";                   // ← 검색어 변수
+        public string WordSearchQuery
+        {
+            get => _wordSearchQuery;
+            set
+            {
+                if (_wordSearchQuery == value) return;
+                _wordSearchQuery = value;
+                OnPropertyChanged(nameof(IsSearchModeToggleOn));
+                FilteredWordList.Refresh();                       // ← 검색어 변경 시 필터 재적용
+            }
+        }
+
+        private string _aicaSearchQuery = "";                   // ← 검색어 변수
+        public string AicaSearchQuery
+        {
+            get => _aicaSearchQuery;
+            set
+            {
+                if (_aicaSearchQuery == value) return;
+                _aicaSearchQuery = value;
+                OnPropertyChanged(nameof(IsSearchModeToggleOn));
+                FilteredAICAList.Refresh();                       // ← 검색어 변경 시 필터 재적용
+            }
+        }
+        private bool FilterWord(object? item)
+        {
+            Debug.WriteLine("FilterWord item1 ", item);
+            if (item is not VocabItem i)
+            {
+                return false;
+            }
+            Debug.WriteLine("FilterWord item2 ", i.word);
+            if (string.IsNullOrWhiteSpace(WordSearchQuery))
+            {
+                return true; // 검색어 없으면 전부 표시
+            }
+            Debug.WriteLine("FilterWord item3 ", i.word);
+            return i.word.Contains(WordSearchQuery, StringComparison.OrdinalIgnoreCase);
+            // 정확히 "block"만: return string.Equals(s, Query, StringComparison.OrdinalIgnoreCase);
+        }
+        private bool FilterAICA(object? item)
+        {
+            Debug.WriteLine("FilterAICA item1 "+ item);
+            if (item is not VocabItem i)
+            {
+                return false;
+            }
+            Debug.WriteLine("FilterAICA item2 "+ i.word);
+            if (string.IsNullOrWhiteSpace(AicaSearchQuery))
+            {
+                return true; // 검색어 없으면 전부 표시
+            }
+            Debug.WriteLine("FilterAICA item3 "+ i.word);
+            return i.word.Contains(AicaSearchQuery, StringComparison.OrdinalIgnoreCase);
+            // 정확히 "block"만: return string.Equals(s, Query, StringComparison.OrdinalIgnoreCase);
+        }
 
         public SharedViewModel()
         {
-
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 SentenceList = SentenceManager.Interface.GetTextList(); // 런타임 전용
@@ -242,6 +413,18 @@ namespace CustomControl.ViewModel
 
                 //InitWordsList();
                 NowText = "";
+                WordsList = new ObservableCollection<VocabItem>();
+                AicaList = new ObservableCollection<VocabItem>();
+
+                //FilteredWordList = CollectionViewSource.GetDefaultView(WordsList);
+                //FilteredWordList.Filter = FilterWord;
+                //FilteredWordList.Refresh();
+
+                //FilteredAICAList = CollectionViewSource.GetDefaultView(AicaList);
+                //FilteredAICAList.Filter = FilterWord;
+                //FilteredAICAList.Refresh();
+                HookFilteredWordListView();
+                HookFilteredAICAListView();
             }
             else
             {
@@ -262,6 +445,8 @@ namespace CustomControl.ViewModel
             }
         }
 
+        
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         protected void OnPropertyChanged(string propertyName)
@@ -272,6 +457,21 @@ namespace CustomControl.ViewModel
         {
             await VocabNote.Interface.RequestVocabNote(-1);
             WordsList = VocabNote.Interface.GetWordList();
+        }
+
+        private void HookFilteredWordListView()
+        {
+            var view = CollectionViewSource.GetDefaultView(WordsList);
+            view.Filter = FilterWord;  // = 로 단일 필터 지정 권장
+            FilteredWordList = view;
+            FilteredWordList.Refresh();
+        }
+        private void HookFilteredAICAListView()
+        {
+            var view = CollectionViewSource.GetDefaultView(AicaList);
+            view.Filter = FilterAICA;  // = 로 단일 필터 지정 권장
+            FilteredAICAList = view;
+            FilteredAICAList.Refresh();
         }
     }
 }

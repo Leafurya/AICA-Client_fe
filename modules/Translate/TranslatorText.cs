@@ -18,11 +18,12 @@ namespace Translate
         public static string ProcessTranslation()
         {
             string? input = selector.GetText();
-            //if (input == null)
-            //{
-            //    Debug.WriteLine("input is null");
-            //    return "";
-            //}
+            if (input == null)
+            {
+                Debug.WriteLine("input is null");
+                return "";
+            }
+            input=input.Replace("\n", " ");
             //Debug.WriteLine("input: "+input);
             //// 번역 실행
             //string result = await Translator.TranslateAsync(input);

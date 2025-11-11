@@ -13,8 +13,12 @@ namespace Utility
 {
     namespace TokenManager
     {
+        using System.Collections;
         using System.Diagnostics;
+        using System.Runtime.Intrinsics.Arm;
+        using Utility.DataBase;
         using Utility.RequestConst;
+        using static System.Net.Mime.MediaTypeNames;
 
         public class TokenData
         {
@@ -28,6 +32,58 @@ namespace Utility
             public string Message { get; set; }
             public TokenData Data { get; set; }
         }
+        public class TokenDB : DBManager
+        {
+            public void Save(string accessToken,string refreshToken)
+            {
+                Connect();
+                string sql = @"
+                    CREATE TABLE IF NOT EXISTS tokens (
+                        id INTEGER NOT NULL,
+                        access TEXT NOT NULL,
+                        refresh TEXT NOT NULL,
+                        PRIMARY KEY (id)
+                    );";
+                ExecuteNonQuery(sql);
+                sql = $@"INSERT OR REPLACE INTO tokens VALUES (0,""{accessToken}"", ""{refreshToken}"");";
+                ExecuteNonQuery(sql);
+                Disconnect();
+            }
+            public void Remove()
+            {
+                Connect();
+                string sql = @"
+                        DROP TABLE tokens;
+                    ";
+                ExecuteNonQuery(sql);
+                Disconnect();
+            }
+            public (string?,string?) Load()
+            {
+                Connect();
+                try
+                {
+                    string[] columns = { "access", "refresh" };
+                    string sql = @"SELECT * FROM tokens;";
+                    List<object[]> result = ExecuteQuery(sql, columns);
+                    result.ForEach((item) =>
+                    {
+                        Debug.WriteLine("access: " + Convert.ToString(item[0]));
+                        Debug.WriteLine("refresh: " + Convert.ToString(item[1]));
+                    });
+                    Disconnect();
+                    return (Convert.ToString(result[0][0]), Convert.ToString(result[0][1]));
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
+
+                Disconnect();
+
+                return (null, null);
+            }
+        }
         public static class TokenManager
         {
             private static readonly HttpClient client = RequestConst.client;
@@ -38,6 +94,27 @@ namespace Utility
             delegate Task<HttpResponseMessage> MethodFunc2(string? url);
             //delegate Task<HttpResponseMessage> MethodFunc(string? url);
 
+            public static void SaveTokensToDB()
+            {
+                TokenDB db= new TokenDB();
+                db.Save(AccessToken, RefreshToken);
+            }
+            public static void RemoveTokensFromDB()
+            {
+                TokenDB db = new TokenDB();
+                db.Remove();
+            }
+            public static void LoadTokens()
+            {
+                TokenDB db = new TokenDB();
+                string? access, refresh;
+                (access,refresh)=db.Load();
+                if (access == null || refresh == null)
+                {
+                    return;
+                }
+                SetTokens(access, refresh);
+            }
             public static void SetTokens(string accessToken, string refreshToken)
             {
                 AccessToken = accessToken;
