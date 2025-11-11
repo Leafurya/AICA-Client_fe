@@ -22,15 +22,6 @@ namespace WordSearch
             string[] columns = { "textid", "text" };
             result=ExecuteQuery("SELECT * FROM texts", columns);
 
-            result.ForEach(item =>
-            {
-                Debug.WriteLine($"{item[0]}, {item[1]}");
-            });
-            //foreach (RecordDict row in result)
-            //{
-            //    //Debug.WriteLine($"{row["textid"]}, {row["text"]}");
-            //}
-
             Disconnect();
         }
     }

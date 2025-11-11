@@ -11,25 +11,10 @@
         <viewmodel:POSConverter x:Key="PosConverter"/>
     </UserControl.Resources>
     <Grid Margin="0,7,0,0">
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Grid Margin="6,6,6,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="20"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-        </Grid>-->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="30"></ColumnDefinition>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <!--선택-->
-        <!--<CheckBox x:Name="toggleBtn" VerticalAlignment="Center"></CheckBox>
-        --><!--단어--><!--
-        <TextBlock d:Text="hello" FontSize="15" x:Name="Word" Grid.Column="1" Text="{Binding word}" Tag="{Binding wordId}" MouseLeftButtonUp="Word_MouseLeftButtonUp"></TextBlock>-->
-        <!--<CheckBox x:Name="toggleBtn" Unchecked="toggleBtn_Unchecked" VerticalAlignment="Center"/>-->
         <TextBlock FontSize="15" x:Name="Word" Grid.Column="1" Text="{Binding word}" Tag="{Binding wordId}" MouseLeftButtonUp="Word_MouseLeftButtonUp"></TextBlock>
     </Grid>
 </UserControl>

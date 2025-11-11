@@ -43,9 +43,7 @@ namespace Utility
                     for(int i = 0; i < columns.Length; i++)
                     {
                         dicts[i]= reader[columns[i]];
-                        //Debug.Write(dicts[i]+" ");
                     }
-                    //Debug.WriteLine("");
                     result.Add(dicts);
                 }
 

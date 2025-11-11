@@ -34,7 +34,7 @@ namespace AICA_Client
 
         private void ViewPwdBtn_Click(object sender, RoutedEventArgs e)
         {
-            PasswordBox pwd = PasswordTextBox; //this.FindName("RegPwdBox") as PasswordBox;
+            PasswordBox pwd = PasswordTextBox;
             TextBox txt = PasswordTextBoxVisible;
 
             if (pwd.Visibility == Visibility.Visible)

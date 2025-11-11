@@ -65,23 +65,15 @@ namespace SentenceManager
 
                 dbResult.ForEach(item =>
                 {
-                    //Debug.WriteLine($"{item[0]}, {item[1]}");
-
                     data.Add(new SentenceData() { sentence = Convert.ToString(item[1]), sentenceId = Convert.ToInt32(item[0]) });//{ Convert.ToInt32(item[0]), item[1]}
                     Debug.WriteLine("Convert.ToString(item[2]) " + Convert.ToString(item[2]));
                     hashs.Add(Convert.ToString(item[2]));
-                    //result.X = Convert.ToDouble(item[0]);
-                    //result.Y = Convert.ToDouble(item[1]);
                 });
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
             }
-        }
-        public SentenceList(List<SentenceList> list)
-        {
-            //data = list;
         }
         public List<SentenceData> getData()
         {
@@ -109,8 +101,6 @@ namespace SentenceManager
                     break;
                 }
             }
-            
-            //hashs.RemoveAt()
         }
         public void AppendSentence(string text,int textId,bool localText=true)
         {
@@ -151,13 +141,6 @@ namespace SentenceManager
                 }
             }
             return -1;
-            //hashs.ForEach((item,idx) =>
-            //{
-            //    if (item.Equals(hashed))
-            //    {
-            //        result = item.sentenceId;
-            //    }
-            //});
         }
     }
 }

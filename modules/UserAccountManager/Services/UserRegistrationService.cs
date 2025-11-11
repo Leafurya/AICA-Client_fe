@@ -27,8 +27,6 @@ namespace UserAccountManager.Services
                 HttpResponseMessage response = await client.GetAsync(url);
                 string result = await response.Content.ReadAsStringAsync();
                 
-
-                //return result.Trim().Equals("true", StringComparison.OrdinalIgnoreCase);
                 return response.IsSuccessStatusCode;
             }
             catch

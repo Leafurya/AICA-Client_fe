@@ -11,23 +11,9 @@
     
     <Grid>
         <Grid.RowDefinitions>
-            <!--<RowDefinition Height="50"></RowDefinition>-->
             <RowDefinition Height="40"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
-        <!--검색창-->
-        <!--<Grid Grid.Row="0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition Width="100"/>
-            </Grid.ColumnDefinitions>
-            <TextBox Style="{StaticResource SearchBox}" Name="searchTxt" Tag="검색어를 입력하세요"/>
-            <Button Grid.Column="1" Name="searchBtn" Content="검색" Style="{StaticResource RoundedButton}"
-                    Margin="8,0,0,0"/>
-        </Grid>-->
-        <!--<TextBox Grid.Row="0" Margin="20,10,20,10"></TextBox>-->
-
-        <!--삭제-->
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"></ColumnDefinition>
@@ -46,20 +32,6 @@
                         Style="{StaticResource RoundedButton}"/>
             </DockPanel>
         </Grid>
-        <!--<TextBox Grid.Row="0" Margin="20,10,20,10"></TextBox>
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-                <ColumnDefinition Width="*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
-            <DockPanel>
-                <ToggleButton Name="toggleButtonSelectAll" Width="20" Height="20" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="20 0 0 0" Checked="ToggleButton_Checked" Unchecked="ToggleButton_Unchecked"></ToggleButton>
-                <TextBlock VerticalAlignment="Center">전체 선택</TextBlock>
-            </DockPanel>
-            <DockPanel Grid.Column="1">
-                <Button Content="선택 삭제" Width="98" Height="28" VerticalAlignment="Center" HorizontalAlignment="right" Margin="0 0 20 0" Click="Button_Click"/>
-            </DockPanel>
-        </Grid>-->
         <ScrollViewer Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       Style="{StaticResource ScrollViewTransparent}">
             <StackPanel>

@@ -24,10 +24,6 @@ namespace Translate
                 return "";
             }
             input=input.Replace("\n", " ");
-            //Debug.WriteLine("input: "+input);
-            //// 번역 실행
-            //string result = await Translator.TranslateAsync(input);
-            //Debug.WriteLine("result: "+ result);
             return input;
         }
     }

@@ -47,51 +47,6 @@
                             Click="LeaveMemberButton_Click"/>
                 </StackPanel>
             </Grid>
-            <!--<Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="3*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">내 정보</TextBlock>
-                    <DockPanel Grid.Row="1">
-                        <TextBlock VerticalAlignment="Center">아이디: </TextBlock>
-                        <TextBlock VerticalAlignment="Center" Text="{Binding UserInfoID}"></TextBlock>
-                    </DockPanel>
-                    <DockPanel Grid.Row="2">
-                        <TextBlock VerticalAlignment="Center">이메일:</TextBlock>
-                        <TextBlock VerticalAlignment="Center" Text="{Binding UserInfoEmail}"></TextBlock>
-                    </DockPanel>
-                    <DockPanel Grid.Row="3">
-                        <TextBlock VerticalAlignment="Center">닉네임:</TextBlock>
-                        <TextBlock VerticalAlignment="Center" Text="{Binding UserInfoAlias}"></TextBlock>
-                    </DockPanel>
-                    <Grid Grid.Row="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                            <ColumnDefinition></ColumnDefinition>
-                        </Grid.ColumnDefinitions>
-                        <Button x:Name="EditInfoButton" Grid.Column="0" Margin="10" Content="회원 정보 수정" Click="EditInfoButton_Click"></Button>
-                        <Button x:Name="LogoutButton" Grid.Column="1" Margin="10" Content="로그아웃" Click="LogoutButton_Click"></Button>
-                        <Button x:Name="LeaveMemberButton" Grid.Column="2" Margin="10" Content="회원 탈퇴" Click="LeaveMemberButton_Click"></Button>
-                    </Grid>
-                </Grid>
-                <Button x:Name="Close" Grid.Column="2" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="top" Content="❌" Click="Close_Click"/>
-            </Grid>-->
         </Border>
     </Grid>
 </Page>

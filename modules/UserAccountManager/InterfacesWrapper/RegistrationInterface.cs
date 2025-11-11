@@ -15,7 +15,6 @@ namespace UserAccountManager.InterfacesWrapper
     {
         public static async Task<string> HandleIdCheck(string id)
         {
-            //return UserRegistrationHandler.HandleIdCheckAsync(view.UserId);
             (bool Success, string Message) = await UserRegistrationHandler.HandleIdCheckAsync(id);
             return Message;
         }
@@ -31,32 +30,9 @@ namespace UserAccountManager.InterfacesWrapper
             (bool Success, string Message) = await EmailVerificationHandler.HandleVerifyCodeAsync(email, verifyCode);
             return (Success,Message);
         }
-
-        //public static Task<(bool Success, string Message)> RegisterUser(IUserRegistrationView view)
-        //{
-        //    return UserRegistrationHandler.HandleRegisterAsync(
-        //        view.UserId,
-        //        view.Password,
-        //        view.ConfirmPassword,
-        //        view.Nickname,
-        //        view.Email,
-        //        view.AuthCode,
-        //        view.IsTermsAgreed1,
-        //        view.IsTermsAgreed2,
-        //        view.IsTermsAgreed3);
-        //}
         public static async Task<(bool Success, string Message)> RegistUser(string userId, string pwd,string rePwd, string email, string alias, string verifyCode,bool agree1,bool agree2,bool agree3)
         {
-            //(bool Success, string Message) = await UserRegistrationHandler.HandleIdCheckAsync(userId);
-            //if (!Success)
-            //{
-            //    return (Success, Message);
-            //}
             (bool Success, string Message) = await UserRegistrationHandler.HandleRegisterAsync(userId, pwd, rePwd, alias, email, verifyCode, agree1, agree2, agree3);
-            //if (!Success)
-            //{
-            //    return (Success, Message);
-            //}
             return (Success, Message);
         }
     }

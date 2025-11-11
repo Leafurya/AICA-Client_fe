@@ -12,22 +12,9 @@ using Utility.Data.Word;
 
 namespace VocabNote
 {
-    //public class WordData
-    //{
-    //    public int wordId { get; set; }
-    //    public string word { get; set; }
-    //}
-
-    //class ResponseBody
-    //{
-    //    public int code { get; set; }
-    //    public string message { get; set; }
-    //    public List<WordData> data { get; set; }
-    //}
     class WordList
     {
         private GetWordBody body;
-        //private List<JustWord> data;
         private List<VocabItem> data=new List<VocabItem>();
         private List<int> wordIds = new List<int>();
         private Dictionary<int, List<VocabItem>> aicaList = new Dictionary<int, List<VocabItem>>();
@@ -51,7 +38,6 @@ namespace VocabNote
         }
         public WordList()
         {
-            //data = body.data;
             data = new List<VocabItem>();
         }
         public void Debug_ShowList()
@@ -82,10 +68,6 @@ namespace VocabNote
         {
             return data;
         }
-        //public void Add(string word, int wordId)
-        //{
-        //    data.Add(new VocabItem { word = word, wordId = wordId });
-        //}
         public (bool,bool) Add(VocabItem vocabItem)
         {
             bool vocabAddResult=AddToVocabList(vocabItem);
@@ -149,14 +131,6 @@ namespace VocabNote
                     break;
                 }
             }
-            //data.ForEach((VocabItem vocabItem) =>
-            //{
-            //    if (vocabItem.wordId == wordId)
-            //    {
-            //        data.Remove(vocabItem);
-            //        return;
-            //    }
-            //});
 
             data.ForEach((VocabItem vocabItem) =>
             {
@@ -187,15 +161,5 @@ namespace VocabNote
         {
             aicaList[textId]=new List<VocabItem>();
         }
-        //public void Clear()
-        //{
-        //    aicaList.Clear();
-        //    wordIds.Clear();
-        //    data.Clear();
-        //}
-        //public void DeleteWordsFromText(int textId)
-        //{
-
-        //}
     }
 }

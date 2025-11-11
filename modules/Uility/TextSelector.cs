@@ -133,7 +133,6 @@ namespace Utility
                 }
 
                 text?.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
-                //text?.ApplyPropertyValue(TextElement.ForegroundProperty, text?.GetPropertyValue(TextElement.ForegroundProperty));
                 SelectText(target);
                 text?.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
             }
@@ -144,10 +143,6 @@ namespace Utility
                     return;
                 }
                 target.ApplyPropertyValue(TextElement.BackgroundProperty, color);
-                //target.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.White);
-                //text?.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Black);
-                //text = target;
-                //text.ApplyPropertyValue(TextElement.ForegroundProperty, Brushes.Red);
             }
             private TextPointer GetTextPointerFromOffset(TextPointer start, int offset)
             {
@@ -160,7 +155,6 @@ namespace Utility
                     if (navigator.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.Text)
                     {
                         string runText = navigator.GetTextInRun(LogicalDirection.Forward);
-                        //Debug.WriteLine("runText: "+ runText);
                         if (count + runText.Length >= offset)
                         {
                             return navigator.GetPositionAtOffset(offset - count);
@@ -173,13 +167,8 @@ namespace Utility
             }
             public TextRange? GetSelectedTextRange(TextPointer origin, int start, int end)
             {
-                //Debug.Write("start: ");
                 TextPointer targetStart = GetTextPointerFromOffset(origin, start);
-                //Debug.WriteLine("targetStart: " + targetStart.GetTextInRun(LogicalDirection.Backward));
-                //Debug.Write("end: ");
                 TextPointer targetEnd = GetTextPointerFromOffset(targetStart, end-start);
-                //TextPointer targetEnd = targetStart.GetPositionAtOffset(end-start);
-                //Debug.WriteLine("targetEnd: " + targetEnd.GetTextInRun(LogicalDirection.Backward));
 
 
                 if (targetStart == null || targetEnd == null)
@@ -209,10 +198,8 @@ namespace Utility
                 Connect();
                 dbResult = ExecuteQuery($"select start, end, lemma from parts where textid={textid} and start<={idx} and end>={idx}", columns);
 
-                //Debug.WriteLine("GetTextfromDB");
                 dbResult.ForEach(item =>
                 {
-                    //Debug.WriteLine($"{item[0]}, {item[1]}");
                     result.X = Convert.ToDouble(item[0]);
                     result.Y = Convert.ToDouble(item[1]);
                     this.lemma = Convert.ToString(item[2]);
@@ -256,7 +243,6 @@ namespace Utility
 
                 Connect();
                 dbResult = ExecuteQuery($"select start, end, pos, tag, token from parts where textid={textid} and lemma=(select lemma from parts where textid={textid} and start={targetStartPoint})", columns);
-                //Debug.WriteLine($"select start, end, pos from parts where textid={textid} and lemma=(select from parts where textid={textid} and start={targetStartPoint})");
 
                 dbResult.ForEach(item =>
                 {

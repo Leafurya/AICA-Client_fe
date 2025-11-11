@@ -16,35 +16,8 @@ using UserAccountManager.Handlers;
 using Utility.Data.Sentence;
 using Utility.RequestConst;
 using Utility.TokenManager;
-//using WordSearch;
 
 namespace AICA_Client;
-/*
- * 단어 카드 보기 o
- * 단어 추가 예외처리 되는지 확인하기 o
- * 단어장 크기 맞추기 o
- * 자동로그인 o
- * aica 단어장 카드 보기 확인 o
- * 마이크 입력 테스트 페이지 열기 o
- * 발음비교 테스트
- *   발음비교 서버 연결 테스트
- *   마이크 입력 테스트
- *   비교 결과 받기 테스트
- * 이 문장에선 이렇게 쓰였어요??
- * 테스트
- *  단어장 테스트
- *      단어 삭제 - 단어 삭제 시 에이카 단어도 삭제되어야 함 o
- *      에이카 단어 삭제 - 이 기능은 없는 기능?
- *                        BE에 에이카 단어 삭제 기능이 없는 것으로 보여짐. 따라서 삭제함
- *      
- *  문장 테스트 o
- *      문장 업데이트
- *      문장 삭제
- *      
- * 에이카 단어장을 문장에 반영할 것 o
- * 
- * 문장 분석 직후 문장 리스트에 추가 안됨 o
- */
 /// <summary>
 /// Interaction logic for MainWindow.xaml
 /// </summary>
@@ -65,10 +38,17 @@ public partial class MainWindow : Window
     {
         Window_OpenLoadingPage(this, new RoutedEventArgs());
 
-        //await Task.Yield();
-        //await ThirdParty.Interface.Init();
-        await Task.Run(() => ThirdParty.Interface.Init());
-        Window_CloseLoadingPage(this, new RoutedEventArgs());
+        try
+        {
+            await Task.Run(() => ThirdParty.Interface.Init());
+            Window_CloseLoadingPage(this, new RoutedEventArgs());
+        }
+        catch (Exception ex)
+        {
+            string exeDir = AppDomain.CurrentDomain.BaseDirectory;
+            MessageBox.Show($"자식프로세스를 찾지 못했습니다.\n({exeDir}child\\child.exe 이 없음)", "에러");
+            Application.Current.Shutdown();
+        }
 
     }
 
@@ -80,8 +60,6 @@ public partial class MainWindow : Window
             vm.IsLogin_LoginButtonHandler += Vm_PropertyChanged;
             Utility.UserSetting.Interface.Init(vm.SettingData);
         }
-        
-        //ThirdParty.Interface.Echo();
     }
     private async void DoAutoLogin(object sender, RoutedEventArgs e)
     {
@@ -98,12 +76,6 @@ public partial class MainWindow : Window
         {
             vm.IsLogin = true;
         }
-
-
-        
-
-        //loadingPage.Stop();
-        //FrameContainer.Visibility = Visibility.Collapsed;
     }
 
     private void Vm_PropertyChanged(object? sender, EventArgs e)
@@ -135,12 +107,6 @@ public partial class MainWindow : Window
     {
         FrameContainer.Visibility = Visibility.Collapsed;
     }
-
-    //private void Regist_Click(object sender, RoutedEventArgs e)
-    //{
-    //    FrameContainer.Visibility = Visibility.Visible;
-    //    subFrame.Content = new Regist(this);
-    //}
     public void OpenRegistFrame(object sender, RoutedEventArgs e)
     {
         FrameContainer.Visibility = Visibility.Visible;
@@ -193,11 +159,6 @@ public partial class MainWindow : Window
             subFrame.Content = new PronunciationTest(item.GetWord(),this);
         }
     }
-    //private void RegistButton_Click(object sender, RoutedEventArgs e)
-    //{
-    //    this.OpenRegistFrame();
-    //}
-
     private void MyPage_Click(object sender, RoutedEventArgs e)
     {
         OpenMyPageFrame();
@@ -229,64 +190,8 @@ public partial class MainWindow : Window
         FrameContainer.Visibility = Visibility.Collapsed;
     }
 
-    //private async void refresh_Click(object sender, RoutedEventArgs e)
-    //{
-    //    (bool suc,string msg)=await TokenManager.RefreshTokenAsync();
-    //    MessageBox.Show(msg, "알림");
-
-    //}
-
-    //private void Canvas_MouseMove(object sender, MouseEventArgs e)
-    //{
-    //    Point mousePos = e.GetPosition(richTextBox);
-    //    WordSearch.Interface.SelectRange(richTextBox, mousePos);
-    //}
-    //private async void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    //{
-    //    WordSearch.Interface.HighlightPOS(richTextBox);
-
-    //    //Debug.WriteLine("click");
-
-    //    // 1. RichTextBox 기준으로 마우스 위치 얻기
-    //    //Point mousePos = e.GetPosition(richTextBox);
-
-    //    // 2. 단어 선택 (색 칠해주는 것까지 포함)
-    //    //WordSearch.Interface.SelectRange(richTextBox, mousePos);
-
-    //    // 3. 해석 요청 + MeaningBox에 표시
-    //    await WordSearch.Interface.PrintMeaning(MeaningBox);
-    //}
-
-
-    //private void Canvas_MouseWheel(object sender, MouseWheelEventArgs e)
-    //{
-    //    // RichTextBox 내부 ScrollViewer 가져오기
-    //    var scrollViewer = FindVisualChild<ScrollViewer>(richTextBox);
-    //    if (scrollViewer != null)
-    //    {
-    //        if (e.Delta > 0)
-    //            scrollViewer.LineUp();     // 휠 ↑
-    //        else
-    //            scrollViewer.LineDown();   // 휠 ↓
-    //    }
-
-    //    e.Handled = true; // 이벤트 버블링 방지 (필수)
-    //}
-    //public static T? FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
-    //{
-    //    for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-    //    {
-    //        var child = VisualTreeHelper.GetChild(parent, i);
-    //        if (child is T correctlyTyped)
-    //            return correctlyTyped;
-
-    //        var result = FindVisualChild<T>(child);
-    //        if (result != null)
-    //            return result;
-    //    }
-    //    return null;
-    //}
-
-
-
+    private void Window_Closing(object sender, CancelEventArgs e)
+    {
+        ThirdParty.Interface.Close();
+    }
 }

@@ -5,9 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-//using UserAccountManager.Models;
-
-//using Utility.RequestConst;
 
 namespace Utility
 {
@@ -92,7 +89,6 @@ namespace Utility
             private static string RefreshToken = "";
             delegate Task<HttpResponseMessage> MethodFunc1(string? url,HttpContent? httpContent=null);
             delegate Task<HttpResponseMessage> MethodFunc2(string? url);
-            //delegate Task<HttpResponseMessage> MethodFunc(string? url);
 
             public static void SaveTokensToDB()
             {
@@ -128,7 +124,6 @@ namespace Utility
 
             public static async Task<(bool Success, string Message)> RefreshTokenAsync()
             {
-                //Debug.WriteLine("request RefreshTokenAsync");
                 if (string.IsNullOrWhiteSpace(RefreshToken))
                     return (false, "리프레시 토큰이 없습니다.");
 
@@ -200,7 +195,6 @@ namespace Utility
                 if (func1 != null)
                 {
                     response = await func1(url, content);
-                    //Debug.WriteLine((int)response.StatusCode);
                     if ((int)response.StatusCode == 401)
                     {
                         (bool suc, string msg) = await EnsureValidTokenAsync();
@@ -220,7 +214,6 @@ namespace Utility
                     return (true, response);
                 }
                 response = await func2(url);
-                //Debug.WriteLine((int)response.StatusCode);
                 if ((int)response.StatusCode == 401)
                 {
                     (bool suc, string msg) = await EnsureValidTokenAsync();

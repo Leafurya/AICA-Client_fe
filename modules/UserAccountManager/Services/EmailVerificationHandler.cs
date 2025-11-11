@@ -13,7 +13,6 @@ namespace UserAccountManager.Services
 {
     public static class EmailVerificationHandler
     {
-        //public static int SentCode { get; private set; }
         public static bool IsVerified { get; set; } = false;
 
         public static async Task<(bool Success, string Message)> HandleSendCodeAsync(string email)
@@ -26,7 +25,6 @@ namespace UserAccountManager.Services
             if (!success)
                 return (false, message);
 
-            //SentCode = code;
             IsVerified = false;
             return (true, message);
         }

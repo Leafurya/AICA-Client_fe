@@ -24,11 +24,9 @@ namespace SentenceManager
         static private HttpClient client=RequestConst.client;
         static public async Task<bool> SaveText(int textid, string text)
         {
-            //HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
             SentenceData data = new SentenceData { sentenceId=textid,sentence=text};
             string jsonData = JsonSerializer.Serialize(data);
-            //string jsonData = $"{{ \"sentenceId\": {textid}, \"sentence\": \"{text}\" }}";
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 
             try
@@ -38,8 +36,6 @@ namespace SentenceManager
                 {
                     return false;
                 }
-                //HttpResponseMessage res = await client.PostAsync(host + "/api/word/add", content);
-                //HttpResponseMessage res = await client.PostAsync(host + "/api/sentence", content);
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -47,17 +43,9 @@ namespace SentenceManager
                 Debug.WriteLine(ex.Message);
                 return false;
             }
-
-            
-            //return res.IsSuccessStatusCode;
         }
         static public async Task<string> GetTextList()
         {
-            //HttpClient client = new HttpClient();
-            //if (!TokenManager.IsTokenValid())
-            //{
-            //    return "invalid token";
-            //}
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
             try
             {
@@ -67,8 +55,6 @@ namespace SentenceManager
                     return "";
                 }
                 string responseBody = await response.Content.ReadAsStringAsync();
-                //HttpResponseMessage res = await client.PostAsync(host + "/api/word/add", content);
-                //HttpResponseMessage res = await client.GetAsync(host + "/api/sentence");
                 return responseBody;
             }
             catch (Exception ex)
@@ -76,25 +62,11 @@ namespace SentenceManager
                 Debug.WriteLine(ex.Message);
                 return "";
             }
-            //HttpResponseMessage res = await client.GetAsync(host+ "/api/sentence");
-            //string responseBody = await res.Content.ReadAsStringAsync();
-            //if (!res.IsSuccessStatusCode)
-            //{
-            //    Debug.WriteLine("SentenceManager.Interface.Request.GetTextList "+res.StatusCode);
-            //}
-            //return responseBody;
         }
         static public async Task<bool> DeleteText(int textId)
         {
-            //if (!TokenManager.IsTokenValid())
-            //{
-            //    Debug.WriteLine("SentenceManager.Interface.Request.DeleteText invalid token");
-            //    return false;
-            //}
-            //HttpClient client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
 
-            //Debug.WriteLine($"req start {host}/api/sentence/{textId}");
             try
             {
                 (bool suc, HttpResponseMessage? response) = await TokenManager.RequestWithTokenCheck("delete", $"{host}/api/sentence/{textId}");
@@ -102,8 +74,6 @@ namespace SentenceManager
                 {
                     return false;
                 }
-                //HttpResponseMessage res = await client.PostAsync(host + "/api/word/add", content);
-                //HttpResponseMessage res = await client.DeleteAsync($"{host}/api/sentence/{textId}");
                 return response.IsSuccessStatusCode;
             }
             catch (Exception ex)
@@ -111,8 +81,6 @@ namespace SentenceManager
                 Debug.WriteLine(ex.Message);
                 return false;
             }
-            
-            //return res.IsSuccessStatusCode;
         }
     }
     public class Interface
@@ -182,11 +150,6 @@ namespace SentenceManager
                 selector.SetTextColorToSelectedText(selectedText);
             }
         }
-        //참조 안함
-        //static public string GetSelectedText()
-        //{
-        //    return selector.GetText();
-        //}
         static public string GetStringFromImg(string path)
         {
             Tesseract tesseract = new Tesseract();
@@ -210,7 +173,6 @@ namespace SentenceManager
                     SaveText(data.sentenceId, data.sentence);
                 });
             }
-            //return GetTextList();
         }
         static private void UpdateTextList(SentenceList list)
         {
@@ -221,14 +183,12 @@ namespace SentenceManager
             List<SentenceData> oldDiffNew = oldList.Except(newList).ToList();
             oldDiffNew.ForEach(data =>
             {
-                //Debug.WriteLine(data.sentenceId + " " + data.sentence);
                 SaveText(data.sentenceId,data.sentence);
             });
             newDiffOld.ForEach(data =>
             {
                 sentenceList.AppendSentence(data.sentence,data.sentenceId,false);
             });
-            //return newDiffOld;
         }
         static public ObservableCollection<SentenceData> GetTextList()
         {
@@ -242,23 +202,12 @@ namespace SentenceManager
                 Debug.WriteLine(ex.Message);
                 return new ObservableCollection<SentenceData>();
             }
-            //listBox.Items.Clear();
-            //foreach (SentenceData sentenceData in data)
-            //{
-            //    SentenceItem sentenceItem = new SentenceItem();
-            //    sentenceItem.SetText(sentenceData.sentence);
-            //    listBox.AddItem(sentenceItem);
-            //}
         }
         static public async Task DeleteText(int textId)
         {
             bool result = await Request.DeleteText(textId);
             sentenceList.DeteleSentence(textId);
             Debug.WriteLine($"delete text {textId}");
-            //return Task.CompletedTask();
-            //if (result)
-            //{
-            //}
         }
         static public SentenceData AddText(string text,int textId)
         {

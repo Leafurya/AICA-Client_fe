@@ -51,11 +51,6 @@ namespace CustomControl
         {
             InitializeComponent();
         }
-        private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        {
-            WordList? ucRoot = ControlUtil.FindAncestor<WordList>(this);
-            ucRoot?.UncheckSelectAllTogglButton();
-        }
         public int GetWordId()
         {
             return (int)Word.Tag;
@@ -71,16 +66,6 @@ namespace CustomControl
 
         private void Word_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-
-            //if(MeaningsGrid.Visibility == Visibility.Visible)
-            //{
-            //    MeaningsGrid.Visibility = Visibility.Collapsed;
-            //}
-            //else
-            //{
-            //    MeaningsGrid.Visibility = Visibility.Visible;
-            //}
-            Debug.WriteLine("word click");
             RaiseEvent(new RoutedEventArgs(OpenMeaningCardEvent, this));
         }
         public void CloseCard()

@@ -15,7 +15,6 @@ namespace Pronunciation
 {
     internal class AudioStreamer : IDisposable
     {
-        // JS와 동일: 4096 samples (mono, 16-bit) → 8192 bytes
         public const int ChunkSamples = 4096;
         private const int BitsPerSample = 16;
         private const int Channels = 1;
@@ -47,22 +46,14 @@ namespace Pronunciation
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine("GetDeviceName error: " + ex.Message);
+                Debug.WriteLine("GetDeviceName error: " + ex.Message);
                 return null;
             }
-            //if( _waveIn == null)
-            //{
-            //    return null;
-            //}
-            //int index = _waveIn.DeviceNumber;
-            //WaveInCapabilities info =WaveIn.GetCapabilities(index);
-            //return info.ProductName;
         }
         public int GetDeviceSampleRateOrDefault(int fallback)
         {
             try
             {
-                // 대부분 장치에서 44100/48000 등이 반환될 수 있음
                 using var temp = new WaveInEvent();
                 return temp.WaveFormat.SampleRate;
             }
@@ -76,14 +67,13 @@ namespace Pronunciation
             _waveIn = new WaveInEvent
             {
                 WaveFormat = new WaveFormat(sampleRate, BitsPerSample, Channels),
-                BufferMilliseconds = 20, // 장치 이벤트 주기(대략), 꼭 4096샘플 보장은 아님
+                BufferMilliseconds = 20,
                 NumberOfBuffers = 4
             };
 
 
             _waveIn.DataAvailable += async (s, a) =>
             {
-                //Debug.WriteLine($"[DataAvailable] BytesRecorded = {a.BytesRecorded}");
                 if (ct.IsCancellationRequested) return;
 
 
@@ -92,7 +82,7 @@ namespace Pronunciation
 
 
                 int bytesPerSample = BitsPerSample / 8;
-                int chunkBytes = ChunkSamples * bytesPerSample * Channels; // 8192
+                int chunkBytes = ChunkSamples * bytesPerSample * Channels;
 
 
                 // 4096 샘플 단위로 잘라서 전송
@@ -117,13 +107,6 @@ namespace Pronunciation
                         _buffer.SetLength(0);
                     }
 
-                    //var bufferFloat = new short[chunkBytes / 2];
-                    //Buffer.BlockCopy(chunk, 0, bufferFloat, 0, chunkBytes);
-
-                    //short peak = bufferFloat.Max(s => Math.Abs(s));
-                    //Debug.WriteLine($"[Volume] Peak amplitude = {peak}");
-
-                    //Debug.WriteLine($"[Send] Chunk size = {chunk.Length} bytes");
                     await onChunk(chunk);
                 }
             };

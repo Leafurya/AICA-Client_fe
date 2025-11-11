@@ -12,6 +12,7 @@ using System.Windows.Media;
 
 namespace ThirdParty
 {
+    // 파이프로부터 데이터 읽어오기
     internal static class Framing
     {
         public static void ReadExactly(Stream s, Span<byte> buf)
@@ -50,18 +51,17 @@ namespace ThirdParty
         private readonly Process _child;
         private readonly NamedPipeClientStream _pipe;
 
-        public ChildPipeClient(string pythonExe, string childScriptPath)
+        public ChildPipeClient()
         {
             // 파이프 이름은 충돌 방지를 위해 GUID 사용
             string pipeName = "myapp_rpc_" + Guid.NewGuid().ToString("N");
             string exeDir = AppDomain.CurrentDomain.BaseDirectory;
 
+            // 자식 프로세스 실행
             var psi = new ProcessStartInfo
             {
-                FileName = $"{exeDir}\\child\\child.exe",                         // 예: "python" 또는 전체 경로
+                FileName = $"{exeDir}child\\child.exe",
                 Arguments = $"{pipeName}",
-                //FileName = pythonExe,
-                //Arguments = $"{childScriptPath} {pipeName}",
                 UseShellExecute = false,
                 RedirectStandardError = true,
                 StandardErrorEncoding = Encoding.UTF8,
@@ -69,6 +69,7 @@ namespace ThirdParty
             };
             psi.Environment["PARENT_PID"] = Environment.ProcessId.ToString(); 
 
+            // 자식 프로세스를 못찾았다면 런타임 에러 발생
             _child = Process.Start(psi) ?? throw new InvalidOperationException("Failed to start child");
             _child.ErrorDataReceived += (_, e) => { if (e.Data != null) Debug.WriteLine("[child] " + e.Data); };
             _child.BeginErrorReadLine();
@@ -76,9 +77,9 @@ namespace ThirdParty
             Debug.WriteLine(pipeName);
 
             _pipe = new NamedPipeClientStream(".", pipeName, PipeDirection.InOut, PipeOptions.None);
-            _pipe.Connect(600000); // 최대 5초 대기
+            _pipe.Connect(600000);
         }
-
+        // 자식 프로세스에 메시지 전달
         public JsonDocument Call(string method, object? body)
         {
             var req = new { method, body };
@@ -97,9 +98,8 @@ namespace ThirdParty
                 if (!_child.HasExited) _child.Kill(true);
                 _child.Dispose();
             }
-            catch { }
+            catch {
+            }
         }
-
-        static string Quote(string s) => s.Contains(' ') ? $"\"{s}\"" : s;
     }
 }

@@ -76,12 +76,8 @@ namespace CustomControl.ViewModel
                 }
             }
         }
-        //
-        //public ObservableCollection<SentenceData> SentenceList
-        //{
-        //    get; set;
-        //}
-        //private UserSettingData _settingData;
+
+        // 사전
         private List<Meaning> _dictionaryMeans;
         public List<Meaning> DictionaryMeans
         {
@@ -110,6 +106,7 @@ namespace CustomControl.ViewModel
             }
         }
 
+        // 사용자 설정
         public UserSettingData SettingData { get; set; } = new UserSettingData();
         private ObservableCollection<SentenceData> _sentenceList;
         public ObservableCollection<SentenceData> SentenceList
@@ -125,6 +122,7 @@ namespace CustomControl.ViewModel
             }
         }
 
+        // 단어장
         private ObservableCollection<VocabItem>? _wordsList;
         public ObservableCollection<VocabItem>? WordsList
         {
@@ -133,14 +131,16 @@ namespace CustomControl.ViewModel
             {
                 if (_wordsList != value)
                 {
-                    _wordsList = value ?? new ObservableCollection<VocabItem>(); // null 방지
-                                                                                 // WordsList 교체 시 View도 다시 연결
+                    _wordsList = value ?? new ObservableCollection<VocabItem>();
+
                     HookFilteredWordListView();
                     OnPropertyChanged(nameof(WordsList));
-                    OnPropertyChanged(nameof(FilteredWordList)); // 바인딩 갱신
+                    OnPropertyChanged(nameof(FilteredWordList));
                 }
             }
         }
+
+        // AICA 단어장
         private ObservableCollection<VocabItem>? _aicaList;
         public ObservableCollection<VocabItem>? AicaList
         {
@@ -149,18 +149,14 @@ namespace CustomControl.ViewModel
             {
                 if (_aicaList != value)
                 {
-                    _aicaList = value ?? new ObservableCollection<VocabItem>(); // null 방지
-                                                                                // WordsList 교체 시 View도 다시 연결
+                    _aicaList = value ?? new ObservableCollection<VocabItem>();
                     HookFilteredAICAListView();
                     OnPropertyChanged(nameof(AicaList));
-                    OnPropertyChanged(nameof(FilteredAICAList)); // 바인딩 갱신
+                    OnPropertyChanged(nameof(FilteredAICAList));
                 }
             }
         }
-        //public ObservableCollection<WordMeanings>? WordsList
-        //{
-        //    get; set;
-        //}
+        // 오버레이 관련
         private string _overlayWord;
         public string OverlayWord
         {
@@ -201,6 +197,8 @@ namespace CustomControl.ViewModel
             }
         }
 
+
+        // 회원 정보 관련
         private string _userinfoID;
         public string UserInfoID
         {
@@ -241,6 +239,7 @@ namespace CustomControl.ViewModel
             }
         }
 
+
         private string _dictionaryMean;
         public string DictionaryMean
         {
@@ -255,7 +254,7 @@ namespace CustomControl.ViewModel
             }
         }
 
-
+        // 검색기 관련
         private string _nowText;
         public string NowText
         {
@@ -296,11 +295,13 @@ namespace CustomControl.ViewModel
             }
         }
 
+        // 헨들러들
         public event EventHandler? IsLogin_LoginButtonHandler;
-        //public event EventHandler? IsLogin_AddWordButtonHandler;
         public event EventHandler? IsLogin_LoadSentenceButtonHandler;
         public event EventHandler? IsLogin_WordListHandler;
         public event EventHandler? IsLogin_AicaListHandler;
+
+        // 로그인 됐는지
         private bool _isLogin;
         public bool IsLogin
         {
@@ -312,7 +313,6 @@ namespace CustomControl.ViewModel
                     _isLogin = value;
                     OnPropertyChanged(nameof(IsLogin));
                     IsLogin_LoginButtonHandler?.Invoke(this, new EventArgs());
-                    //IsLogin_AddWordButtonHandler?.Invoke(this, new EventArgs());
                     IsLogin_LoadSentenceButtonHandler?.Invoke(this, new EventArgs());
                     IsLogin_WordListHandler?.Invoke(this, new EventArgs());
                     IsLogin_AicaListHandler?.Invoke(this,new EventArgs());
@@ -346,7 +346,8 @@ namespace CustomControl.ViewModel
             }
         }
 
-        private string _wordSearchQuery = "";                   // ← 검색어 변수
+        // 단어장 검색어
+        private string _wordSearchQuery = "";
         public string WordSearchQuery
         {
             get => _wordSearchQuery;
@@ -355,11 +356,12 @@ namespace CustomControl.ViewModel
                 if (_wordSearchQuery == value) return;
                 _wordSearchQuery = value;
                 OnPropertyChanged(nameof(IsSearchModeToggleOn));
-                FilteredWordList.Refresh();                       // ← 검색어 변경 시 필터 재적용
+                FilteredWordList.Refresh();
             }
         }
 
-        private string _aicaSearchQuery = "";                   // ← 검색어 변수
+        // AICA 단어장 검색어
+        private string _aicaSearchQuery = "";
         public string AicaSearchQuery
         {
             get => _aicaSearchQuery;
@@ -368,7 +370,7 @@ namespace CustomControl.ViewModel
                 if (_aicaSearchQuery == value) return;
                 _aicaSearchQuery = value;
                 OnPropertyChanged(nameof(IsSearchModeToggleOn));
-                FilteredAICAList.Refresh();                       // ← 검색어 변경 시 필터 재적용
+                FilteredAICAList.Refresh();
             }
         }
         private bool FilterWord(object? item)
@@ -385,7 +387,6 @@ namespace CustomControl.ViewModel
             }
             Debug.WriteLine("FilterWord item3 ", i.word);
             return i.word.Contains(WordSearchQuery, StringComparison.OrdinalIgnoreCase);
-            // 정확히 "block"만: return string.Equals(s, Query, StringComparison.OrdinalIgnoreCase);
         }
         private bool FilterAICA(object? item)
         {
@@ -401,7 +402,6 @@ namespace CustomControl.ViewModel
             }
             Debug.WriteLine("FilterAICA item3 "+ i.word);
             return i.word.Contains(AicaSearchQuery, StringComparison.OrdinalIgnoreCase);
-            // 정확히 "block"만: return string.Equals(s, Query, StringComparison.OrdinalIgnoreCase);
         }
 
         public SharedViewModel()
@@ -409,20 +409,11 @@ namespace CustomControl.ViewModel
             if (!System.ComponentModel.DesignerProperties.GetIsInDesignMode(new DependencyObject()))
             {
                 SentenceList = SentenceManager.Interface.GetTextList(); // 런타임 전용
-                //SettingData = new UserSettingData();
 
-                //InitWordsList();
                 NowText = "";
                 WordsList = new ObservableCollection<VocabItem>();
                 AicaList = new ObservableCollection<VocabItem>();
 
-                //FilteredWordList = CollectionViewSource.GetDefaultView(WordsList);
-                //FilteredWordList.Filter = FilterWord;
-                //FilteredWordList.Refresh();
-
-                //FilteredAICAList = CollectionViewSource.GetDefaultView(AicaList);
-                //FilteredAICAList.Filter = FilterWord;
-                //FilteredAICAList.Refresh();
                 HookFilteredWordListView();
                 HookFilteredAICAListView();
             }
@@ -435,13 +426,6 @@ namespace CustomControl.ViewModel
                     new SentenceData { sentence = "디자인 타임 문장 1" ,sentenceId=1},
                     new SentenceData { sentence = "디자인 타임 문장 2" ,sentenceId=2}
                 };
-                //userData = new User { alias = "배재", id = "metalhyun", pwd = "123", email = "metal@hyun.com", token = null };
-
-                //WordsList = new ObservableCollection<JustWord>
-                //{
-                //    new JustWord { word = "apple" ,wordId=1},
-                //    new JustWord { word = "banana" ,wordId=2}
-                //};
             }
         }
 
@@ -453,23 +437,18 @@ namespace CustomControl.ViewModel
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        private async void InitWordsList()
-        {
-            await VocabNote.Interface.RequestVocabNote(-1);
-            WordsList = VocabNote.Interface.GetWordList();
-        }
 
         private void HookFilteredWordListView()
         {
             var view = CollectionViewSource.GetDefaultView(WordsList);
-            view.Filter = FilterWord;  // = 로 단일 필터 지정 권장
+            view.Filter = FilterWord;
             FilteredWordList = view;
             FilteredWordList.Refresh();
         }
         private void HookFilteredAICAListView()
         {
             var view = CollectionViewSource.GetDefaultView(AicaList);
-            view.Filter = FilterAICA;  // = 로 단일 필터 지정 권장
+            view.Filter = FilterAICA;
             FilteredAICAList = view;
             FilteredAICAList.Refresh();
         }

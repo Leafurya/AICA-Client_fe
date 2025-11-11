@@ -11,14 +11,9 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
-            <!--<RowDefinition Height="12"/>-->
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="220"/>
         </Grid.RowDefinitions>
-        <!--<Grid.RowDefinitions> origin
-            <RowDefinition Height="20"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>-->
         <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,8,0,8">
             <TextBlock Text="문장 입력" FontSize="16" FontWeight="SemiBold" VerticalAlignment="Center"/>
             <ToggleButton Content="검색모드"
@@ -34,15 +29,8 @@
                     Height="32" MinWidth="150"
                     Margin="8,0,0,0" DockPanel.Dock="Right"
                     Click="btnSelectImg_Click"/>
-            <!--<ToggleButton Name="toggleBtnMode" Width="20" IsChecked="{Binding IsSearchModeToggleOn}"  Checked="ToggleBtnMode_Checked" Unchecked="ToggleBtnMode_Unchecked"/> origin
-            <TextBlock>검색모드</TextBlock>
-            <Button Name="btnSelectImg" Content="이미지 선택" Click="btnSelectImg_Click"/>-->
         </DockPanel>
         <Grid Grid.Row="1" VerticalAlignment="Stretch">
-            <!--<Grid.RowDefinitions>
-                <RowDefinition Height="2*"></RowDefinition>
-                <RowDefinition Height="*"></RowDefinition>
-            </Grid.RowDefinitions>-->
             <Border Background="#F8FAFB" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1" CornerRadius="8"/>
             <RichTextBox x:Name="textBoxSearcher"
                          HorizontalAlignment="Stretch"

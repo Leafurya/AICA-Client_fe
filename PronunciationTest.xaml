@@ -9,7 +9,6 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="PronunciationTest">
     <Page.Resources>
-        <!-- 내장 변환기 등록 -->
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
     </Page.Resources>
     <Page.DataContext>

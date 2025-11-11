@@ -1,4 +1,3 @@
-
 using System;
 using System.Buffers.Binary;
 using System.Diagnostics;
@@ -17,28 +16,26 @@ namespace ThirdParty
         static private ChildPipeClient app;
         static public Task Init()
         {
-            try
-            {
-                app = new ChildPipeClient("E:\\DevTools\\Anaconda\\envs\\capstone-thirdparty\\python.exe", "E:\\GitHub\\capstone\\thirdparty\\main.py");
-            }
-            catch (InvalidOperationException ex)
-            {
-                MessageBox.Show("자식프로세스를 찾지 못했습니다.\n./child/child.exe", "에러");
-                throw ex;
-            }
+            app = new ChildPipeClient(); // 자식 프로세스 실행
             return Task.CompletedTask;
         }
+        // 자식 프로세스 종료
+        static public void Close() 
+        {
+            while (app == null);
+            app.Dispose();
+        }
+        // 실행 확인용 에코
         static public void Echo()
         {
-            //Debug.WriteLine("start echo");
             object json = new
             {
                 msg = "hello third party"
             };
-            //byte[] response=app.Send(json);
             using (var resp = app.Call("echo", json))
                 Debug.WriteLine(resp.RootElement.ToString());
         }
+        // 문장 분석 요청
         static public int AnalyzeSentence(string sentence)
         {
             int result = -1;
@@ -46,16 +43,10 @@ namespace ThirdParty
             {
                 text = sentence
             };
-            using (JsonDocument resp = app.Call("analyze", json))
+            using (JsonDocument resp = app.Call("analyze", json)) // 자식 프로세스로 문장 분석 요청 메시지 전송
             {
                 try
                 {
-                    string pretty = JsonSerializer.Serialize(
-                                    resp.RootElement,
-                                    new JsonSerializerOptions { WriteIndented = true }
-);
-
-                    Debug.WriteLine(pretty);
                     result = resp.RootElement.GetProperty("textId").GetInt32();
                 }
                 catch (Exception e)
@@ -66,6 +57,7 @@ namespace ThirdParty
             }
             return result;
         }
+        // 텍스트 추출 요청
         static public string ExtractText(string imgPath)
         {
             string result="";
@@ -74,7 +66,7 @@ namespace ThirdParty
             {
                 imgPath = imgPath
             };
-            using (JsonDocument resp = app.Call("extract", json))
+            using (JsonDocument resp = app.Call("extract", json)) // 자식 프로세스로 텍스트 추출 요청 메시지 전송
             {
                 try
                 {
@@ -88,6 +80,7 @@ namespace ThirdParty
 
             return result;
         }
+        // 번역 요청
         static public string TranslateText(string text)
         {
             string result = "";
@@ -95,22 +88,14 @@ namespace ThirdParty
             {
                 text = text
             };
-            using (JsonDocument resp = app.Call("translate", json))
+            using (JsonDocument resp = app.Call("translate", json)) // 자식 프로세스로 번역 요청 메시지 전송
             {
                 try {
-
-                    string pretty = JsonSerializer.Serialize(
-                                    resp.RootElement,
-                                    new JsonSerializerOptions { WriteIndented = true }
-);
-
-                    Debug.WriteLine(pretty);
                     result = resp.RootElement.GetProperty("text").GetString();
                 }
                 catch (Exception e)
                 {
                     Debug.WriteLine(e.Message);
-                    
                 }
             }
             return result;

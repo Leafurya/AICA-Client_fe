@@ -19,13 +19,6 @@ namespace Utility
     {
         namespace Json
         {
-            //public class WordLookupBody
-            //{
-            //    public int code { get; set; }
-            //    public string message { get; set; }
-            //    public JustWord data { get; set; }
-            //    public List<Meaning> meanings { get; set; }
-            //}
             public class BodyBase
             {
                 public int code { get; set; }
@@ -38,17 +31,12 @@ namespace Utility
             }
             public class GetWordBody: BodyBase
             {
-                //public List<JustWord> data { get; set; }
                 public List<VocabItem> data { get; set; }
             }
             public class SentenceBody: BodyBase
             {
                 public List<SentenceData> data { get; set; }
             }
-            //public class GetAicaListBody: BodyBase
-            //{
-            //    public List<AicaMeanings> data { get; set; }
-            //}
         }
         namespace UserData
         {
@@ -142,40 +130,6 @@ namespace Utility
                     {"SCONJ",new SolidColorBrush(Color.FromRgb(178, 255, 89))},
                     {"SYM",new SolidColorBrush(Color.FromRgb(255, 138, 128))},
                     {"VERB",new SolidColorBrush(Color.FromRgb(209, 196, 233))}
-                    //{"NN",new SolidColorBrush(Color.FromRgb(255, 82, 82))},
-                    //{"ADJ",new SolidColorBrush(Color.FromRgb(255, 152, 0))},
-                    //{"ADP",new SolidColorBrush(Color.FromRgb(255, 235, 59))},
-                    //{"ADV",new SolidColorBrush(Color.FromRgb(139, 195, 74))},
-                    //{"AUX",new SolidColorBrush(Color.FromRgb(76, 175, 80))},
-                    //{"CCONJ",new SolidColorBrush(Color.FromRgb(0, 230, 118))},
-                    //{"DET",new SolidColorBrush(Color.FromRgb(0, 188, 212))},
-                    //{"INTJ",new SolidColorBrush(Color.FromRgb(3, 169, 244))},
-                    //{"NOUN",new SolidColorBrush(Color.FromRgb(63, 81, 181))},
-                    //{"NUM",new SolidColorBrush(Color.FromRgb(103, 58, 183))},
-                    //{"PART",new SolidColorBrush(Color.FromRgb(156, 39, 176))},
-                    //{"PRON",new SolidColorBrush(Color.FromRgb(233, 30, 99))},
-                    //{"PROPN",new SolidColorBrush(Color.FromRgb(255, 64, 129))},
-                    //{"PUNCT",new SolidColorBrush(Color.FromRgb(255, 215, 64))},
-                    //{"SCONJ",new SolidColorBrush(Color.FromRgb(118, 255, 3))},
-                    //{"SYM",new SolidColorBrush(Color.FromRgb(244, 67, 54))},
-                    //{"VERB",new SolidColorBrush(Color.FromRgb(179, 136, 255))}
-                    //{"NN",new SolidColorBrush(Color.FromRgb(0, 115, 240))},
-                    //{"ADJ",new SolidColorBrush(Color.FromRgb(0, 138, 99))},
-                    //{"ADP",new SolidColorBrush(Color.FromRgb(0, 157, 212))},
-                    //{"ADV",new SolidColorBrush(Color.FromRgb(71, 128, 125))},
-                    //{"AUX",new SolidColorBrush(Color.FromRgb(77, 125, 148))},
-                    //{"CCONJ",new SolidColorBrush(Color.FromRgb(88, 83, 145))},
-                    //{"DET",new SolidColorBrush(Color.FromRgb(91, 145, 59))},
-                    //{"INTJ",new SolidColorBrush(Color.FromRgb(122, 90, 230))},
-                    //{"NOUN",new SolidColorBrush(Color.FromRgb(134, 142, 186))},
-                    //{"NUM",new SolidColorBrush(Color.FromRgb(152, 119, 76))},
-                    //{"PART",new SolidColorBrush(Color.FromRgb(172, 106, 103))},
-                    //{"PRON",new SolidColorBrush(Color.FromRgb(191, 64, 191))},
-                    //{"PROPN",new SolidColorBrush(Color.FromRgb(191, 158, 87))},
-                    //{"PUNCT",new SolidColorBrush(Color.FromRgb(194, 0, 0))},
-                    //{"SCONJ",new SolidColorBrush(Color.FromRgb(216, 119, 55))},
-                    //{"SYM",new SolidColorBrush(Color.FromRgb(235, 40, 103))},
-                    //{"VERB",new SolidColorBrush(Color.FromRgb(255, 46, 204))}
                 };
             }
             public class Example
@@ -214,11 +168,6 @@ namespace Utility
             {
                 public int? sentenceId { get; set; }
             }
-            //[Obsolete]
-            //public class AicaMeanings : WordMeanings
-            //{
-            //    public int textId { get; set; }
-            //}
             public class JustWord
             {
                 public int wordId { get; set; }
@@ -280,7 +229,6 @@ namespace Utility
                 }
                 public WordMeanings? Append(string json)
                 {
-                    //WordLookupBody? body = JsonSerializer.Deserialize<WordLookupBody>(json);
                     Debug.WriteLine("dict data json: "+json);
                     GetWordBody? body = JsonSerializer.Deserialize<GetWordBody>(json);
                     if (body != null)
@@ -290,23 +238,6 @@ namespace Utility
                     }
                     return null;
                 }
-                //public bool Append(WordMeanings mean)
-                //{
-                //    bool exist = false;
-                //    //WordLookupBody? body = JsonSerializer.Deserialize<WordLookupBody>(json);
-                //    words.ForEach(word =>
-                //    {
-                //        if (word.wordId == mean.wordId)
-                //        {
-                //            exist = true;
-                //        }
-                //    });
-                //    if (!exist)
-                //    {
-                //        words.Add(mean);
-                //    }
-                //    return exist;
-                //}
                 public WordMeanings? GetWordMeanings(int id)
                 {
                     Debug.WriteLine("find " + id);
@@ -339,11 +270,6 @@ namespace Utility
                 {
                     return dictionary.Append(json);
                 }
-                //[Obsolete]
-                //static public WordMeanings? Append(WordMeanings mean)
-                //{
-                //    return dictionary.Append(mean);
-                //}
                 static public void SelectWord(int id)
                 {
                     nowWordId = id;

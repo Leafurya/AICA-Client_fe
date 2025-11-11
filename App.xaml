@@ -11,7 +11,6 @@
             </ResourceDictionary.MergedDictionaries>
             <viewmodel:SentenceViewModel x:Key="vmSentence"></viewmodel:SentenceViewModel>
             <viewmodel:SharedViewModel x:Key="vmShared"></viewmodel:SharedViewModel>
-            <viewmodel:DictViewModel x:Key="vmDict"></viewmodel:DictViewModel>
             <viewmodel:POSConverter x:Key="convPOS"></viewmodel:POSConverter>
         </ResourceDictionary>
     </Application.Resources>

@@ -34,7 +34,7 @@ namespace UserAccountManager.Services
                 {
                     return (false, "액세스토큰 재발급 실패");
                 }
-                //HttpResponseMessage response = await client.DeleteAsync($"{host}/api/member");
+
                 string json = await response.Content.ReadAsStringAsync();
 
                 DeleteUserResponse? result = JsonSerializer.Deserialize<DeleteUserResponse>(json, _jsonOptions);

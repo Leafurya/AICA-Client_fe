@@ -19,17 +19,13 @@
             <!-- + 버튼 -->
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="50"></RowDefinition>
-        </Grid.RowDefinitions>-->
-        
+
         <!-- 제목 -->
         <StackPanel Grid.Row="0" Margin="24,18,24,8">
             <TextBlock Text="{Binding DictWord}" FontSize="18" FontWeight="Bold"  TextWrapping="Wrap"/>
         </StackPanel>
 
-        <!-- ✅ 중앙 의미 리스트 (DictionarySenses) -->
+        <!-- 중앙 의미 리스트 (DictionarySenses) -->
         <Border Grid.Row="1" Margin="24,8,24,0" Padding="16"
          Background="#FFFFFF" BorderBrush="{StaticResource Brush.Border}" BorderThickness="1"
          CornerRadius="10">
@@ -115,8 +111,5 @@
                 Click="Button_Click">
             <TextBlock Text="+" FontSize="18"/>
         </Button>
-
-        <!--<TextBlock Grid.Column="1" Text="{Binding DictionaryMean}" TextWrapping="Wrap"></TextBlock>
-        <Button x:Name="AddWord" IsEnabled="{Binding IsLogin}" Grid.Row="1" Margin="10,10,10,10" Content="+" Click="Button_Click"></Button>-->
     </Grid>
 </UserControl>

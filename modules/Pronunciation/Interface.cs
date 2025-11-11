@@ -12,16 +12,6 @@ namespace Pronunciation
 {
     public class Interface
     {
-        /*
-         *  InitializeComponent();
-            _ws.OnText += OnServerText;
-            _ws.OnClosed += (code, reason) => Dispatcher.Invoke(() =>
-            {
-            TxtStatus.Text = $"Closed: {code} {reason}";
-            BtnStart.IsEnabled = true;
-            BtnStop.IsEnabled = false;
-            });
-         */
         private static WsClient _ws = new();
         private static AudioStreamer _audio = new();
         private static CancellationTokenSource? _cts;
@@ -57,7 +47,6 @@ namespace Pronunciation
             try
             {
                 // 실제 장치 샘플레이트 조회
-                //int sampleRate = _audio.GetDeviceSampleRateOrDefault(16000);
                 int sampleRate = 16000;
                 Debug.WriteLine($"[C# Device SampleRate] {sampleRate} Hz");
 
@@ -78,7 +67,7 @@ namespace Pronunciation
                     {
                         await _ws.CloseAsync("mic start fail", _cts.Token);
                     }
-                    catch { /*ignore*/ }
+                    catch {}
                 }
                 return;
             }
@@ -90,42 +79,19 @@ namespace Pronunciation
             // 발음 비교 끝나면 팝업을 끌 것
             try
             {
-                //BtnStop.IsEnabled = false;
                 _cts?.Cancel();
                 _audio.Stop();
                 await _ws.SendTextAsync(JsonSerializer.Serialize(new
                 {
                     type="end"
-                }));//"{\"type\":\"end\"}"
+                }));
                 await _ws.DisposeAsync();
-                //TxtStatus.Text = "Stopped";
-                //BtnStart.IsEnabled = true;
             }
             catch (Exception ex)
             {
                 Debug.WriteLine(ex.Message);
-                //TxtStatus.Text = $"Stop error: {ex.Message}";
             }
         }
-
-
-        //public static void OnServerText(string text)
-        //{
-        //    try
-        //    {
-        //        using var doc = JsonDocument.Parse(text);
-        //        if (doc.RootElement.TryGetProperty("accuracyScore", out var acc))
-        //        {
-        //            double val = acc.GetDouble();
-        //            if (val <= 1.0) val *= 100.0; // 서버가 0~1 범위일 경우 보정
-        //            Debug.WriteLine(val);
-        //            //vm의 값을 변경하여 정확도를 보여줄 것.
-        //            //AccuracyBar.Value = Math.Clamp(val, 0, 100);
-        //            //AccuracyText.Text = ((int)AccuracyBar.Value).ToString();
-        //        }
-        //    }
-        //    catch (Exception ex) { }
-        //}
         public static bool IsWebSocketConnected()
         {
             return isWSConnected;

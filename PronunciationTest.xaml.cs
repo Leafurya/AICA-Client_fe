@@ -74,9 +74,6 @@ namespace AICA_Client
                     if (val <= 1.0) val *= 100.0; // 서버가 0~1 범위일 경우 보정
                     Debug.WriteLine(val);
                     sharedVM.PronuncScore = val;
-                    //vm의 값을 변경하여 정확도를 보여줄 것.
-                    //AccuracyBar.Value = Math.Clamp(val, 0, 100);
-                    //AccuracyText.Text = ((int)AccuracyBar.Value).ToString();
                 }
             }
             catch (Exception ex) {

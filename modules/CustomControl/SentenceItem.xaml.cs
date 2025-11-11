@@ -37,8 +37,6 @@ namespace CustomControl
             if (sender is TextBlock clickedTextBlock)
             {
                 int textId = (int)clickedTextBlock.Tag;
-                //Debug.WriteLine("tag: " + clickedTextBlock.Tag);
-                //WordSearch.Interface.SetTextId((int)clickedTextBlock.Tag);
                 SentenceManager.Interface.SetSelectedTextId(textId);
                 ItemsControl? itemsControl = ControlUtil.FindParent<ItemsControl>(this);
                 if (itemsControl?.DataContext is SharedViewModel sharedVM)
@@ -47,9 +45,7 @@ namespace CustomControl
                     sharedVM.IsSearchModeToggleOn = false;
                     if (sharedVM.IsLogin)
                     {
-                        //await VocabNote.Interface.RequestAicaList(textId);
                         sharedVM.AicaList = VocabNote.Interface.GetAicaList(textId);
-                        // 문장에 에이카 단어 표시하기
                     }
                 }
             }

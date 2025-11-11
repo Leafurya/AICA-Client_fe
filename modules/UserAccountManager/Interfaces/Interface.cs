@@ -21,12 +21,6 @@ namespace UserAccountManager.Interfaces
         bool IsTermsAgreed3 { get; }
     }
 
-    //public interface ILoginView
-    //{
-    //    string UserId { get; }
-    //    string Password { get; }
-    //}
-
     public interface IUserInfoEditView
     {
         string PasswordForCheck { get; }

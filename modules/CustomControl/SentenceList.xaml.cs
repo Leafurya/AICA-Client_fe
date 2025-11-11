@@ -55,18 +55,8 @@ namespace CustomControl
                     await SentenceManager.Interface.RequestTextList();
                     vm.SentenceList = SentenceManager.Interface.GetTextList();
                 }
-                //diff.ForEach(data =>
-                //{
-                //    vm.SentenceList.Add(data);
-                //});
             }
 
-        }
-
-        private void Text_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            //TextDisplayService.Display(text);
-            
         }
 
 
@@ -115,7 +105,6 @@ namespace CustomControl
                     await SentenceManager.Interface.DeleteText(textId); // 문장 삭제
                     if (this.DataContext is SharedViewModel sharedVm)
                     {
-                        //VocabNote.Interface.ClearAicaList(textId); // 관련 aica 리스트 삭제
                         // 관련 단어 삭제 
 
                         if (sharedVm.IsLogin)
@@ -131,8 +120,7 @@ namespace CustomControl
 
                         if (nowTextId == textId) // 지금 떠있는 문장을 삭제했다면
                         {
-                            WordSearch.Interface.SetTextId(-1); //
-                            //sharedVm.AicaList = VocabNote.Interface.GetAicaList(nowTextId);
+                            WordSearch.Interface.SetTextId(-1);
                             sharedVm.NowText = "";
                         }
                     }
@@ -147,21 +135,6 @@ namespace CustomControl
                     vm.SentenceList.RemoveAt(index);
                 }
             }
-            //SentenceData data= vm.SentenceList
-
-            //foreach (SentenceItem item in items)
-            //{
-            //    int textId = item.GetTextId();
-            //    SentenceManager.Interface.DeleteText(textId, "mangoAccessToken");
-            //    Debug.WriteLine("textId " + textId);
-            //    //item.IsChecked = false; // 전체 Off
-
-
-            //}
-            //if(this.DataContext is SharedViewModel vm)
-            //{
-            //}
-
         }
     }
 }

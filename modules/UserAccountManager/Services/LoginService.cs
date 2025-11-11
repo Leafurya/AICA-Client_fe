@@ -26,7 +26,6 @@ namespace UserAccountManager.Services
             try
             {
                 var response = await client.PostAsync($"{host}/api/login", content);
-                //Debug.WriteLine((int)response.StatusCode);
                 if ((int)response.StatusCode == 401)
                 {
                     (bool suc,string msg)=await TokenManager.EnsureValidTokenAsync();
@@ -51,7 +50,6 @@ namespace UserAccountManager.Services
                 });
                 if (result?.Code == 200 && result.Data != null)
                 {
-                    //Debug.WriteLine(result.Data.AccessToken + " " + result.Data.RefreshToken);
                     TokenManager.SetTokens(result.Data.AccessToken, result.Data.RefreshToken);
                     return (true, result.Message);
                 }

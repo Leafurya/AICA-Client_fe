@@ -31,7 +31,6 @@ namespace UserAccountManager.Services
                 {
                     return (false, "액세스토큰 재발급 실패",null);
                 }
-                //var response = await client.GetAsync($"{host}/api/member");
                 var json = await response.Content.ReadAsStringAsync();
 
                 var result = JsonSerializer.Deserialize<UserInfoData>(json, new JsonSerializerOptions
@@ -52,7 +51,6 @@ namespace UserAccountManager.Services
             }
         }
 
-        // ✅ 회원정보 수정 진입 전 비밀번호 확인 기능 리팩터링
         public static async Task<(bool Success, string Message)> VerifyPasswordAsync(string password)
         {
             try

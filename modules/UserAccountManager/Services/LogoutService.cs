@@ -20,14 +20,6 @@ namespace UserAccountManager.Services
 
         public static async Task<(bool Success, string Message)> LogoutAsync()
         {
-            //var body = new
-            //{
-            //    accessToken = TokenManager.GetAccessToken()
-            //};
-
-            //var content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json");
-
-
             client.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", TokenManager.GetAccessToken());
 
@@ -38,7 +30,6 @@ namespace UserAccountManager.Services
                 {
                     return (false, "액세스토큰 재발급 실패");
                 }
-                //HttpResponseMessage response = await client.PostAsync(, null);
                 string json = await response.Content.ReadAsStringAsync();
                 Debug.WriteLine("logout response body " + json);
                 LogoutResponse? result = JsonSerializer.Deserialize<LogoutResponse>(json, new JsonSerializerOptions

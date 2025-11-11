@@ -61,7 +61,6 @@ namespace AICA_Client
         private async void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             (bool suc,string msg)=await LogoutHandler.HandleLogoutAsync();
-            //MessageBox.Show(msg, "알림", MessageBoxButton.OK);
             if (suc)
             {
                 if (this.DataContext is SharedViewModel vm)
@@ -78,7 +77,6 @@ namespace AICA_Client
         private async void LeaveMemberButton_Click(object sender, RoutedEventArgs e)
         {
             (bool suc,string msg)=await UserDeleteHandler.HandleDeleteAsync();
-            //MessageBox.Show(msg, "알림", MessageBoxButton.OK);
             if (suc)
             {
                 if(this.DataContext is SharedViewModel vm)
@@ -91,7 +89,6 @@ namespace AICA_Client
 
         private void EditInfoButton_Click(object sender, RoutedEventArgs e)
         {
-            //this.mainWnd.OpenEditInfoFrame();
             this.mainWnd.OpenPwdConfirmPageFrame();
         }
     }

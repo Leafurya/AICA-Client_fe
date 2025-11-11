@@ -32,7 +32,6 @@ namespace CustomControl
         {
             InitializeComponent();
             this.Loaded += WordList_Loaded;
-            //InitList();
         }
 
         private void WordList_Loaded(object sender, RoutedEventArgs e)
@@ -47,7 +46,6 @@ namespace CustomControl
         {
             if (this.DataContext is SharedViewModel vm)
             {
-                //Debug.WriteLine("word list handler call");
                 if (vm.IsLogin)
                 {
                     await VocabNote.Interface.RequestVocabNote(-1);

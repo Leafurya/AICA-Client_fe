@@ -35,53 +35,11 @@
                                  BorderBrush="{StaticResource Brush.Border}" BorderThickness="1"/>
                     <Button Content="로그인" Style="{StaticResource RoundedButton}" Height="42" Margin="0,0,0,14"
                             Click="Button_Click"/>
-                    <!--<Button Content="회원가입" Style="{StaticResource RoundedButton}" Height="42" Margin="0,0,0,14"
-                            Click="Button_Click"/>-->
-                    <!--<DockPanel Margin="0,0,0,14" HorizontalAlignment="Center">
-                        <ToggleButton x:Name="RememberMeToggleButton" Width="20" Height="20" VerticalAlignment="Center" IsChecked="{Binding SettingData.rememberMe, Mode=TwoWay}" Checked="RememberMeToggleButton_Checked" Unchecked="RememberMeToggleButton_Unchecked"></ToggleButton>
-                        <TextBlock VerticalAlignment="Center" Foreground="#555">로그인 상태 유지</TextBlock>
-                    </DockPanel>-->
                     <CheckBox Content="로그인 상태 유지" Foreground="#555" HorizontalAlignment="Center" Margin="0,0,0,14"
                               Checked="RememberMeToggleButton_Checked" Unchecked="RememberMeToggleButton_Unchecked"
                               x:Name="RememberMeToggleButton"/>
                 </StackPanel>
             </Grid>
-            <!--<Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="3*"></ColumnDefinition>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Grid Grid.Column="1">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                        <RowDefinition Height="*"></RowDefinition>
-                    </Grid.RowDefinitions>
-                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">로그인</TextBlock>
-                    <TextBlock TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1"> image</TextBlock>
-                    <TextBox x:Name="textBox_id" Grid.Row="2" Margin="10"></TextBox>
-                    <PasswordBox x:Name="textBox_pwd" Grid.Row="3" Margin="10"></PasswordBox>
-                    <Button Grid.Row="4" Margin="10" Content="로그인" Click="Button_Click"></Button>
-                    <Border Grid.Row="5" BorderThickness="0,0,0,2" BorderBrush="Gray">
-                        <DockPanel Margin="10">
-                            <ToggleButton x:Name="RememberMeToggleButton" Width="20" Height="20" VerticalAlignment="Center" IsChecked="{Binding SettingData.rememberMe, Mode=TwoWay}" Checked="RememberMeToggleButton_Checked" Unchecked="RememberMeToggleButton_Unchecked"></ToggleButton>
-                            <TextBlock VerticalAlignment="Center">로그인 상태 유지</TextBlock>
-                        </DockPanel>
-                    </Border>
-                    <TextBlock Grid.Row="6" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">SNS 간편 로그인</TextBlock>
-                    <TextBlock Grid.Row="7" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center">카카오 아이콘</TextBlock>
-                    <Button x:Name="RegistButton" Grid.Row="9" HorizontalAlignment="Center" VerticalAlignment="Center" Content="회원가입" Padding="20,10,20,10" Click="RegistButton_Click"></Button>
-                </Grid>
-                <Button x:Name="Close" Grid.Column="2" Width="20" Height="20" HorizontalAlignment="Right" VerticalAlignment="top" Content="❌" Click="Close_Click"/>
-            </Grid>-->
         </Border>
     </Grid>
 </Page>

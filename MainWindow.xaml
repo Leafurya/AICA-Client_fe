@@ -11,7 +11,7 @@
         DataContext="{StaticResource vmShared}"
         ctrl:WordItem.OpenPronunciationFrame="OpenPronunciationFrame"
         ctrl:SearchBox.OpenLoadingPage="Window_OpenLoadingPage"
-        ctrl:SearchBox.CloseLoadingPage="Window_CloseLoadingPage">
+        ctrl:SearchBox.CloseLoadingPage="Window_CloseLoadingPage" Closing="Window_Closing">
     <Grid Background="{StaticResource Brush.Card}">
         <Grid.RowDefinitions>
             <RowDefinition Height="45"></RowDefinition>
@@ -29,7 +29,6 @@
                     <Image Height="40" Width="117" Stretch="Fill" Source="pack://application:,,,/styles/Image/Logo.png"/>
                 </StackPanel>
 
-                <!-- 오른쪽: 로그인/회원가입 or 내정보 -->
                 <Grid Grid.Column="2" VerticalAlignment="Center">
                     <DockPanel HorizontalAlignment="Right">
                         <Button Visibility="Visible" Content="로그인" Style="{StaticResource RoundedButton}"
@@ -46,23 +45,12 @@
                 </Grid>
             </Grid>
         </Border>
-        <!--<Grid> origin
-            <DockPanel HorizontalAlignment="Right">
-                <Button Visibility="Visible" x:Name="Ligin" Content="로그인" Padding="20,10,20,10" Click="Ligin_Click"></Button>
-                <Button Visibility="Collapsed" x:Name="MyPage" Content="내 정보" Padding="20,10,20,10" Click="MyPage_Click"></Button>
-            </DockPanel>
-        </Grid>-->
         <Grid Grid.Row="1" Background="{StaticResource Brush.Card}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="420"/>
                 <ColumnDefinition/>
                 <ColumnDefinition Width="360"/>
             </Grid.ColumnDefinitions>
-            <!--<Grid.ColumnDefinitions> origin
-                <ColumnDefinition Width="308*"></ColumnDefinition>
-                <ColumnDefinition Width="233*"></ColumnDefinition>
-                <ColumnDefinition Width="259*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>-->
             <Border Background="{StaticResource Brush.Card}" Grid.Column="0"
                     BorderBrush="{StaticResource Brush.Border}" BorderThickness="0,0,1,0">
                 <ctrl:SearchBox/>

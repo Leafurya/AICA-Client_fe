@@ -38,10 +38,7 @@ namespace WordSearch
                 Debug.WriteLine(host + "/api/wordinfo?word=" + word);
                 HttpResponseMessage res = await client.GetAsync(host + "/api/wordinfo?word=" + word);
             
-                //if (res.IsSuccessStatusCode)
-                //{
                 string responseBody = await res.Content.ReadAsStringAsync();
-                //return responseBody;
                 return (res.IsSuccessStatusCode,responseBody);
 
             }
@@ -53,8 +50,6 @@ namespace WordSearch
             {
                 return (false, "json 파싱 에러");
             }
-            //}
-            //return null;
         }
     }
     public class Interface
@@ -106,14 +101,11 @@ namespace WordSearch
         }
         static public async Task<(string, WordMeanings?)> GetMeaning()
         {
-            //HttpRequest req = new("https://api.dictionaryapi.dev/api/v2/entries/en");
-            //string word = selector.GetText();
             string word = selector.GetLemma();
 
             (bool suc,string? result) = await Request.GetDictionaryResult(word);
             if (!suc)
             {
-                //Debug.WriteLine("단어 의미 불러오기 실패");
                 Debug.WriteLine(result);
                 if (result == null)
                 {
@@ -135,8 +127,7 @@ namespace WordSearch
                 Manager.SelectWord(wordMeanings.wordId);
                 result = wordMeanings.ToString();
             }
-            //string result = await req.GetDictionaryResult(word); // 해석 받아오기
-            return (result, wordMeanings);                             // 화면에 띄우기
+            return (result, wordMeanings);
         }
         static public bool HighlightPOS(RichTextBox textBox)
         {
@@ -150,14 +141,11 @@ namespace WordSearch
             //DB에서 모든 단어를 찾는다
             List<WordData> targets = new List<WordData>();
             int targetStartPoint = selector.GetTargetStartPoint();
-            //targets=selector.GetWordsFromDB(textId, word);
             targets = selector.GetWordsFromDB(textId, targetStartPoint);
             targets.ForEach(target =>
             {
                 WordDataMap.InsertWordData(target);
             });
-            //WordDataMap.InsertWordData()
-
 
             //각 단어의 품사에 맞는 배경색을 지정한다
             targets.ForEach(data =>
@@ -175,7 +163,6 @@ namespace WordSearch
                     {
                         selector.SetBackgroundColorToSelectedText(selectedText, PosColors.colors[data.pos]);
                     }
-                    //selector.SetBackgroundColorToSelectedText(selectedText, Brushes.Cyan);
                 }
             });
             return result;
@@ -186,14 +173,11 @@ namespace WordSearch
 
             //DB에서 모든 단어를 찾는다
             List<WordData> targets = new List<WordData>();
-            //targets=selector.GetWordsFromDB(textId, word);
             targets = selector.GetWordsFromDB(textId, word);
             targets.ForEach(target =>
             {
                 WordDataMap.InsertWordData(target);
             });
-            //WordDataMap.InsertWordData()
-
 
             //각 단어의 품사에 맞는 배경색을 지정한다
             targets.ForEach(data =>
@@ -211,14 +195,12 @@ namespace WordSearch
                     {
                         selector.SetBackgroundColorToSelectedText(selectedText, PosColors.colors[data.pos]);
                     }
-                    //selector.SetBackgroundColorToSelectedText(selectedText, Brushes.Cyan);
                 }
             });
             return result;
         }
         static public int GetSelectedWordId()
         {
-            //return selector.GetWordId();
             return 0;
         }
         static public void SetTextId(int _textId)

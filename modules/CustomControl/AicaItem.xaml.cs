@@ -29,20 +29,10 @@ namespace CustomControl
         {
             InitializeComponent();
         }
-
-        //private void ToggleButton_Unchecked(object sender, RoutedEventArgs e)
-        //{
-        //    AicaList? ucRoot = ControlUtil.FindAncestor<AicaList>(this);
-        //    ucRoot?.UncheckSelectAllTogglButton();
-        //}
         public int GetWordId()
         {
             return (int)Word.Tag;
         }
-        //public bool IsChecked()
-        //{
-        //    return (bool)toggleBtn.IsChecked;
-        //}
 
         private void Word_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
@@ -51,20 +41,13 @@ namespace CustomControl
             {
                 if (sharedVM.IsLogin)
                 {
-                    //Debug.WriteLine(this.DataContext is VocabItem);
                     if(this.DataContext is VocabItem vm)
                     {
-                        //sharedVM.DictionaryMean = vm.ToString();
                         sharedVM.DictionaryMeans = vm.meanings;
                         sharedVM.DictWord = vm.word;
                     }
                 }
             }
         }
-
-        //private void toggleBtn_Unchecked(object sender, RoutedEventArgs e)
-        //{
-
-        //}
     }
 }
